@@ -1,6 +1,6 @@
 ---
 title: "TOPMed Analysis Workshop"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -87,7 +87,8 @@ gds <- seqOpen(gdsfile)
 sample.id <- TopmedPipeline::getobj("samples_subset100.RData")
 
 # LD pruning to get variant set
-snpset <- snpgdsLDpruning(gds, sample.id=sample.id, method="corr", slide.max.bp=10e6, ld.threshold=sqrt(0.1))
+snpset <- snpgdsLDpruning(gds, sample.id=sample.id, method="corr", 
+                          slide.max.bp=10e6, ld.threshold=sqrt(0.1))
 sapply(snpset, length)
 pruned <- unlist(snpset, use.names=FALSE)
 
