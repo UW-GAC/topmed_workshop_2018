@@ -175,8 +175,8 @@ grm <- snpgdsGRM(gds, method="GCTA")
     ## Excluding 14 SNVs (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
     ## Working space: 1,126 samples, 1,106 SNVs
     ##     using 1 (CPU) core
-    ## GRM-analysis:    Thu Jun 15 16:30:12 2017    0%
-    ## GRM-analysis:    Thu Jun 15 16:30:13 2017    100%
+    ## GRM-analysis:    Thu Jun 15 16:50:03 2017    0%
+    ## GRM-analysis:    Thu Jun 15 16:50:05 2017    100%
 
 ``` r
 names(grm)
@@ -222,28 +222,28 @@ snpset <- snpgdsLDpruning(gds, sample.id=sample.id, method="corr",
     ##     using 1 (CPU) core
     ##  Sliding window: 1e+07 basepairs, Inf SNPs
     ##  |LD| threshold: 0.316228
-    ## Chromosome 1: 31.25%, 350/1120
-    ## Chromosome 2: 31.16%, 349/1120
-    ## Chromosome 3: 30.98%, 347/1120
-    ## Chromosome 4: 30.89%, 346/1120
-    ## Chromosome 5: 29.73%, 333/1120
-    ## Chromosome 6: 30.89%, 346/1120
-    ## Chromosome 7: 28.48%, 319/1120
-    ## Chromosome 8: 25.54%, 286/1120
-    ## Chromosome 9: 27.68%, 310/1120
-    ## Chromosome 10: 28.57%, 320/1120
+    ## Chromosome 1: 31.61%, 354/1120
+    ## Chromosome 2: 31.43%, 352/1120
+    ## Chromosome 3: 30.18%, 338/1120
+    ## Chromosome 4: 30.80%, 345/1120
+    ## Chromosome 5: 29.55%, 331/1120
+    ## Chromosome 6: 30.36%, 340/1120
+    ## Chromosome 7: 28.30%, 317/1120
+    ## Chromosome 8: 26.25%, 294/1120
+    ## Chromosome 9: 27.77%, 311/1120
+    ## Chromosome 10: 28.48%, 319/1120
     ## Chromosome 11: 26.88%, 301/1120
-    ## Chromosome 12: 28.48%, 319/1120
-    ## Chromosome 13: 25.54%, 286/1120
-    ## Chromosome 14: 24.11%, 270/1120
-    ## Chromosome 15: 21.52%, 241/1120
-    ## Chromosome 16: 22.41%, 251/1120
-    ## Chromosome 17: 21.25%, 238/1120
-    ## Chromosome 18: 23.30%, 261/1120
-    ## Chromosome 19: 20.89%, 234/1120
-    ## Chromosome 20: 20.00%, 224/1120
-    ## Chromosome 21: 18.04%, 202/1120
-    ## Chromosome 22: 17.95%, 201/1120
+    ## Chromosome 12: 28.21%, 316/1120
+    ## Chromosome 13: 25.18%, 282/1120
+    ## Chromosome 14: 24.55%, 275/1120
+    ## Chromosome 15: 22.23%, 249/1120
+    ## Chromosome 16: 21.96%, 246/1120
+    ## Chromosome 17: 22.14%, 248/1120
+    ## Chromosome 18: 23.39%, 262/1120
+    ## Chromosome 19: 21.07%, 236/1120
+    ## Chromosome 20: 19.91%, 223/1120
+    ## Chromosome 21: 17.50%, 196/1120
+    ## Chromosome 22: 17.77%, 199/1120
     ## 6334 SNPs are selected in total.
 
 ``` r
@@ -251,9 +251,9 @@ sapply(snpset, length)
 ```
 
     ##  chr1  chr2  chr3  chr4  chr5  chr6  chr7  chr8  chr9 chr10 chr11 chr12 
-    ##   350   349   347   346   333   346   319   286   310   320   301   319 
+    ##   354   352   338   345   331   340   317   294   311   319   301   316 
     ## chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 
-    ##   286   270   241   251   238   261   234   224   202   201
+    ##   282   275   249   246   248   262   236   223   196   199
 
 ``` r
 pruned <- unlist(snpset, use.names=FALSE)
@@ -269,11 +269,11 @@ king <- snpgdsIBDKING(gds, sample.id=sample.id, snp.id=pruned)
     ##     using 1 (CPU) core
     ## No family is specified, and all individuals are treated as singletons.
     ## Relationship inference in the presence of population stratification.
-    ## Thu Jun 15 16:30:16 2017    (internal increment: 65536)
+    ## Thu Jun 15 16:50:08 2017    (internal increment: 65536)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Thu Jun 15 16:30:17 2017    Done.
+    ## Thu Jun 15 16:50:08 2017    Done.
 
 ``` r
 names(king)
@@ -300,12 +300,12 @@ head(kinship)
 ```
 
     ##       ID1     ID2       IBS0     kinship
-    ## 1 HG00110 HG00116 0.02478686 -0.01184690
-    ## 2 HG00110 HG00120 0.02620777 -0.02339004
-    ## 3 HG00110 HG00128 0.02573413 -0.01644336
-    ## 4 HG00110 HG00136 0.02873382 -0.04191981
-    ## 5 HG00110 HG00137 0.02541838 -0.02308627
-    ## 6 HG00110 HG00141 0.02826018 -0.04556501
+    ## 1 HG00110 HG00116 0.02557626 -0.01701094
+    ## 2 HG00110 HG00120 0.02652352 -0.02582017
+    ## 3 HG00110 HG00128 0.02526050 -0.01307786
+    ## 4 HG00110 HG00136 0.02873382 -0.03797084
+    ## 5 HG00110 HG00137 0.02778655 -0.04283111
+    ## 6 HG00110 HG00141 0.02889170 -0.04921021
 
 ``` r
 library(ggplot2)
@@ -316,7 +316,7 @@ ggplot(kinship, aes(IBS0, kinship)) +
     theme_bw()
 ```
 
-![](workshop_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](workshop_files/figure-markdown_github/king_plot-1.png)
 
 The next step is [PC-AiR](http://www.ncbi.nlm.nih.gov/pubmed/25810074), in which we select a set of unrelated samples that is maximally informative about all ancestries in the sample. We use this unrelated set for Principal Component Analysis (PCA), then project the relatives onto the PCs.
 
@@ -336,7 +336,7 @@ sapply(sampset, length)
 ```
 
     ##   rels unrels 
-    ##     14     86
+    ##     15     85
 
 Typically we would repeat the LD pruning step on the set of unrelated samples we just identified, but for this example we will re-use the pruned set of variants from step 1. Using the SNPRelate package, we run PCA on the unrelated set and project values for the related set.
 
@@ -347,15 +347,15 @@ pca.unrel <- snpgdsPCA(gds, sample.id=sampset$unrels, snp.id=pruned)
 
     ## Principal Component Analysis (PCA) on genotypes:
     ## Excluding 19,426 SNVs (non-autosomes or non-selection)
-    ## Excluding 220 SNVs (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
-    ## Working space: 86 samples, 6,114 SNVs
+    ## Excluding 227 SNVs (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
+    ## Working space: 85 samples, 6,107 SNVs
     ##     using 1 (CPU) core
-    ## Thu Jun 15 16:30:17 2017    (internal increment: 8712)
+    ## Thu Jun 15 16:50:09 2017    (internal increment: 8816)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Thu Jun 15 16:30:18 2017    Begin (eigenvalues and eigenvectors)
-    ## Thu Jun 15 16:30:18 2017    Done.
+    ## Thu Jun 15 16:50:09 2017    Begin (eigenvalues and eigenvectors)
+    ## Thu Jun 15 16:50:09 2017    Done.
 
 ``` r
 # project values for relatives
@@ -363,28 +363,28 @@ snp.load <- snpgdsPCASNPLoading(pca.unrel, gdsobj=gds)
 ```
 
     ## SNP loading:
-    ## Working space: 86 samples, 6114 SNPs
+    ## Working space: 85 samples, 6107 SNPs
     ##     using 1 (CPU) core
     ##     using the top 32 eigenvectors
-    ## Thu Jun 15 16:30:18 2017    (internal increment: 65536)
+    ## Thu Jun 15 16:50:09 2017    (internal increment: 65536)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Thu Jun 15 16:30:18 2017    Done.
+    ## Thu Jun 15 16:50:10 2017    Done.
 
 ``` r
 samp.load <- snpgdsPCASampLoading(snp.load, gdsobj=gds, sample.id=sampset$rels)
 ```
 
     ## Sample loading:
-    ## Working space: 14 samples, 6114 SNPs
+    ## Working space: 15 samples, 6107 SNPs
     ##     using 1 (CPU) core
     ##     using the top 32 eigenvectors
-    ## Thu Jun 15 16:30:18 2017    (internal increment: 65536)
+    ## Thu Jun 15 16:50:10 2017    (internal increment: 65536)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Thu Jun 15 16:30:18 2017    Done.
+    ## Thu Jun 15 16:50:10 2017    Done.
 
 ``` r
 # combine unrelated and related PCs and order as in GDS file
@@ -462,7 +462,7 @@ ggparcoord(pc.df, columns=1:12, groupColumn="Population", scale="uniminmax") +
     xlab("PC") + ylab("")
 ```
 
-![](workshop_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](workshop_files/figure-markdown_github/pcair_parcoord-1.png)
 
 The first 2 PCs separate populations, so we use them to compute kinship estimates adjusting for ancestry. The PC-Relate function expects a `SeqVarData` object, which allows linking sample and variant annotation with a GDS file in a single object. We will cover these in more detail later for association testing, but for now we create a bare object with no annotation.
 
@@ -505,7 +505,7 @@ ggplot(pc.df, aes(PC1, PC2, color=Population)) + geom_point() +
     scale_color_manual(values=pop.cols)
 ```
 
-![](workshop_files/figure-markdown_github/unnamed-chunk-12-1.png)
+![](workshop_files/figure-markdown_github/pcair_2-1.png)
 
 Now we use the revised PCs to compute new kinship estimates. One can run the iteration multiple times and check for conversion, but usually two rounds are sufficient.
 
@@ -526,7 +526,7 @@ ggplot(kinship, aes(k0, kin)) +
     theme_bw()
 ```
 
-![](workshop_files/figure-markdown_github/unnamed-chunk-14-1.png)
+![](workshop_files/figure-markdown_github/pcrelate_plot-1.png)
 
 ``` r
 seqClose(gds)
