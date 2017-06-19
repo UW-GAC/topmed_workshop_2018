@@ -175,8 +175,8 @@ grm <- snpgdsGRM(gds, method="GCTA")
     ## Excluding 14 SNVs (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
     ## Working space: 1,126 samples, 1,106 SNVs
     ##     using 1 (CPU) core
-    ## GRM-analysis:    Mon Jun 19 13:20:36 2017    0%
-    ## GRM-analysis:    Mon Jun 19 13:20:37 2017    100%
+    ## GRM-analysis:    Mon Jun 19 14:12:10 2017    0%
+    ## GRM-analysis:    Mon Jun 19 14:12:12 2017    100%
 
 ``` r
 names(grm)
@@ -223,37 +223,37 @@ snpset <- snpgdsLDpruning(gds, sample.id=sample.id, method="corr",
     ##  Sliding window: 1e+07 basepairs, Inf SNPs
     ##  |LD| threshold: 0.316228
     ## Chromosome 1: 31.25%, 350/1120
-    ## Chromosome 2: 31.07%, 348/1120
-    ## Chromosome 3: 31.16%, 349/1120
-    ## Chromosome 4: 30.71%, 344/1120
+    ## Chromosome 2: 31.43%, 352/1120
+    ## Chromosome 3: 30.27%, 339/1120
+    ## Chromosome 4: 30.89%, 346/1120
     ## Chromosome 5: 29.46%, 330/1120
-    ## Chromosome 6: 31.07%, 348/1120
+    ## Chromosome 6: 31.34%, 351/1120
     ## Chromosome 7: 28.48%, 319/1120
-    ## Chromosome 8: 25.80%, 289/1120
-    ## Chromosome 9: 27.68%, 310/1120
-    ## Chromosome 10: 28.48%, 319/1120
-    ## Chromosome 11: 26.96%, 302/1120
-    ## Chromosome 12: 28.30%, 317/1120
+    ## Chromosome 8: 25.98%, 291/1120
+    ## Chromosome 9: 27.41%, 307/1120
+    ## Chromosome 10: 29.02%, 325/1120
+    ## Chromosome 11: 26.88%, 301/1120
+    ## Chromosome 12: 27.95%, 313/1120
     ## Chromosome 13: 25.62%, 287/1120
-    ## Chromosome 14: 23.93%, 268/1120
-    ## Chromosome 15: 21.88%, 245/1120
+    ## Chromosome 14: 24.82%, 278/1120
+    ## Chromosome 15: 22.50%, 252/1120
     ## Chromosome 16: 21.96%, 246/1120
-    ## Chromosome 17: 22.23%, 249/1120
-    ## Chromosome 18: 23.12%, 259/1120
-    ## Chromosome 19: 21.52%, 241/1120
+    ## Chromosome 17: 22.05%, 247/1120
+    ## Chromosome 18: 23.57%, 264/1120
+    ## Chromosome 19: 20.80%, 233/1120
     ## Chromosome 20: 20.54%, 230/1120
-    ## Chromosome 21: 17.50%, 196/1120
-    ## Chromosome 22: 17.59%, 197/1120
-    ## 6343 SNPs are selected in total.
+    ## Chromosome 21: 17.41%, 195/1120
+    ## Chromosome 22: 17.05%, 191/1120
+    ## 6347 SNPs are selected in total.
 
 ``` r
 sapply(snpset, length)
 ```
 
     ##  chr1  chr2  chr3  chr4  chr5  chr6  chr7  chr8  chr9 chr10 chr11 chr12 
-    ##   350   348   349   344   330   348   319   289   310   319   302   317 
+    ##   350   352   339   346   330   351   319   291   307   325   301   313 
     ## chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 
-    ##   287   268   245   246   249   259   241   230   196   197
+    ##   287   278   252   246   247   264   233   230   195   191
 
 ``` r
 pruned <- unlist(snpset, use.names=FALSE)
@@ -263,17 +263,17 @@ king <- snpgdsIBDKING(gds, sample.id=sample.id, snp.id=pruned)
 ```
 
     ## IBD analysis (KING method of moment) on genotypes:
-    ## Excluding 19,417 SNVs (non-autosomes or non-selection)
+    ## Excluding 19,413 SNVs (non-autosomes or non-selection)
     ## Excluding 0 SNV (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
-    ## Working space: 100 samples, 6,343 SNVs
+    ## Working space: 100 samples, 6,347 SNVs
     ##     using 1 (CPU) core
     ## No family is specified, and all individuals are treated as singletons.
     ## Relationship inference in the presence of population stratification.
-    ## Mon Jun 19 13:20:39 2017    (internal increment: 65536)
+    ## Mon Jun 19 14:12:13 2017    (internal increment: 65536)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Mon Jun 19 13:20:39 2017    Done.
+    ## Mon Jun 19 14:12:13 2017    Done.
 
 ``` r
 names(king)
@@ -299,13 +299,13 @@ kinship <- snpgdsIBDSelection(king)
 head(kinship)
 ```
 
-    ##       ID1     ID2       IBS0     kinship
-    ## 1 HG00110 HG00116 0.02585527 -0.01504212
-    ## 2 HG00110 HG00120 0.02617058 -0.01865223
-    ## 3 HG00110 HG00128 0.02427873 -0.01339829
-    ## 4 HG00110 HG00136 0.02979663 -0.04632972
-    ## 5 HG00110 HG00137 0.02632824 -0.02978339
-    ## 6 HG00110 HG00141 0.02853539 -0.03941035
+    ##       ID1     ID2       IBS0      kinship
+    ## 1 HG00110 HG00116 0.02520876 -0.009603842
+    ## 2 HG00110 HG00120 0.02725697 -0.027010804
+    ## 3 HG00110 HG00128 0.02615409 -0.019578313
+    ## 4 HG00110 HG00136 0.02914763 -0.039315726
+    ## 5 HG00110 HG00137 0.02568142 -0.022509004
+    ## 6 HG00110 HG00141 0.02804475 -0.036014406
 
 ``` r
 library(ggplot2)
@@ -336,7 +336,7 @@ sapply(sampset, length)
 ```
 
     ##   rels unrels 
-    ##     15     85
+    ##     14     86
 
 Typically we would repeat the LD pruning step on the set of unrelated samples we just identified, but for this example we will re-use the pruned set of variants from step 1. Using the SNPRelate package, we run PCA on the unrelated set and project values for the related set.
 
@@ -346,16 +346,16 @@ pca.unrel <- snpgdsPCA(gds, sample.id=sampset$unrels, snp.id=pruned)
 ```
 
     ## Principal Component Analysis (PCA) on genotypes:
-    ## Excluding 19,417 SNVs (non-autosomes or non-selection)
-    ## Excluding 209 SNVs (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
-    ## Working space: 85 samples, 6,134 SNVs
+    ## Excluding 19,413 SNVs (non-autosomes or non-selection)
+    ## Excluding 215 SNVs (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
+    ## Working space: 86 samples, 6,132 SNVs
     ##     using 1 (CPU) core
-    ## Mon Jun 19 13:20:40 2017    (internal increment: 8816)
+    ## Mon Jun 19 14:12:14 2017    (internal increment: 8712)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Mon Jun 19 13:20:40 2017    Begin (eigenvalues and eigenvectors)
-    ## Mon Jun 19 13:20:40 2017    Done.
+    ## Mon Jun 19 14:12:14 2017    Begin (eigenvalues and eigenvectors)
+    ## Mon Jun 19 14:12:14 2017    Done.
 
 ``` r
 # project values for relatives
@@ -363,28 +363,28 @@ snp.load <- snpgdsPCASNPLoading(pca.unrel, gdsobj=gds)
 ```
 
     ## SNP loading:
-    ## Working space: 85 samples, 6134 SNPs
+    ## Working space: 86 samples, 6132 SNPs
     ##     using 1 (CPU) core
     ##     using the top 32 eigenvectors
-    ## Mon Jun 19 13:20:40 2017    (internal increment: 65536)
+    ## Mon Jun 19 14:12:14 2017    (internal increment: 65536)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Mon Jun 19 13:20:40 2017    Done.
+    ## Mon Jun 19 14:12:15 2017    Done.
 
 ``` r
 samp.load <- snpgdsPCASampLoading(snp.load, gdsobj=gds, sample.id=sampset$rels)
 ```
 
     ## Sample loading:
-    ## Working space: 15 samples, 6134 SNPs
+    ## Working space: 14 samples, 6132 SNPs
     ##     using 1 (CPU) core
     ##     using the top 32 eigenvectors
-    ## Mon Jun 19 13:20:40 2017    (internal increment: 65536)
+    ## Mon Jun 19 14:12:15 2017    (internal increment: 65536)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Mon Jun 19 13:20:40 2017    Done.
+    ## Mon Jun 19 14:12:15 2017    Done.
 
 ``` r
 # combine unrelated and related PCs and order as in GDS file
@@ -547,7 +547,8 @@ sampfile <- "1KG_phase3_subset_annot.RData"
 if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile)
 annot <- TopmedPipeline::getobj(sampfile)
 
-grmfile <- "/projects/users/stephanie/Code/TOPMed/analysis_pipeline/testdata/grm.RData"
+grmfile <- "grm.RData"
+if (!file.exists(grmfile)) download.file(file.path(data.path, grmfile), grmfile)
 grm <- TopmedPipeline::getobj(grmfile)
 rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
 
