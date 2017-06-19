@@ -12,7 +12,7 @@ To use the R packages developed at the DCC for sequence data, we first need to c
 library(SeqArray)
 data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
 vcffile <- "1KG_phase3_subset_chr1.vcf.gz"
-download.file(file.path(data.path, vcffile), vcffile)
+if (!file.exists(vcffile)) download.file(file.path(data.path, vcffile), vcffile)
 gdsfile <- "1KG_phase3_subset_chr1.gds"
 seqVCF2GDS(vcffile, gdsfile, fmt.import="GT", storage.option="LZMA_RA", verbose=FALSE)
 ```
@@ -175,8 +175,8 @@ grm <- snpgdsGRM(gds, method="GCTA")
     ## Excluding 14 SNVs (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
     ## Working space: 1,126 samples, 1,106 SNVs
     ##     using 1 (CPU) core
-    ## GRM-analysis:    Thu Jun 15 16:50:03 2017    0%
-    ## GRM-analysis:    Thu Jun 15 16:50:05 2017    100%
+    ## GRM-analysis:    Mon Jun 19 13:20:36 2017    0%
+    ## GRM-analysis:    Mon Jun 19 13:20:37 2017    100%
 
 ``` r
 names(grm)
@@ -204,7 +204,7 @@ Step 1 is to get initial estimates of kinship using [KING](http://www.ncbi.nlm.n
 ``` r
 # use a GDS file with all chromosomes
 gdsfile <- "1KG_phase3_subset.gds"
-download.file(file.path(data.path, gdsfile), gdsfile)
+if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
 gds <- seqOpen(gdsfile)
 
 # use a subset of 100 samples to make things run faster
@@ -222,38 +222,38 @@ snpset <- snpgdsLDpruning(gds, sample.id=sample.id, method="corr",
     ##     using 1 (CPU) core
     ##  Sliding window: 1e+07 basepairs, Inf SNPs
     ##  |LD| threshold: 0.316228
-    ## Chromosome 1: 31.61%, 354/1120
-    ## Chromosome 2: 31.43%, 352/1120
-    ## Chromosome 3: 30.18%, 338/1120
-    ## Chromosome 4: 30.80%, 345/1120
-    ## Chromosome 5: 29.55%, 331/1120
-    ## Chromosome 6: 30.36%, 340/1120
-    ## Chromosome 7: 28.30%, 317/1120
-    ## Chromosome 8: 26.25%, 294/1120
-    ## Chromosome 9: 27.77%, 311/1120
+    ## Chromosome 1: 31.25%, 350/1120
+    ## Chromosome 2: 31.07%, 348/1120
+    ## Chromosome 3: 31.16%, 349/1120
+    ## Chromosome 4: 30.71%, 344/1120
+    ## Chromosome 5: 29.46%, 330/1120
+    ## Chromosome 6: 31.07%, 348/1120
+    ## Chromosome 7: 28.48%, 319/1120
+    ## Chromosome 8: 25.80%, 289/1120
+    ## Chromosome 9: 27.68%, 310/1120
     ## Chromosome 10: 28.48%, 319/1120
-    ## Chromosome 11: 26.88%, 301/1120
-    ## Chromosome 12: 28.21%, 316/1120
-    ## Chromosome 13: 25.18%, 282/1120
-    ## Chromosome 14: 24.55%, 275/1120
-    ## Chromosome 15: 22.23%, 249/1120
+    ## Chromosome 11: 26.96%, 302/1120
+    ## Chromosome 12: 28.30%, 317/1120
+    ## Chromosome 13: 25.62%, 287/1120
+    ## Chromosome 14: 23.93%, 268/1120
+    ## Chromosome 15: 21.88%, 245/1120
     ## Chromosome 16: 21.96%, 246/1120
-    ## Chromosome 17: 22.14%, 248/1120
-    ## Chromosome 18: 23.39%, 262/1120
-    ## Chromosome 19: 21.07%, 236/1120
-    ## Chromosome 20: 19.91%, 223/1120
+    ## Chromosome 17: 22.23%, 249/1120
+    ## Chromosome 18: 23.12%, 259/1120
+    ## Chromosome 19: 21.52%, 241/1120
+    ## Chromosome 20: 20.54%, 230/1120
     ## Chromosome 21: 17.50%, 196/1120
-    ## Chromosome 22: 17.77%, 199/1120
-    ## 6334 SNPs are selected in total.
+    ## Chromosome 22: 17.59%, 197/1120
+    ## 6343 SNPs are selected in total.
 
 ``` r
 sapply(snpset, length)
 ```
 
     ##  chr1  chr2  chr3  chr4  chr5  chr6  chr7  chr8  chr9 chr10 chr11 chr12 
-    ##   354   352   338   345   331   340   317   294   311   319   301   316 
+    ##   350   348   349   344   330   348   319   289   310   319   302   317 
     ## chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 
-    ##   282   275   249   246   248   262   236   223   196   199
+    ##   287   268   245   246   249   259   241   230   196   197
 
 ``` r
 pruned <- unlist(snpset, use.names=FALSE)
@@ -263,17 +263,17 @@ king <- snpgdsIBDKING(gds, sample.id=sample.id, snp.id=pruned)
 ```
 
     ## IBD analysis (KING method of moment) on genotypes:
-    ## Excluding 19,426 SNVs (non-autosomes or non-selection)
+    ## Excluding 19,417 SNVs (non-autosomes or non-selection)
     ## Excluding 0 SNV (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
-    ## Working space: 100 samples, 6,334 SNVs
+    ## Working space: 100 samples, 6,343 SNVs
     ##     using 1 (CPU) core
     ## No family is specified, and all individuals are treated as singletons.
     ## Relationship inference in the presence of population stratification.
-    ## Thu Jun 15 16:50:08 2017    (internal increment: 65536)
+    ## Mon Jun 19 13:20:39 2017    (internal increment: 65536)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Thu Jun 15 16:50:08 2017    Done.
+    ## Mon Jun 19 13:20:39 2017    Done.
 
 ``` r
 names(king)
@@ -300,12 +300,12 @@ head(kinship)
 ```
 
     ##       ID1     ID2       IBS0     kinship
-    ## 1 HG00110 HG00116 0.02557626 -0.01701094
-    ## 2 HG00110 HG00120 0.02652352 -0.02582017
-    ## 3 HG00110 HG00128 0.02526050 -0.01307786
-    ## 4 HG00110 HG00136 0.02873382 -0.03797084
-    ## 5 HG00110 HG00137 0.02778655 -0.04283111
-    ## 6 HG00110 HG00141 0.02889170 -0.04921021
+    ## 1 HG00110 HG00116 0.02585527 -0.01504212
+    ## 2 HG00110 HG00120 0.02617058 -0.01865223
+    ## 3 HG00110 HG00128 0.02427873 -0.01339829
+    ## 4 HG00110 HG00136 0.02979663 -0.04632972
+    ## 5 HG00110 HG00137 0.02632824 -0.02978339
+    ## 6 HG00110 HG00141 0.02853539 -0.03941035
 
 ``` r
 library(ggplot2)
@@ -346,16 +346,16 @@ pca.unrel <- snpgdsPCA(gds, sample.id=sampset$unrels, snp.id=pruned)
 ```
 
     ## Principal Component Analysis (PCA) on genotypes:
-    ## Excluding 19,426 SNVs (non-autosomes or non-selection)
-    ## Excluding 227 SNVs (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
-    ## Working space: 85 samples, 6,107 SNVs
+    ## Excluding 19,417 SNVs (non-autosomes or non-selection)
+    ## Excluding 209 SNVs (monomorphic: TRUE, < MAF: NaN, or > missing rate: NaN)
+    ## Working space: 85 samples, 6,134 SNVs
     ##     using 1 (CPU) core
-    ## Thu Jun 15 16:50:09 2017    (internal increment: 8816)
+    ## Mon Jun 19 13:20:40 2017    (internal increment: 8816)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Thu Jun 15 16:50:09 2017    Begin (eigenvalues and eigenvectors)
-    ## Thu Jun 15 16:50:09 2017    Done.
+    ## Mon Jun 19 13:20:40 2017    Begin (eigenvalues and eigenvectors)
+    ## Mon Jun 19 13:20:40 2017    Done.
 
 ``` r
 # project values for relatives
@@ -363,28 +363,28 @@ snp.load <- snpgdsPCASNPLoading(pca.unrel, gdsobj=gds)
 ```
 
     ## SNP loading:
-    ## Working space: 85 samples, 6107 SNPs
+    ## Working space: 85 samples, 6134 SNPs
     ##     using 1 (CPU) core
     ##     using the top 32 eigenvectors
-    ## Thu Jun 15 16:50:09 2017    (internal increment: 65536)
+    ## Mon Jun 19 13:20:40 2017    (internal increment: 65536)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Thu Jun 15 16:50:10 2017    Done.
+    ## Mon Jun 19 13:20:40 2017    Done.
 
 ``` r
 samp.load <- snpgdsPCASampLoading(snp.load, gdsobj=gds, sample.id=sampset$rels)
 ```
 
     ## Sample loading:
-    ## Working space: 15 samples, 6107 SNPs
+    ## Working space: 15 samples, 6134 SNPs
     ##     using 1 (CPU) core
     ##     using the top 32 eigenvectors
-    ## Thu Jun 15 16:50:10 2017    (internal increment: 65536)
+    ## Mon Jun 19 13:20:40 2017    (internal increment: 65536)
     ## 
     [..................................................]  0%, ETC: ---    
     [==================================================] 100%, completed      
-    ## Thu Jun 15 16:50:10 2017    Done.
+    ## Mon Jun 19 13:20:40 2017    Done.
 
 ``` r
 # combine unrelated and related PCs and order as in GDS file
@@ -399,7 +399,7 @@ We need to determine which PCs are ancestry informative. To do this we need popu
 ``` r
 library(Biobase)
 sampfile <- "1KG_phase3_subset_annot.RData"
-download.file(file.path(data.path, sampfile), sampfile)
+if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile)
 annot <- TopmedPipeline::getobj(sampfile)
 annot
 ```
@@ -535,14 +535,173 @@ seqClose(gds)
 Association tests
 =================
 
+Since TOPMed has many studies with related participants, we focus on linear mixed models. Logistic mixed models are also possible using GENESIS, see the [GMMAT paper](https://www.ncbi.nlm.nih.gov/pubmed/27018471).
+
 Null model
 ----------
+
+The first step in an association test is to fit the null model. We use the `AnnotatedDataFrame` with phenotypes, and a GRM. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups.
+
+``` r
+sampfile <- "1KG_phase3_subset_annot.RData"
+if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile)
+annot <- TopmedPipeline::getobj(sampfile)
+
+grmfile <- "/projects/users/stephanie/Code/TOPMed/analysis_pipeline/testdata/grm.RData"
+grm <- TopmedPipeline::getobj(grmfile)
+rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
+
+library(GENESIS)
+nullmod <- fitNullMM(annot, outcome="outcome", covars=c("sex", "Population"), 
+                     covMatList=grm$grm, group.var="Population", verbose=FALSE)
+```
+
+We also recommend taking an inverse normal transform of the residuals and refitting the model. This is done separately for each group, and the transformed residuals are rescaled. See the full procedure in the
+[pipeline documenation](https://github.com/smgogarten/analysis_pipeline#association-testing).
 
 Single-variant tests
 --------------------
 
+Single-variant tests are the same as in GWAS. We use the `assocTestMM` function in GENESIS. We have to create a `SeqVarData` object including both the GDS file and the sample annotation containing phenotypes.
+
+``` r
+gdsfile <- "1KG_phase3_subset_chr1.gds"
+if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
+gds <- seqOpen(gdsfile)
+seqData <- SeqVarData(gds, sampleData=annot)
+assoc <- assocTestMM(seqData, nullmod)
+head(assoc)
+```
+
+    ##   snpID chr    n          MAF minor.allele          Est        SE
+    ## 1     1   1 1126 0.0039964476          alt  0.037896432 0.3547545
+    ## 2     2   1 1126 0.0492895204          alt  0.173271721 0.1038710
+    ## 3     3   1 1126 0.0004440497          alt  0.034881381 1.0211652
+    ## 4     4   1 1126 0.0008880995          alt  0.003698581 0.6811618
+    ## 5     5   1 1126 0.0071047957          alt -0.062695115 0.2685319
+    ## 6     6   1 1126 0.0022202487          alt  0.574104228 0.4504458
+    ##      Wald.Stat  Wald.pval
+    ## 1 1.141145e-02 0.91492830
+    ## 2 2.782705e+00 0.09528713
+    ## 3 1.166797e-03 0.97275083
+    ## 4 2.948287e-05 0.99566766
+    ## 5 5.450992e-02 0.81539366
+    ## 6 1.624413e+00 0.20247756
+
+We make a QQ plot to examine the results.
+
+``` r
+qqplot <- function(pval) {
+    pval <- pval[!is.na(pval)]
+    n <- length(pval)
+    x <- 1:n
+    dat <- data.frame(obs=sort(pval),
+                      exp=x/n,
+                      upper=qbeta(0.025, x, rev(x)),
+                      lower=qbeta(0.975, x, rev(x)))
+    
+    ggplot(dat, aes(-log10(exp), -log10(obs))) +
+        geom_line(aes(-log10(exp), -log10(upper)), color="gray") +
+        geom_line(aes(-log10(exp), -log10(lower)), color="gray") +
+        geom_point() +
+        geom_abline(intercept=0, slope=1, color="red") +
+        xlab(expression(paste(-log[10], "(expected P)"))) +
+        ylab(expression(paste(-log[10], "(observed P)"))) +
+        theme_bw()
+}    
+
+qqplot(assoc$Wald.pval)
+```
+
+![](workshop_files/figure-markdown_github/assoc_single_qq-1.png)
+
 Sliding window tests
 --------------------
+
+For rare variants, we can do burden tests or SKAT on sliding windows using the GENESIS function `assocTestSeqWindow`. We restrict the test to variants with alternate allele frequency &lt; 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme.
+
+``` r
+assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
+                            weight.beta=c(1,1), window.size=5, window.shift=2)
+names(assoc)
+```
+
+    ## [1] "param"       "window"      "nsample"     "results"     "variantInfo"
+
+``` r
+head(assoc$results)
+```
+
+    ##   chr window.start window.stop n.site dup burden.skew       Score
+    ## 1   1       966001      971000      1   0   11.036036  0.30138968
+    ## 2   1       968001      973000      1   1   11.036036  0.30138968
+    ## 3   1       970001      975000      1   1   11.036036  0.30138968
+    ## 4   1       982001      987000      1   0    3.041979 16.03409196
+    ## 5   1       984001      989000      1   1    3.041979 16.03409196
+    ## 6   1      1022001     1027000      1   0   33.466573  0.03348047
+    ##          Var  Score.stat Score.pval
+    ## 1  7.9529830 0.011421594 0.91489064
+    ## 2  7.9529830 0.011421594 0.91489064
+    ## 3  7.9529830 0.011421594 0.91489064
+    ## 4 92.5372698 2.778254702 0.09555224
+    ## 5 92.5372698 2.778254702 0.09555224
+    ## 6  0.9598379 0.001167845 0.97273860
+
+``` r
+head(assoc$variantInfo)
+```
+
+    ##   variantID allele chr     pos n.obs         freq weight
+    ## 1         1      1   1  970546  1126 0.0039964476      1
+    ## 2         2      1   1  985900  1126 0.0492895204      1
+    ## 3         3      1   1 1025045  1126 0.0004440497      1
+    ## 4         4      1   1 1265550  1126 0.0008880995      1
+    ## 5         5      1   1 1472676  1126 0.0071047957      1
+    ## 6         6      1   1 1735725  1126 0.0022202487      1
+
+``` r
+qqplot(assoc$results$Score.pval)
+```
+
+![](workshop_files/figure-markdown_github/assoc_window_burden-1.png)
+
+For SKAT, we use the Wu weights.
+
+``` r
+assoc <- assocTestSeqWindow(seqData, nullmod, test="SKAT", AF.range=c(0,0.1),
+                            weight.beta=c(1,25), window.size=5, window.shift=2)
+head(assoc$results)
+```
+
+    ##   chr window.start window.stop n.site dup          Q_0     pval_0 err_0
+    ## 1   1       966001      971000      1   0 4.684458e+01 0.91489064     0
+    ## 2   1       968001      973000      1   1 4.684458e+01 0.91489064     0
+    ## 3   1       970001      975000      1   1 4.684458e+01 0.91489064     0
+    ## 4   1       982001      987000      1   0 1.419993e+04 0.09555224     0
+    ## 5   1       984001      989000      1   1 1.419993e+04 0.09555224     0
+    ## 6   1      1022001     1027000      1   0 6.858109e-01 0.97273860     0
+
+``` r
+head(assoc$variantInfo)
+```
+
+    ##   variantID allele chr     pos n.obs         freq    weight
+    ## 1         1      1   1  970546  1126 0.0039964476 22.709172
+    ## 2         2      1   1  985900  1126 0.0492895204  7.431881
+    ## 3         3      1   1 1025045  1126 0.0004440497 24.734926
+    ## 4         4      1   1 1265550  1126 0.0008880995 24.472547
+    ## 5         5      1   1 1472676  1126 0.0071047957 21.067933
+    ## 6         6      1   1 1735725  1126 0.0022202487 23.701317
+
+``` r
+qqplot(assoc$results$pval_0)
+```
+
+![](workshop_files/figure-markdown_github/assoc_window_skat-1.png)
+
+``` r
+seqClose(gds)
+```
 
 Variant annotation
 ==================

@@ -17,7 +17,7 @@ To use the R packages developed at the DCC for sequence data, we first need to c
 library(SeqArray)
 data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
 vcffile <- "1KG_phase3_subset_chr1.vcf.gz"
-download.file(file.path(data.path, vcffile), vcffile)
+if (!file.exists(vcffile)) download.file(file.path(data.path, vcffile), vcffile)
 gdsfile <- "1KG_phase3_subset_chr1.gds"
 seqVCF2GDS(vcffile, gdsfile, fmt.import="GT", storage.option="LZMA_RA", verbose=FALSE)
 ```
@@ -80,7 +80,7 @@ Step 1 is to get initial estimates of kinship using [KING](http://www.ncbi.nlm.n
 ```{r king}
 # use a GDS file with all chromosomes
 gdsfile <- "1KG_phase3_subset.gds"
-download.file(file.path(data.path, gdsfile), gdsfile)
+if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
 gds <- seqOpen(gdsfile)
 
 # use a subset of 100 samples to make things run faster
@@ -148,7 +148,7 @@ We need to determine which PCs are ancestry informative. To do this we need popu
 ```{r annot}
 library(Biobase)
 sampfile <- "1KG_phase3_subset_annot.RData"
-download.file(file.path(data.path, sampfile), sampfile)
+if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile)
 annot <- TopmedPipeline::getobj(sampfile)
 annot
 head(pData(annot))
@@ -232,13 +232,98 @@ ggplot(kinship, aes(k0, kin)) +
 seqClose(gds)
 ```
 
+
 # Association tests
+
+Since TOPMed has many studies with related participants, we focus on linear mixed models. Logistic mixed models are also possible using GENESIS, see the [GMMAT paper](https://www.ncbi.nlm.nih.gov/pubmed/27018471).
 
 ## Null model
 
+The first step in an association test is to fit the null model. We use the `AnnotatedDataFrame` with phenotypes, and a GRM. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups.
+
+```{r null_model}
+sampfile <- "1KG_phase3_subset_annot.RData"
+if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile)
+annot <- TopmedPipeline::getobj(sampfile)
+
+grmfile <- "/projects/users/stephanie/Code/TOPMed/analysis_pipeline/testdata/grm.RData"
+grm <- TopmedPipeline::getobj(grmfile)
+rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
+
+library(GENESIS)
+nullmod <- fitNullMM(annot, outcome="outcome", covars=c("sex", "Population"), 
+                     covMatList=grm$grm, group.var="Population", verbose=FALSE)
+```
+
+We also recommend taking an inverse normal transform of the residuals and refitting the model. This is done separately for each group, and the transformed residuals are rescaled. See the full procedure in the  
+[pipeline documenation](https://github.com/smgogarten/analysis_pipeline#association-testing).
+
 ## Single-variant tests
 
+Single-variant tests are the same as in GWAS. We use the `assocTestMM` function in GENESIS. We have to create a `SeqVarData` object including both the GDS file and the sample annotation containing phenotypes.
+
+```{r assoc_single}
+gdsfile <- "1KG_phase3_subset_chr1.gds"
+if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
+gds <- seqOpen(gdsfile)
+seqData <- SeqVarData(gds, sampleData=annot)
+assoc <- assocTestMM(seqData, nullmod)
+head(assoc)
+```
+
+We make a QQ plot to examine the results.
+
+```{r assoc_single_qq}
+qqplot <- function(pval) {
+    pval <- pval[!is.na(pval)]
+    n <- length(pval)
+    x <- 1:n
+    dat <- data.frame(obs=sort(pval),
+                      exp=x/n,
+                      upper=qbeta(0.025, x, rev(x)),
+                      lower=qbeta(0.975, x, rev(x)))
+    
+    ggplot(dat, aes(-log10(exp), -log10(obs))) +
+        geom_line(aes(-log10(exp), -log10(upper)), color="gray") +
+        geom_line(aes(-log10(exp), -log10(lower)), color="gray") +
+        geom_point() +
+        geom_abline(intercept=0, slope=1, color="red") +
+        xlab(expression(paste(-log[10], "(expected P)"))) +
+        ylab(expression(paste(-log[10], "(observed P)"))) +
+        theme_bw()
+}    
+
+qqplot(assoc$Wald.pval)
+```
+
 ## Sliding window tests
+
+For rare variants, we can do burden tests or SKAT on sliding windows using the GENESIS function `assocTestSeqWindow`. We restrict the test to variants with alternate allele frequency < 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme.
+
+```{r assoc_window_burden}
+assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
+                            weight.beta=c(1,1), window.size=5, window.shift=2)
+names(assoc)
+head(assoc$results)
+head(assoc$variantInfo)
+
+qqplot(assoc$results$Score.pval)
+```
+
+For SKAT, we use the Wu weights.
+
+```{r assoc_window_skat}
+assoc <- assocTestSeqWindow(seqData, nullmod, test="SKAT", AF.range=c(0,0.1),
+                            weight.beta=c(1,25), window.size=5, window.shift=2)
+head(assoc$results)
+head(assoc$variantInfo)
+
+qqplot(assoc$results$pval_0)
+```
+
+```{r assoc_close}
+seqClose(gds)
+```
 
 # Variant annotation
 
