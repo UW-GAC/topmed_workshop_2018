@@ -1,0 +1,2 @@
+rmd_files: ["index.Rmd", "workshop.Rmd"]
+output_dir: "docs"

@@ -1,0 +1,12 @@
+--- 
+title: "TOPMed Analysis Workshop"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+link-citations: yes
+github-repo: UW-GAC/topmed_workshop_2017
+description: "Course materials for the TOPMed analysis workhop"
+---
+
+Course materials for the TOPMed Analysis Workshop
