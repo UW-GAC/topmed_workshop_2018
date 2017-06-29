@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>TOPMed Analysis Workshop</title>
+  <meta name="description" content="Course materials for the TOPMed analysis workhop">
+  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+
+  <meta property="og:title" content="TOPMed Analysis Workshop" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course materials for the TOPMed analysis workhop" />
+  <meta name="github-repo" content="UW-GAC/topmed_workshop_2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="TOPMed Analysis Workshop" />
+  
+  <meta name="twitter:description" content="Course materials for the TOPMed analysis workhop" />
+  
+
+
+
+<meta name="date" content="2017-06-28">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="pc-relate.html">
+<link rel="next" href="variant-annotation.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>1</b> GDS format</a></li>
+<li class="chapter" data-level="2" data-path="computing-a-grm.html"><a href="computing-a-grm.html"><i class="fa fa-check"></i><b>2</b> Computing a GRM</a></li>
+<li class="chapter" data-level="3" data-path="pc-relate.html"><a href="pc-relate.html"><i class="fa fa-check"></i><b>3</b> PC-Relate</a></li>
+<li class="chapter" data-level="4" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>4</b> Association tests</a><ul>
+<li class="chapter" data-level="4.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>4.1</b> Null model</a></li>
+<li class="chapter" data-level="4.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>4.2</b> Single-variant tests</a></li>
+<li class="chapter" data-level="4.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>4.3</b> Sliding window tests</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="variant-annotation.html"><a href="variant-annotation.html"><i class="fa fa-check"></i><b>5</b> Variant annotation</a><ul>
+<li class="chapter" data-level="5.1" data-path="variant-annotation.html"><a href="variant-annotation.html#defining-aggregate-units"><i class="fa fa-check"></i><b>5.1</b> Defining aggregate units</a></li>
+<li class="chapter" data-level="5.2" data-path="variant-annotation.html"><a href="variant-annotation.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>5.2</b> Association testing with aggregate units</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">TOPMed Analysis Workshop</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="association-tests" class="section level1">
+<h1><span class="header-section-number">4</span> Association tests</h1>
+<p>Since TOPMed has many studies with related participants, we focus on linear mixed models. Logistic mixed models are also possible using GENESIS, see the <a href="https://www.ncbi.nlm.nih.gov/pubmed/27018471">GMMAT paper</a>.</p>
+<div id="null-model" class="section level2">
+<h2><span class="header-section-number">4.1</span> Null model</h2>
+<p>The first step in an association test is to fit the null model. We use the <code>AnnotatedDataFrame</code> with phenotypes, and a GRM. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sampfile &lt;-<span class="st"> &quot;1KG_phase3_subset_annot.RData&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(sampfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, sampfile), sampfile)
+annot &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(sampfile)
+
+grmfile &lt;-<span class="st"> &quot;grm.RData&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(grmfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, grmfile), grmfile)
+grm &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(grmfile)
+<span class="kw">rownames</span>(grm<span class="op">$</span>grm) &lt;-<span class="st"> </span><span class="kw">colnames</span>(grm<span class="op">$</span>grm) &lt;-<span class="st"> </span>grm<span class="op">$</span>sample.id
+
+<span class="kw">library</span>(GENESIS)
+nullmod &lt;-<span class="st"> </span><span class="kw">fitNullMM</span>(annot, <span class="dt">outcome=</span><span class="st">&quot;outcome&quot;</span>, <span class="dt">covars=</span><span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;Population&quot;</span>), 
+                     <span class="dt">covMatList=</span>grm<span class="op">$</span>grm, <span class="dt">group.var=</span><span class="st">&quot;Population&quot;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p>We also recommend taking an inverse normal transform of the residuals and refitting the model. This is done separately for each group, and the transformed residuals are rescaled. See the full procedure in the<br />
+<a href="https://github.com/smgogarten/analysis_pipeline#association-testing">pipeline documenation</a>.</p>
+</div>
+<div id="single-variant-tests" class="section level2">
+<h2><span class="header-section-number">4.2</span> Single-variant tests</h2>
+<p>Single-variant tests are the same as in GWAS. We use the <code>assocTestMM</code> function in GENESIS. We have to create a <code>SeqVarData</code> object including both the GDS file and the sample annotation containing phenotypes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gdsfile &lt;-<span class="st"> &quot;1KG_phase3_subset_chr1.gds&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(gdsfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, gdsfile), gdsfile)
+gds &lt;-<span class="st"> </span><span class="kw">seqOpen</span>(gdsfile)
+seqData &lt;-<span class="st"> </span><span class="kw">SeqVarData</span>(gds, <span class="dt">sampleData=</span>annot)
+assoc &lt;-<span class="st"> </span><span class="kw">assocTestMM</span>(seqData, nullmod)
+<span class="kw">head</span>(assoc)</code></pre></div>
+<pre><code>##   snpID chr    n          MAF minor.allele          Est        SE
+## 1     1   1 1126 0.0039964476          alt  0.037896432 0.3547545
+## 2     2   1 1126 0.0492895204          alt  0.173271721 0.1038710
+## 3     3   1 1126 0.0004440497          alt  0.034881381 1.0211652
+## 4     4   1 1126 0.0008880995          alt  0.003698581 0.6811618
+## 5     5   1 1126 0.0071047957          alt -0.062695115 0.2685319
+## 6     6   1 1126 0.0022202487          alt  0.574104228 0.4504458
+##      Wald.Stat  Wald.pval
+## 1 1.141145e-02 0.91492830
+## 2 2.782705e+00 0.09528713
+## 3 1.166797e-03 0.97275083
+## 4 2.948287e-05 0.99566766
+## 5 5.450992e-02 0.81539366
+## 6 1.624413e+00 0.20247756</code></pre>
+<p>We make a QQ plot to examine the results.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qqplot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
+    pval &lt;-<span class="st"> </span>pval[<span class="op">!</span><span class="kw">is.na</span>(pval)]
+    n &lt;-<span class="st"> </span><span class="kw">length</span>(pval)
+    x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>n
+    dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">obs=</span><span class="kw">sort</span>(pval),
+                      <span class="dt">exp=</span>x<span class="op">/</span>n,
+                      <span class="dt">upper=</span><span class="kw">qbeta</span>(<span class="fl">0.025</span>, x, <span class="kw">rev</span>(x)),
+                      <span class="dt">lower=</span><span class="kw">qbeta</span>(<span class="fl">0.975</span>, x, <span class="kw">rev</span>(x)))
+    
+    <span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="op">-</span><span class="kw">log10</span>(exp), <span class="op">-</span><span class="kw">log10</span>(obs))) <span class="op">+</span>
+<span class="st">        </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="op">-</span><span class="kw">log10</span>(exp), <span class="op">-</span><span class="kw">log10</span>(upper)), <span class="dt">color=</span><span class="st">&quot;gray&quot;</span>) <span class="op">+</span>
+<span class="st">        </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="op">-</span><span class="kw">log10</span>(exp), <span class="op">-</span><span class="kw">log10</span>(lower)), <span class="dt">color=</span><span class="st">&quot;gray&quot;</span>) <span class="op">+</span>
+<span class="st">        </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">        </span><span class="kw">geom_abline</span>(<span class="dt">intercept=</span><span class="dv">0</span>, <span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">color=</span><span class="st">&quot;red&quot;</span>) <span class="op">+</span>
+<span class="st">        </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="op">-</span>log[<span class="dv">10</span>], <span class="st">&quot;(expected P)&quot;</span>))) <span class="op">+</span>
+<span class="st">        </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="op">-</span>log[<span class="dv">10</span>], <span class="st">&quot;(observed P)&quot;</span>))) <span class="op">+</span>
+<span class="st">        </span><span class="kw">theme_bw</span>()
+}    
+
+<span class="kw">qqplot</span>(assoc<span class="op">$</span>Wald.pval)</code></pre></div>
+<p><img src="_main_files/figure-html/assoc_single_qq-1.png" width="672" /></p>
+</div>
+<div id="sliding-window-tests" class="section level2">
+<h2><span class="header-section-number">4.3</span> Sliding window tests</h2>
+<p>For rare variants, we can do burden tests or SKAT on sliding windows using the GENESIS function <code>assocTestSeqWindow</code>. We restrict the test to variants with alternate allele frequency &lt; 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">assoc &lt;-<span class="st"> </span><span class="kw">assocTestSeqWindow</span>(seqData, nullmod, <span class="dt">test=</span><span class="st">&quot;Burden&quot;</span>, <span class="dt">AF.range=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>),
+                            <span class="dt">weight.beta=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">window.size=</span><span class="dv">5</span>, <span class="dt">window.shift=</span><span class="dv">2</span>)
+<span class="kw">names</span>(assoc)</code></pre></div>
+<pre><code>## [1] &quot;param&quot;       &quot;window&quot;      &quot;nsample&quot;     &quot;results&quot;     &quot;variantInfo&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>results)</code></pre></div>
+<pre><code>##   chr window.start window.stop n.site dup burden.skew       Score
+## 1   1       966001      971000      1   0   11.036036  0.30138968
+## 2   1       968001      973000      1   1   11.036036  0.30138968
+## 3   1       970001      975000      1   1   11.036036  0.30138968
+## 4   1       982001      987000      1   0    3.041979 16.03409196
+## 5   1       984001      989000      1   1    3.041979 16.03409196
+## 6   1      1022001     1027000      1   0   33.466573  0.03348047
+##          Var  Score.stat Score.pval
+## 1  7.9529830 0.011421594 0.91489064
+## 2  7.9529830 0.011421594 0.91489064
+## 3  7.9529830 0.011421594 0.91489064
+## 4 92.5372698 2.778254702 0.09555224
+## 5 92.5372698 2.778254702 0.09555224
+## 6  0.9598379 0.001167845 0.97273860</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>variantInfo)</code></pre></div>
+<pre><code>##   variantID allele chr     pos n.obs         freq weight
+## 1         1      1   1  970546  1126 0.0039964476      1
+## 2         2      1   1  985900  1126 0.0492895204      1
+## 3         3      1   1 1025045  1126 0.0004440497      1
+## 4         4      1   1 1265550  1126 0.0008880995      1
+## 5         5      1   1 1472676  1126 0.0071047957      1
+## 6         6      1   1 1735725  1126 0.0022202487      1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqplot</span>(assoc<span class="op">$</span>results<span class="op">$</span>Score.pval)</code></pre></div>
+<p><img src="_main_files/figure-html/assoc_window_burden-1.png" width="672" /></p>
+<p>For SKAT, we use the Wu weights.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">assoc &lt;-<span class="st"> </span><span class="kw">assocTestSeqWindow</span>(seqData, nullmod, <span class="dt">test=</span><span class="st">&quot;SKAT&quot;</span>, <span class="dt">AF.range=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>),
+                            <span class="dt">weight.beta=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">25</span>), <span class="dt">window.size=</span><span class="dv">5</span>, <span class="dt">window.shift=</span><span class="dv">2</span>)
+<span class="kw">head</span>(assoc<span class="op">$</span>results)</code></pre></div>
+<pre><code>##   chr window.start window.stop n.site dup          Q_0     pval_0 err_0
+## 1   1       966001      971000      1   0 4.684458e+01 0.91489064     0
+## 2   1       968001      973000      1   1 4.684458e+01 0.91489064     0
+## 3   1       970001      975000      1   1 4.684458e+01 0.91489064     0
+## 4   1       982001      987000      1   0 1.419993e+04 0.09555224     0
+## 5   1       984001      989000      1   1 1.419993e+04 0.09555224     0
+## 6   1      1022001     1027000      1   0 6.858109e-01 0.97273860     0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>variantInfo)</code></pre></div>
+<pre><code>##   variantID allele chr     pos n.obs         freq    weight
+## 1         1      1   1  970546  1126 0.0039964476 22.709172
+## 2         2      1   1  985900  1126 0.0492895204  7.431881
+## 3         3      1   1 1025045  1126 0.0004440497 24.734926
+## 4         4      1   1 1265550  1126 0.0008880995 24.472547
+## 5         5      1   1 1472676  1126 0.0071047957 21.067933
+## 6         6      1   1 1735725  1126 0.0022202487 23.701317</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqplot</span>(assoc<span class="op">$</span>results<span class="op">$</span>pval_<span class="dv">0</span>)</code></pre></div>
+<p><img src="_main_files/figure-html/assoc_window_skat-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqClose</span>(gds)</code></pre></div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="pc-relate.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="variant-annotation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

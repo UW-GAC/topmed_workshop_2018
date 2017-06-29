@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>TOPMed Analysis Workshop</title>
+  <meta name="description" content="Course materials for the TOPMed analysis workhop">
+  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+
+  <meta property="og:title" content="TOPMed Analysis Workshop" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course materials for the TOPMed analysis workhop" />
+  <meta name="github-repo" content="UW-GAC/topmed_workshop_2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="TOPMed Analysis Workshop" />
+  
+  <meta name="twitter:description" content="Course materials for the TOPMed analysis workhop" />
+  
+
+
+
+<meta name="date" content="2017-06-28">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+
+<link rel="next" href="computing-a-grm.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>1</b> GDS format</a></li>
+<li class="chapter" data-level="2" data-path="computing-a-grm.html"><a href="computing-a-grm.html"><i class="fa fa-check"></i><b>2</b> Computing a GRM</a></li>
+<li class="chapter" data-level="3" data-path="pc-relate.html"><a href="pc-relate.html"><i class="fa fa-check"></i><b>3</b> PC-Relate</a></li>
+<li class="chapter" data-level="4" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>4</b> Association tests</a><ul>
+<li class="chapter" data-level="4.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>4.1</b> Null model</a></li>
+<li class="chapter" data-level="4.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>4.2</b> Single-variant tests</a></li>
+<li class="chapter" data-level="4.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>4.3</b> Sliding window tests</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="variant-annotation.html"><a href="variant-annotation.html"><i class="fa fa-check"></i><b>5</b> Variant annotation</a><ul>
+<li class="chapter" data-level="5.1" data-path="variant-annotation.html"><a href="variant-annotation.html#defining-aggregate-units"><i class="fa fa-check"></i><b>5.1</b> Defining aggregate units</a></li>
+<li class="chapter" data-level="5.2" data-path="variant-annotation.html"><a href="variant-annotation.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>5.2</b> Association testing with aggregate units</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">TOPMed Analysis Workshop</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">TOPMed Analysis Workshop</h1>
+<h4 class="date"><em>2017-06-28</em></h4>
+</div>
+<div id="gds-format" class="section level1">
+<h1><span class="header-section-number">1</span> GDS format</h1>
+<p>GDS is Genomic Data Structure, a storage format that can efficiently store genomic data and provide fast random access to subsets of the data. For more information on GDS for sequence data, read the <a href="https://github.com/zhengxwen/SeqArray/blob/master/vignettes/SeqArrayTutorial.Rmd">SeqArray package vignette</a>.</p>
+<p>To use the R packages developed at the DCC for sequence data, we first need to convert a VCF file to GDS. (If the file is BCF, use <a href="bcftools">https://samtools.github.io/bcftools/bcftools.html</a> to convert to VCF.)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SeqArray)
+data.path &lt;-<span class="st"> &quot;https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata&quot;</span>
+vcffile &lt;-<span class="st"> &quot;1KG_phase3_subset_chr1.vcf.gz&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(vcffile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, vcffile), vcffile)
+gdsfile &lt;-<span class="st"> &quot;1KG_phase3_subset_chr1.gds&quot;</span>
+<span class="kw">seqVCF2GDS</span>(vcffile, gdsfile, <span class="dt">fmt.import=</span><span class="st">&quot;GT&quot;</span>, <span class="dt">storage.option=</span><span class="st">&quot;LZMA_RA&quot;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p>We can interact with the GDS file using the SeqArray package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gds &lt;-<span class="st"> </span><span class="kw">seqOpen</span>(gdsfile)
+gds</code></pre></div>
+<pre><code>## Object of class &quot;SeqVarGDSClass&quot;
+## File: /projects/users/stephanie/Code/TOPMed/topmed_workshop_2017/1KG_phase3_subset_chr1.gds (70.3K)
+## +    [  ] *
+## |--+ description   [  ] *
+## |--+ sample.id   { Str8 1126 LZMA_ra(9.66%), 877B } *
+## |--+ variant.id   { Int32 1120 LZMA_ra(17.5%), 793B } *
+## |--+ position   { Int32 1120 LZMA_ra(78.5%), 3.4K } *
+## |--+ chromosome   { Str8 1120 LZMA_ra(4.55%), 109B } *
+## |--+ allele   { Str8 1120 LZMA_ra(26.0%), 1.2K } *
+## |--+ genotype   [  ] *
+## |  |--+ data   { Bit2 2x1126x1121 LZMA_ra(8.34%), 51.4K } *
+## |  |--+ extra.index   { Int32 3x0 LZMA_ra, 18B } *
+## |  \--+ extra   { Int16 0 LZMA_ra, 18B }
+## |--+ phase   [  ]
+## |  |--+ data   { Bit1 1126x1120 LZMA_ra(0.11%), 177B } *
+## |  |--+ extra.index   { Int32 3x0 LZMA_ra, 18B } *
+## |  \--+ extra   { Bit1 0 LZMA_ra, 18B }
+## |--+ annotation   [  ]
+## |  |--+ id   { Str8 1120 LZMA_ra(40.4%), 3.6K } *
+## |  |--+ qual   { Float32 1120 LZMA_ra(2.46%), 117B } *
+## |  |--+ filter   { Int32,factor 1120 LZMA_ra(2.46%), 117B } *
+## |  |--+ info   [  ]
+## |  \--+ format   [  ]
+## \--+ sample.annotation   [  ]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sample.id &lt;-<span class="st"> </span><span class="kw">seqGetData</span>(gds, <span class="st">&quot;sample.id&quot;</span>)
+<span class="kw">length</span>(sample.id)</code></pre></div>
+<pre><code>## [1] 1126</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(sample.id)</code></pre></div>
+<pre><code>## [1] &quot;HG00096&quot; &quot;HG00097&quot; &quot;HG00099&quot; &quot;HG00100&quot; &quot;HG00101&quot; &quot;HG00102&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">variant.id &lt;-<span class="st"> </span><span class="kw">seqGetData</span>(gds, <span class="st">&quot;variant.id&quot;</span>)
+<span class="kw">length</span>(variant.id)</code></pre></div>
+<pre><code>## [1] 1120</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(variant.id)</code></pre></div>
+<pre><code>## [1] 1 2 3 4 5 6</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># define a filter to read a subset of data</span>
+<span class="kw">seqSetFilter</span>(gds, <span class="dt">variant.id=</span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">sample.id=</span>sample.id[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>])</code></pre></div>
+<pre><code>## # of selected samples: 5
+## # of selected variants: 10</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geno &lt;-<span class="st"> </span><span class="kw">seqGetData</span>(gds, <span class="st">&quot;genotype&quot;</span>)
+<span class="kw">dim</span>(geno)</code></pre></div>
+<pre><code>## [1]  2  5 10</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geno[,,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</code></pre></div>
+<pre><code>## , , 1
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 2
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0</code></pre>
+<p>The <a href="http://bioconductor.org/packages/SeqVarTools">SeqVarTools package</a> has some additional functions for interacting with SeqArray-format GDS files.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SeqVarTools)
+
+<span class="kw">getGenotype</span>(gds)</code></pre></div>
+<pre><code>##          variant
+## sample    1     2     3     4     5     6     7     8     9     10   
+##   HG00096 &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot;
+##   HG00097 &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot;
+##   HG00099 &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot;
+##   HG00100 &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot;
+##   HG00101 &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">refDosage</span>(gds)</code></pre></div>
+<pre><code>##          variant
+## sample    1 2 3 4 5 6 7 8 9 10
+##   HG00096 2 2 2 2 2 2 2 2 2  2
+##   HG00097 2 2 2 2 2 2 2 2 2  2
+##   HG00099 2 2 2 2 2 2 2 2 2  2
+##   HG00100 2 2 2 2 2 2 2 2 2  2
+##   HG00101 2 2 2 2 2 2 2 2 2  2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">altDosage</span>(gds)</code></pre></div>
+<pre><code>##          variant
+## sample    1 2 3 4 5 6 7 8 9 10
+##   HG00096 0 0 0 0 0 0 0 0 0  0
+##   HG00097 0 0 0 0 0 0 0 0 0  0
+##   HG00099 0 0 0 0 0 0 0 0 0  0
+##   HG00100 0 0 0 0 0 0 0 0 0  0
+##   HG00101 0 0 0 0 0 0 0 0 0  0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">refChar</span>(gds)</code></pre></div>
+<pre><code>##  [1] &quot;C&quot; &quot;C&quot; &quot;C&quot; &quot;C&quot; &quot;T&quot; &quot;G&quot; &quot;G&quot; &quot;A&quot; &quot;A&quot; &quot;C&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">altChar</span>(gds)</code></pre></div>
+<pre><code>##  [1] &quot;G&quot; &quot;T&quot; &quot;T&quot; &quot;T&quot; &quot;C&quot; &quot;A&quot; &quot;A&quot; &quot;T&quot; &quot;C&quot; &quot;T&quot;</code></pre>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="computing-a-grm.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
