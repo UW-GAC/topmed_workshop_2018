@@ -6,7 +6,9 @@ output: bookdown::gitbook
 documentclass: book
 link-citations: yes
 github-repo: UW-GAC/topmed_workshop_2017
-description: "Course materials for the TOPMed analysis workhop"
+description: "Course materials for the TOPMed analysis workshop"
 ---
 
-Course materials for the TOPMed Analysis Workshop
+# Introduction
+
+This site contains course materials for the TOPMed Analysis Workshop, August 7-9 2017.

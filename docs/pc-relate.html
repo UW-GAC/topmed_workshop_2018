@@ -6,25 +6,25 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>TOPMed Analysis Workshop</title>
-  <meta name="description" content="Course materials for the TOPMed analysis workhop">
+  <meta name="description" content="Course materials for the TOPMed analysis workshop">
   <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
 
   <meta property="og:title" content="TOPMed Analysis Workshop" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Course materials for the TOPMed analysis workhop" />
+  <meta property="og:description" content="Course materials for the TOPMed analysis workshop" />
   <meta name="github-repo" content="UW-GAC/topmed_workshop_2017" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="TOPMed Analysis Workshop" />
   
-  <meta name="twitter:description" content="Course materials for the TOPMed analysis workhop" />
+  <meta name="twitter:description" content="Course materials for the TOPMed analysis workshop" />
   
 
 
 
-<meta name="date" content="2017-06-28">
+<meta name="date" content="2017-06-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -98,17 +98,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>1</b> GDS format</a></li>
-<li class="chapter" data-level="2" data-path="computing-a-grm.html"><a href="computing-a-grm.html"><i class="fa fa-check"></i><b>2</b> Computing a GRM</a></li>
-<li class="chapter" data-level="3" data-path="pc-relate.html"><a href="pc-relate.html"><i class="fa fa-check"></i><b>3</b> PC-Relate</a></li>
-<li class="chapter" data-level="4" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>4</b> Association tests</a><ul>
-<li class="chapter" data-level="4.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>4.1</b> Null model</a></li>
-<li class="chapter" data-level="4.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>4.2</b> Single-variant tests</a></li>
-<li class="chapter" data-level="4.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>4.3</b> Sliding window tests</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>2</b> GDS format</a></li>
+<li class="chapter" data-level="3" data-path="computing-a-grm.html"><a href="computing-a-grm.html"><i class="fa fa-check"></i><b>3</b> Computing a GRM</a></li>
+<li class="chapter" data-level="4" data-path="pc-relate.html"><a href="pc-relate.html"><i class="fa fa-check"></i><b>4</b> PC-Relate</a></li>
+<li class="chapter" data-level="5" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>5</b> Association tests</a><ul>
+<li class="chapter" data-level="5.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>5.1</b> Null model</a></li>
+<li class="chapter" data-level="5.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>5.2</b> Single-variant tests</a></li>
+<li class="chapter" data-level="5.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>5.3</b> Sliding window tests</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="variant-annotation.html"><a href="variant-annotation.html"><i class="fa fa-check"></i><b>5</b> Variant annotation</a><ul>
-<li class="chapter" data-level="5.1" data-path="variant-annotation.html"><a href="variant-annotation.html#defining-aggregate-units"><i class="fa fa-check"></i><b>5.1</b> Defining aggregate units</a></li>
-<li class="chapter" data-level="5.2" data-path="variant-annotation.html"><a href="variant-annotation.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>5.2</b> Association testing with aggregate units</a></li>
+<li class="chapter" data-level="6" data-path="variant-annotation.html"><a href="variant-annotation.html"><i class="fa fa-check"></i><b>6</b> Variant annotation</a><ul>
+<li class="chapter" data-level="6.1" data-path="variant-annotation.html"><a href="variant-annotation.html#defining-aggregate-units"><i class="fa fa-check"></i><b>6.1</b> Defining aggregate units</a></li>
+<li class="chapter" data-level="6.2" data-path="variant-annotation.html"><a href="variant-annotation.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>6.2</b> Association testing with aggregate units</a></li>
 </ul></li>
 </ul>
 
@@ -128,7 +129,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="pc-relate" class="section level1">
-<h1><span class="header-section-number">3</span> PC-Relate</h1>
+<h1><span class="header-section-number">4</span> PC-Relate</h1>
 <p>To disentangle ancestry from recent familial relatedness, we use the <a href="http://www.ncbi.nlm.nih.gov/pubmed/26748516">PC-Relate</a> method.</p>
 <p>Step 1 is to get initial estimates of kinship using <a href="http://www.ncbi.nlm.nih.gov/pubmed/20926424">KING</a>, which is robust to population structure but not admixture. The KING algorithm is available in SNPRelate. Typically we select a subset of variants for this calculation with LD pruning.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># use a GDS file with all chromosomes</span>
@@ -149,51 +150,51 @@ snpset &lt;-<span class="st"> </span><span class="kw">snpgdsLDpruning</span>(gds
 ##     using 1 (CPU) core
 ##  Sliding window: 1e+07 basepairs, Inf SNPs
 ##  |LD| threshold: 0.316228
-## Chromosome 1: 31.16%, 349/1120
+## Chromosome 1: 31.43%, 352/1120
 ## Chromosome 2: 31.25%, 350/1120
-## Chromosome 3: 30.18%, 338/1120
-## Chromosome 4: 30.98%, 347/1120
-## Chromosome 5: 29.64%, 332/1120
-## Chromosome 6: 31.34%, 351/1120
-## Chromosome 7: 28.48%, 319/1120
+## Chromosome 3: 29.91%, 335/1120
+## Chromosome 4: 30.80%, 345/1120
+## Chromosome 5: 29.38%, 329/1120
+## Chromosome 6: 30.54%, 342/1120
+## Chromosome 7: 28.39%, 318/1120
 ## Chromosome 8: 26.07%, 292/1120
-## Chromosome 9: 27.14%, 304/1120
-## Chromosome 10: 28.66%, 321/1120
-## Chromosome 11: 26.96%, 302/1120
-## Chromosome 12: 28.21%, 316/1120
-## Chromosome 13: 25.27%, 283/1120
-## Chromosome 14: 24.64%, 276/1120
-## Chromosome 15: 22.23%, 249/1120
-## Chromosome 16: 22.59%, 253/1120
-## Chromosome 17: 22.05%, 247/1120
-## Chromosome 18: 23.84%, 267/1120
-## Chromosome 19: 21.61%, 242/1120
-## Chromosome 20: 20.00%, 224/1120
-## Chromosome 21: 17.32%, 194/1120
-## Chromosome 22: 17.68%, 198/1120
-## 6354 SNPs are selected in total.</code></pre>
+## Chromosome 9: 27.23%, 305/1120
+## Chromosome 10: 28.30%, 317/1120
+## Chromosome 11: 26.25%, 294/1120
+## Chromosome 12: 28.57%, 320/1120
+## Chromosome 13: 25.00%, 280/1120
+## Chromosome 14: 24.29%, 272/1120
+## Chromosome 15: 22.32%, 250/1120
+## Chromosome 16: 22.86%, 256/1120
+## Chromosome 17: 21.96%, 246/1120
+## Chromosome 18: 23.66%, 265/1120
+## Chromosome 19: 21.43%, 240/1120
+## Chromosome 20: 20.89%, 234/1120
+## Chromosome 21: 17.41%, 195/1120
+## Chromosome 22: 17.77%, 199/1120
+## 6336 SNPs are selected in total.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(snpset, length)</code></pre></div>
 <pre><code>##  chr1  chr2  chr3  chr4  chr5  chr6  chr7  chr8  chr9 chr10 chr11 chr12 
-##   349   350   338   347   332   351   319   292   304   321   302   316 
+##   352   350   335   345   329   342   318   292   305   317   294   320 
 ## chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 
-##   283   276   249   253   247   267   242   224   194   198</code></pre>
+##   280   272   250   256   246   265   240   234   195   199</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pruned &lt;-<span class="st"> </span><span class="kw">unlist</span>(snpset, <span class="dt">use.names=</span><span class="ot">FALSE</span>)
 
 <span class="co"># KING</span>
 king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <span class="dt">sample.id=</span>sample.id, <span class="dt">snp.id=</span>pruned)</code></pre></div>
 <pre><code>## IBD analysis (KING method of moment) on genotypes:
-## Excluding 19,406 SNVs (non-autosomes or non-selection)
+## Excluding 19,424 SNVs (non-autosomes or non-selection)
 ## Excluding 0 SNV (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
-## Working space: 100 samples, 6,354 SNVs
+## Working space: 100 samples, 6,336 SNVs
 ##     using 1 (CPU) core
 ## No family is specified, and all individuals are treated as singletons.
 ## Relationship inference in the presence of population stratification.
 ## CPU capabilities: Double-Precision SSE2
-## Wed Jun 28 09:33:25 2017    (internal increment: 65536)
+## Thu Jun 29 00:52:39 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Wed Jun 28 09:33:25 2017    Done.</code></pre>
+## Thu Jun 29 00:52:40 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(king)</code></pre></div>
 <pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;afreq&quot;     &quot;IBS0&quot;      &quot;kinship&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(king<span class="op">$</span>kinship)</code></pre></div>
@@ -203,13 +204,13 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 <p>We extract pairwise kinship estimates and IBS0 to plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kinship &lt;-<span class="st"> </span><span class="kw">snpgdsIBDSelection</span>(king)
 <span class="kw">head</span>(kinship)</code></pre></div>
-<pre><code>##       ID1     ID2       IBS0      kinship
-## 1 HG00110 HG00116 0.02455146 -0.004813478
-## 2 HG00110 HG00120 0.02628266 -0.018050542
-## 3 HG00110 HG00128 0.02518099 -0.012091898
-## 4 HG00110 HG00136 0.02974504 -0.042719615
-## 5 HG00110 HG00137 0.02722694 -0.035800241
-## 6 HG00110 HG00141 0.02769909 -0.033092659</code></pre>
+<pre><code>##       ID1     ID2       IBS0       kinship
+## 1 HG00110 HG00116 0.02430556 -0.0009003601
+## 2 HG00110 HG00120 0.02698864 -0.0228091236
+## 3 HG00110 HG00128 0.02572601 -0.0158343484
+## 4 HG00110 HG00136 0.02856692 -0.0333133253
+## 5 HG00110 HG00137 0.02572601 -0.0204081633
+## 6 HG00110 HG00141 0.02856692 -0.0342136855</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(kinship, <span class="kw">aes</span>(IBS0, kinship)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">2</span><span class="op">^</span>(<span class="op">-</span><span class="kw">seq</span>(<span class="dv">3</span>,<span class="dv">9</span>,<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>), <span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>, <span class="dt">color=</span><span class="st">&quot;grey&quot;</span>) <span class="op">+</span>
@@ -231,38 +232,38 @@ sampset &lt;-<span class="st"> </span><span class="kw">pcairPartition</span>(<sp
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># run PCA on unrelated set</span>
 pca.unrel &lt;-<span class="st"> </span><span class="kw">snpgdsPCA</span>(gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>unrels, <span class="dt">snp.id=</span>pruned)</code></pre></div>
 <pre><code>## Principal Component Analysis (PCA) on genotypes:
-## Excluding 19,406 SNVs (non-autosomes or non-selection)
-## Excluding 234 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
-## Working space: 86 samples, 6,120 SNVs
+## Excluding 19,424 SNVs (non-autosomes or non-selection)
+## Excluding 203 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
+## Working space: 86 samples, 6,133 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Wed Jun 28 09:33:28 2017    (internal increment: 8952)
+## Thu Jun 29 00:52:42 2017    (internal increment: 8952)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Wed Jun 28 09:33:28 2017    Begin (eigenvalues and eigenvectors)
-## Wed Jun 28 09:33:28 2017    Done.</code></pre>
+## Thu Jun 29 00:52:43 2017    Begin (eigenvalues and eigenvectors)
+## Thu Jun 29 00:52:43 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project values for relatives</span>
 snp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASNPLoading</span>(pca.unrel, <span class="dt">gdsobj=</span>gds)</code></pre></div>
 <pre><code>## SNP loading:
-## Working space: 86 samples, 6120 SNPs
+## Working space: 86 samples, 6133 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Wed Jun 28 09:33:28 2017    (internal increment: 65536)
+## Thu Jun 29 00:52:43 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Wed Jun 28 09:33:28 2017    Done.</code></pre>
+## Thu Jun 29 00:52:43 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASampLoading</span>(snp.load, <span class="dt">gdsobj=</span>gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>rels)</code></pre></div>
 <pre><code>## Sample loading:
-## Working space: 14 samples, 6120 SNPs
+## Working space: 14 samples, 6133 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Wed Jun 28 09:33:28 2017    (internal increment: 65536)
+## Thu Jun 29 00:52:43 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Wed Jun 28 09:33:28 2017    Done.</code></pre>
+## Thu Jun 29 00:52:43 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># combine unrelated and related PCs and order as in GDS file</span>
 pcs &lt;-<span class="st"> </span><span class="kw">rbind</span>(pca.unrel<span class="op">$</span>eigenvect, samp.load<span class="op">$</span>eigenvect)
 <span class="kw">rownames</span>(pcs) &lt;-<span class="st"> </span><span class="kw">c</span>(pca.unrel<span class="op">$</span>sample.id, samp.load<span class="op">$</span>sample.id)

@@ -6,25 +6,25 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>TOPMed Analysis Workshop</title>
-  <meta name="description" content="Course materials for the TOPMed analysis workhop">
+  <meta name="description" content="Course materials for the TOPMed analysis workshop">
   <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
 
   <meta property="og:title" content="TOPMed Analysis Workshop" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Course materials for the TOPMed analysis workhop" />
+  <meta property="og:description" content="Course materials for the TOPMed analysis workshop" />
   <meta name="github-repo" content="UW-GAC/topmed_workshop_2017" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="TOPMed Analysis Workshop" />
   
-  <meta name="twitter:description" content="Course materials for the TOPMed analysis workhop" />
+  <meta name="twitter:description" content="Course materials for the TOPMed analysis workshop" />
   
 
 
 
-<meta name="date" content="2017-06-28">
+<meta name="date" content="2017-06-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -98,17 +98,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>1</b> GDS format</a></li>
-<li class="chapter" data-level="2" data-path="computing-a-grm.html"><a href="computing-a-grm.html"><i class="fa fa-check"></i><b>2</b> Computing a GRM</a></li>
-<li class="chapter" data-level="3" data-path="pc-relate.html"><a href="pc-relate.html"><i class="fa fa-check"></i><b>3</b> PC-Relate</a></li>
-<li class="chapter" data-level="4" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>4</b> Association tests</a><ul>
-<li class="chapter" data-level="4.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>4.1</b> Null model</a></li>
-<li class="chapter" data-level="4.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>4.2</b> Single-variant tests</a></li>
-<li class="chapter" data-level="4.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>4.3</b> Sliding window tests</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>2</b> GDS format</a></li>
+<li class="chapter" data-level="3" data-path="computing-a-grm.html"><a href="computing-a-grm.html"><i class="fa fa-check"></i><b>3</b> Computing a GRM</a></li>
+<li class="chapter" data-level="4" data-path="pc-relate.html"><a href="pc-relate.html"><i class="fa fa-check"></i><b>4</b> PC-Relate</a></li>
+<li class="chapter" data-level="5" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>5</b> Association tests</a><ul>
+<li class="chapter" data-level="5.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>5.1</b> Null model</a></li>
+<li class="chapter" data-level="5.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>5.2</b> Single-variant tests</a></li>
+<li class="chapter" data-level="5.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>5.3</b> Sliding window tests</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="variant-annotation.html"><a href="variant-annotation.html"><i class="fa fa-check"></i><b>5</b> Variant annotation</a><ul>
-<li class="chapter" data-level="5.1" data-path="variant-annotation.html"><a href="variant-annotation.html#defining-aggregate-units"><i class="fa fa-check"></i><b>5.1</b> Defining aggregate units</a></li>
-<li class="chapter" data-level="5.2" data-path="variant-annotation.html"><a href="variant-annotation.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>5.2</b> Association testing with aggregate units</a></li>
+<li class="chapter" data-level="6" data-path="variant-annotation.html"><a href="variant-annotation.html"><i class="fa fa-check"></i><b>6</b> Variant annotation</a><ul>
+<li class="chapter" data-level="6.1" data-path="variant-annotation.html"><a href="variant-annotation.html#defining-aggregate-units"><i class="fa fa-check"></i><b>6.1</b> Defining aggregate units</a></li>
+<li class="chapter" data-level="6.2" data-path="variant-annotation.html"><a href="variant-annotation.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>6.2</b> Association testing with aggregate units</a></li>
 </ul></li>
 </ul>
 
@@ -128,10 +129,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="association-tests" class="section level1">
-<h1><span class="header-section-number">4</span> Association tests</h1>
+<h1><span class="header-section-number">5</span> Association tests</h1>
 <p>Since TOPMed has many studies with related participants, we focus on linear mixed models. Logistic mixed models are also possible using GENESIS, see the <a href="https://www.ncbi.nlm.nih.gov/pubmed/27018471">GMMAT paper</a>.</p>
 <div id="null-model" class="section level2">
-<h2><span class="header-section-number">4.1</span> Null model</h2>
+<h2><span class="header-section-number">5.1</span> Null model</h2>
 <p>The first step in an association test is to fit the null model. We use the <code>AnnotatedDataFrame</code> with phenotypes, and a GRM. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sampfile &lt;-<span class="st"> &quot;1KG_phase3_subset_annot.RData&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(sampfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, sampfile), sampfile)
@@ -149,7 +150,7 @@ nullmod &lt;-<span class="st"> </span><span class="kw">fitNullMM</span>(annot, <
 <a href="https://github.com/smgogarten/analysis_pipeline#association-testing">pipeline documenation</a>.</p>
 </div>
 <div id="single-variant-tests" class="section level2">
-<h2><span class="header-section-number">4.2</span> Single-variant tests</h2>
+<h2><span class="header-section-number">5.2</span> Single-variant tests</h2>
 <p>Single-variant tests are the same as in GWAS. We use the <code>assocTestMM</code> function in GENESIS. We have to create a <code>SeqVarData</code> object including both the GDS file and the sample annotation containing phenotypes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gdsfile &lt;-<span class="st"> &quot;1KG_phase3_subset_chr1.gds&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(gdsfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, gdsfile), gdsfile)
@@ -195,7 +196,7 @@ assoc &lt;-<span class="st"> </span><span class="kw">assocTestMM</span>(seqData,
 <p><img src="_main_files/figure-html/assoc_single_qq-1.png" width="672" /></p>
 </div>
 <div id="sliding-window-tests" class="section level2">
-<h2><span class="header-section-number">4.3</span> Sliding window tests</h2>
+<h2><span class="header-section-number">5.3</span> Sliding window tests</h2>
 <p>For rare variants, we can do burden tests or SKAT on sliding windows using the GENESIS function <code>assocTestSeqWindow</code>. We restrict the test to variants with alternate allele frequency &lt; 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">assoc &lt;-<span class="st"> </span><span class="kw">assocTestSeqWindow</span>(seqData, nullmod, <span class="dt">test=</span><span class="st">&quot;Burden&quot;</span>, <span class="dt">AF.range=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>),
                             <span class="dt">weight.beta=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">window.size=</span><span class="dv">5</span>, <span class="dt">window.shift=</span><span class="dv">2</span>)
