@@ -342,8 +342,20 @@ seqClose(gds)
 ```
 
 # Variant annotation
+Rare variants are generally aggregated into some meaningful units for association testing to decrease multiple testing burden and increase statistical power. Various genomic and epigenomic annotations can be used to define aggregation units and filter them. A large number of annotations are availiable through the Whole Genome Sequence Annotator (WGSA) to the TOPMed users. 
 
 ## Defining aggregate units
+We will be using a gene-based aggregation unit, where each unit is a GENCODE gene and 20 kb flanking region upstream and downstream of it. For real data, one will likely filter variants within each unit based on various annotations (example loss of function, conservation, deleteriousness scores etc.).     
+The aggregation units are passed to the analysis pipeline as an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, reference, alt) and the and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (for example a variant can be assigned to mutiples genes) 
+
+```{r agg_unit}
+# Include code to read the aggunit RData onject and display the header
+# agunit <- getobj()
+# names(agunit)
+# head(agunit)
+
+# if present show an example of variant that is present in mutiple groups
+```
 
 ## Association testing with aggregate units
 
