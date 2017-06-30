@@ -51,6 +51,8 @@ altDosage(gds)
 
 refChar(gds)
 altChar(gds)
+
+seqClose(gds)
 ```
 
 
@@ -59,6 +61,12 @@ altChar(gds)
 We can use the [SNPRelate package](https://github.com/zhengxwen/SNPRelate) to compute a Genetic Relationship matrix (GRM).
 
 ```{r grm}
+library(SeqArray)
+data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+gdsfile <- "1KG_phase3_subset_chr1.gds"
+if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
+gds <- seqOpen(gdsfile)
+
 library(SNPRelate)
 grm <- snpgdsGRM(gds, method="GCTA")
 names(grm)
@@ -66,6 +74,7 @@ dim(grm$grm)
 
 seqClose(gds)
 ```
+
 
 # PC-Relate
 
@@ -75,14 +84,20 @@ Step 1 is to get initial estimates of kinship using [KING](http://www.ncbi.nlm.n
 
 ```{r king}
 # use a GDS file with all chromosomes
+library(SeqArray)
+data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
 gdsfile <- "1KG_phase3_subset.gds"
 if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
 gds <- seqOpen(gdsfile)
 
 # use a subset of 100 samples to make things run faster
-sample.id <- TopmedPipeline::getobj("samples_subset100.RData")
+workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2017/raw/master"
+sampfile <- "samples_subset100.RData"
+if (!file.exists(sampfile)) download.file(file.path(workshop.path, sampfile), sampfile)
+sample.id <- TopmedPipeline::getobj(sampfile)
 
 # LD pruning to get variant set
+library(SNPRelate)
 snpset <- snpgdsLDpruning(gds, sample.id=sample.id, method="corr", 
                           slide.max.bp=10e6, ld.threshold=sqrt(0.1))
 sapply(snpset, length)
@@ -177,6 +192,7 @@ The first 2 PCs separate populations, so we use them to compute kinship estimate
 
 ```{r pcrelate_1}
 seqResetFilter(gds, verbose=FALSE)
+library(SeqVarTools)
 seqData <- SeqVarData(gds)
 
 pcrel <- pcrelate(seqData, pcMat=pcs[,1:2], training.set=sampset$unrels, 
@@ -238,6 +254,7 @@ Since TOPMed has many studies with related participants, we focus on linear mixe
 The first step in an association test is to fit the null model. We use the `AnnotatedDataFrame` with phenotypes, and a GRM. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups.
 
 ```{r null_model}
+data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
 sampfile <- "1KG_phase3_subset_annot.RData"
 if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile)
 annot <- TopmedPipeline::getobj(sampfile)
@@ -260,6 +277,7 @@ We also recommend taking an inverse normal transform of the residuals and refitt
 Single-variant tests are the same as in GWAS. We use the `assocTestMM` function in GENESIS. We have to create a `SeqVarData` object including both the GDS file and the sample annotation containing phenotypes.
 
 ```{r assoc_single}
+library(SeqVarTools)
 gdsfile <- "1KG_phase3_subset_chr1.gds"
 if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
 gds <- seqOpen(gdsfile)
@@ -271,6 +289,7 @@ head(assoc)
 We make a QQ plot to examine the results.
 
 ```{r assoc_single_qq}
+library(ggplot2)
 qqplot <- function(pval) {
     pval <- pval[!is.na(pval)]
     n <- length(pval)

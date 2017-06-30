@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-06-29">
+<meta name="date" content="2017-06-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -134,7 +134,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="null-model" class="section level2">
 <h2><span class="header-section-number">5.1</span> Null model</h2>
 <p>The first step in an association test is to fit the null model. We use the <code>AnnotatedDataFrame</code> with phenotypes, and a GRM. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sampfile &lt;-<span class="st"> &quot;1KG_phase3_subset_annot.RData&quot;</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data.path &lt;-<span class="st"> &quot;https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata&quot;</span>
+sampfile &lt;-<span class="st"> &quot;1KG_phase3_subset_annot.RData&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(sampfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, sampfile), sampfile)
 annot &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(sampfile)
 
@@ -152,7 +153,8 @@ nullmod &lt;-<span class="st"> </span><span class="kw">fitNullMM</span>(annot, <
 <div id="single-variant-tests" class="section level2">
 <h2><span class="header-section-number">5.2</span> Single-variant tests</h2>
 <p>Single-variant tests are the same as in GWAS. We use the <code>assocTestMM</code> function in GENESIS. We have to create a <code>SeqVarData</code> object including both the GDS file and the sample annotation containing phenotypes.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gdsfile &lt;-<span class="st"> &quot;1KG_phase3_subset_chr1.gds&quot;</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SeqVarTools)
+gdsfile &lt;-<span class="st"> &quot;1KG_phase3_subset_chr1.gds&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(gdsfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, gdsfile), gdsfile)
 gds &lt;-<span class="st"> </span><span class="kw">seqOpen</span>(gdsfile)
 seqData &lt;-<span class="st"> </span><span class="kw">SeqVarData</span>(gds, <span class="dt">sampleData=</span>annot)
@@ -173,7 +175,8 @@ assoc &lt;-<span class="st"> </span><span class="kw">assocTestMM</span>(seqData,
 ## 5 5.450992e-02 0.81539366
 ## 6 1.624413e+00 0.20247756</code></pre>
 <p>We make a QQ plot to examine the results.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qqplot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+qqplot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
     pval &lt;-<span class="st"> </span>pval[<span class="op">!</span><span class="kw">is.na</span>(pval)]
     n &lt;-<span class="st"> </span><span class="kw">length</span>(pval)
     x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>n

@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-06-29">
+<meta name="date" content="2017-06-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -133,14 +133,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>To disentangle ancestry from recent familial relatedness, we use the <a href="http://www.ncbi.nlm.nih.gov/pubmed/26748516">PC-Relate</a> method.</p>
 <p>Step 1 is to get initial estimates of kinship using <a href="http://www.ncbi.nlm.nih.gov/pubmed/20926424">KING</a>, which is robust to population structure but not admixture. The KING algorithm is available in SNPRelate. Typically we select a subset of variants for this calculation with LD pruning.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># use a GDS file with all chromosomes</span>
+<span class="kw">library</span>(SeqArray)
+data.path &lt;-<span class="st"> &quot;https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata&quot;</span>
 gdsfile &lt;-<span class="st"> &quot;1KG_phase3_subset.gds&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(gdsfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, gdsfile), gdsfile)
 gds &lt;-<span class="st"> </span><span class="kw">seqOpen</span>(gdsfile)
 
 <span class="co"># use a subset of 100 samples to make things run faster</span>
-sample.id &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(<span class="st">&quot;samples_subset100.RData&quot;</span>)
+workshop.path &lt;-<span class="st"> &quot;https://github.com/UW-GAC/topmed_workshop_2017/raw/master&quot;</span>
+sampfile &lt;-<span class="st"> &quot;samples_subset100.RData&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(sampfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(workshop.path, sampfile), sampfile)
+sample.id &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(sampfile)
 
 <span class="co"># LD pruning to get variant set</span>
+<span class="kw">library</span>(SNPRelate)
 snpset &lt;-<span class="st"> </span><span class="kw">snpgdsLDpruning</span>(gds, <span class="dt">sample.id=</span>sample.id, <span class="dt">method=</span><span class="st">&quot;corr&quot;</span>, 
                           <span class="dt">slide.max.bp=</span><span class="fl">10e6</span>, <span class="dt">ld.threshold=</span><span class="kw">sqrt</span>(<span class="fl">0.1</span>))</code></pre></div>
 <pre><code>## SNV pruning based on LD:
@@ -151,50 +157,50 @@ snpset &lt;-<span class="st"> </span><span class="kw">snpgdsLDpruning</span>(gds
 ##  Sliding window: 1e+07 basepairs, Inf SNPs
 ##  |LD| threshold: 0.316228
 ## Chromosome 1: 31.43%, 352/1120
-## Chromosome 2: 31.25%, 350/1120
-## Chromosome 3: 29.91%, 335/1120
+## Chromosome 2: 31.61%, 354/1120
+## Chromosome 3: 30.62%, 343/1120
 ## Chromosome 4: 30.80%, 345/1120
-## Chromosome 5: 29.38%, 329/1120
-## Chromosome 6: 30.54%, 342/1120
-## Chromosome 7: 28.39%, 318/1120
-## Chromosome 8: 26.07%, 292/1120
-## Chromosome 9: 27.23%, 305/1120
-## Chromosome 10: 28.30%, 317/1120
-## Chromosome 11: 26.25%, 294/1120
-## Chromosome 12: 28.57%, 320/1120
-## Chromosome 13: 25.00%, 280/1120
-## Chromosome 14: 24.29%, 272/1120
-## Chromosome 15: 22.32%, 250/1120
-## Chromosome 16: 22.86%, 256/1120
-## Chromosome 17: 21.96%, 246/1120
-## Chromosome 18: 23.66%, 265/1120
+## Chromosome 5: 29.46%, 330/1120
+## Chromosome 6: 31.34%, 351/1120
+## Chromosome 7: 28.21%, 316/1120
+## Chromosome 8: 25.98%, 291/1120
+## Chromosome 9: 27.50%, 308/1120
+## Chromosome 10: 28.66%, 321/1120
+## Chromosome 11: 26.88%, 301/1120
+## Chromosome 12: 27.95%, 313/1120
+## Chromosome 13: 26.07%, 292/1120
+## Chromosome 14: 24.82%, 278/1120
+## Chromosome 15: 22.77%, 255/1120
+## Chromosome 16: 22.59%, 253/1120
+## Chromosome 17: 21.52%, 241/1120
+## Chromosome 18: 23.21%, 260/1120
 ## Chromosome 19: 21.43%, 240/1120
-## Chromosome 20: 20.89%, 234/1120
-## Chromosome 21: 17.41%, 195/1120
-## Chromosome 22: 17.77%, 199/1120
-## 6336 SNPs are selected in total.</code></pre>
+## Chromosome 20: 20.45%, 229/1120
+## Chromosome 21: 17.50%, 196/1120
+## Chromosome 22: 16.34%, 183/1120
+## 6352 SNPs are selected in total.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(snpset, length)</code></pre></div>
 <pre><code>##  chr1  chr2  chr3  chr4  chr5  chr6  chr7  chr8  chr9 chr10 chr11 chr12 
-##   352   350   335   345   329   342   318   292   305   317   294   320 
+##   352   354   343   345   330   351   316   291   308   321   301   313 
 ## chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 
-##   280   272   250   256   246   265   240   234   195   199</code></pre>
+##   292   278   255   253   241   260   240   229   196   183</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pruned &lt;-<span class="st"> </span><span class="kw">unlist</span>(snpset, <span class="dt">use.names=</span><span class="ot">FALSE</span>)
 
 <span class="co"># KING</span>
 king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <span class="dt">sample.id=</span>sample.id, <span class="dt">snp.id=</span>pruned)</code></pre></div>
 <pre><code>## IBD analysis (KING method of moment) on genotypes:
-## Excluding 19,424 SNVs (non-autosomes or non-selection)
+## Excluding 19,408 SNVs (non-autosomes or non-selection)
 ## Excluding 0 SNV (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
-## Working space: 100 samples, 6,336 SNVs
+## Working space: 100 samples, 6,352 SNVs
 ##     using 1 (CPU) core
 ## No family is specified, and all individuals are treated as singletons.
 ## Relationship inference in the presence of population stratification.
 ## CPU capabilities: Double-Precision SSE2
-## Thu Jun 29 00:52:39 2017    (internal increment: 65536)
+## Fri Jun 30 09:05:43 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Thu Jun 29 00:52:40 2017    Done.</code></pre>
+## Fri Jun 30 09:05:43 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(king)</code></pre></div>
 <pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;afreq&quot;     &quot;IBS0&quot;      &quot;kinship&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(king<span class="op">$</span>kinship)</code></pre></div>
@@ -204,13 +210,13 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 <p>We extract pairwise kinship estimates and IBS0 to plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kinship &lt;-<span class="st"> </span><span class="kw">snpgdsIBDSelection</span>(king)
 <span class="kw">head</span>(kinship)</code></pre></div>
-<pre><code>##       ID1     ID2       IBS0       kinship
-## 1 HG00110 HG00116 0.02430556 -0.0009003601
-## 2 HG00110 HG00120 0.02698864 -0.0228091236
-## 3 HG00110 HG00128 0.02572601 -0.0158343484
-## 4 HG00110 HG00136 0.02856692 -0.0333133253
-## 5 HG00110 HG00137 0.02572601 -0.0204081633
-## 6 HG00110 HG00141 0.02856692 -0.0342136855</code></pre>
+<pre><code>##       ID1     ID2       IBS0      kinship
+## 1 HG00110 HG00116 0.02518892 -0.008756039
+## 2 HG00110 HG00120 0.02613350 -0.019625604
+## 3 HG00110 HG00128 0.02518892 -0.011185006
+## 4 HG00110 HG00136 0.02912469 -0.038949275
+## 5 HG00110 HG00137 0.02613350 -0.029891304
+## 6 HG00110 HG00141 0.02786524 -0.035024155</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(kinship, <span class="kw">aes</span>(IBS0, kinship)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">2</span><span class="op">^</span>(<span class="op">-</span><span class="kw">seq</span>(<span class="dv">3</span>,<span class="dv">9</span>,<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>), <span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>, <span class="dt">color=</span><span class="st">&quot;grey&quot;</span>) <span class="op">+</span>
@@ -227,43 +233,43 @@ sampset &lt;-<span class="st"> </span><span class="kw">pcairPartition</span>(<sp
 <pre><code>## [1] &quot;rels&quot;   &quot;unrels&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(sampset, length)</code></pre></div>
 <pre><code>##   rels unrels 
-##     14     86</code></pre>
+##     17     83</code></pre>
 <p>Typically we would repeat the LD pruning step on the set of unrelated samples we just identified, but for this example we will re-use the pruned set of variants from step 1. Using the SNPRelate package, we run PCA on the unrelated set and project values for the related set.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># run PCA on unrelated set</span>
 pca.unrel &lt;-<span class="st"> </span><span class="kw">snpgdsPCA</span>(gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>unrels, <span class="dt">snp.id=</span>pruned)</code></pre></div>
 <pre><code>## Principal Component Analysis (PCA) on genotypes:
-## Excluding 19,424 SNVs (non-autosomes or non-selection)
-## Excluding 203 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
-## Working space: 86 samples, 6,133 SNVs
+## Excluding 19,408 SNVs (non-autosomes or non-selection)
+## Excluding 290 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
+## Working space: 83 samples, 6,062 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Thu Jun 29 00:52:42 2017    (internal increment: 8952)
+## Fri Jun 30 09:05:46 2017    (internal increment: 9276)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Thu Jun 29 00:52:43 2017    Begin (eigenvalues and eigenvectors)
-## Thu Jun 29 00:52:43 2017    Done.</code></pre>
+## Fri Jun 30 09:05:46 2017    Begin (eigenvalues and eigenvectors)
+## Fri Jun 30 09:05:46 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project values for relatives</span>
 snp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASNPLoading</span>(pca.unrel, <span class="dt">gdsobj=</span>gds)</code></pre></div>
 <pre><code>## SNP loading:
-## Working space: 86 samples, 6133 SNPs
+## Working space: 83 samples, 6062 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Thu Jun 29 00:52:43 2017    (internal increment: 65536)
+## Fri Jun 30 09:05:46 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Thu Jun 29 00:52:43 2017    Done.</code></pre>
+## Fri Jun 30 09:05:46 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASampLoading</span>(snp.load, <span class="dt">gdsobj=</span>gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>rels)</code></pre></div>
 <pre><code>## Sample loading:
-## Working space: 14 samples, 6133 SNPs
+## Working space: 17 samples, 6062 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Thu Jun 29 00:52:43 2017    (internal increment: 65536)
+## Fri Jun 30 09:05:46 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Thu Jun 29 00:52:43 2017    Done.</code></pre>
+## Fri Jun 30 09:05:46 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># combine unrelated and related PCs and order as in GDS file</span>
 pcs &lt;-<span class="st"> </span><span class="kw">rbind</span>(pca.unrel<span class="op">$</span>eigenvect, samp.load<span class="op">$</span>eigenvect)
 <span class="kw">rownames</span>(pcs) &lt;-<span class="st"> </span><span class="kw">c</span>(pca.unrel<span class="op">$</span>sample.id, samp.load<span class="op">$</span>sample.id)
@@ -323,6 +329,7 @@ pop.cols &lt;-<span class="st"> </span><span class="kw">setNames</span>(<span cl
 <p><img src="_main_files/figure-html/pcair_parcoord-1.png" width="672" /></p>
 <p>The first 2 PCs separate populations, so we use them to compute kinship estimates adjusting for ancestry. The PC-Relate function expects a <code>SeqVarData</code> object, which allows linking sample and variant annotation with a GDS file in a single object. We will cover these in more detail later for association testing, but for now we create a bare object with no annotation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqResetFilter</span>(gds, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
+<span class="kw">library</span>(SeqVarTools)
 seqData &lt;-<span class="st"> </span><span class="kw">SeqVarData</span>(gds)
 
 pcrel &lt;-<span class="st"> </span><span class="kw">pcrelate</span>(seqData, <span class="dt">pcMat=</span>pcs[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">training.set=</span>sampset<span class="op">$</span>unrels, 
