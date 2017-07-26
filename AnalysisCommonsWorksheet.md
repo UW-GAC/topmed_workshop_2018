@@ -57,7 +57,7 @@ Parameter inputs:
 
 References:
 * Command Line Interface [Quickstart](https://wiki.dnanexus.com/Command-Line-Client/Quickstart)
-* Index of [dx commands] (https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands)
+* Index of [dx commands](https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands)
 
 #### Log in to AWI
 **Replace dxuserX with the user ID from your handout**
