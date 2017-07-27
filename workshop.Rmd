@@ -290,7 +290,7 @@ We make a QQ plot to examine the results.
 
 ```{r assoc_single_qq}
 library(ggplot2)
-qqplot <- function(pval) {
+qqPlot <- function(pval) {
     pval <- pval[!is.na(pval)]
     n <- length(pval)
     x <- 1:n
@@ -309,7 +309,7 @@ qqplot <- function(pval) {
         theme_bw()
 }    
 
-qqplot(assoc$Wald.pval)
+qqPlot(assoc$Wald.pval)
 ```
 
 ## Sliding window tests
@@ -323,7 +323,7 @@ names(assoc)
 head(assoc$results)
 head(assoc$variantInfo)
 
-qqplot(assoc$results$Score.pval)
+qqPlot(assoc$results$Score.pval)
 ```
 
 For SKAT, we use the Wu weights.
@@ -334,7 +334,7 @@ assoc <- assocTestSeqWindow(seqData, nullmod, test="SKAT", AF.range=c(0,0.1),
 head(assoc$results)
 head(assoc$variantInfo)
 
-qqplot(assoc$results$pval_0)
+qqPlot(assoc$results$pval_0)
 ```
 
 
@@ -386,7 +386,7 @@ head(assoc$results)
 head(names(assoc$variantInfo))
 head(assoc$variantInfo[[1]])
 
-qqplot(assoc$results$Score.pval)
+qqPlot(assoc$results$Score.pval)
 ```
 
 ```{r assoc_close}
