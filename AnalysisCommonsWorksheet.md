@@ -17,17 +17,17 @@ Note that the job will finish instantaneously if you don’t change the output f
 Log into http://dnanexus.com using the user name and password listed on the handout.  Should be in the form of **dxuser#**.
 Navigate to and select **(tools/genesis_v0.7)**
 File inputs:
-* phenofile -> phenotype/1KG_pheno.csv
-* genotypefile -> genotypes/1KG_phase3_subset_chr1.gds
-* kinship -> kinship/1KG_kins.Rda 
+- phenofile -> phenotype/1KG_pheno.csv
+- genotypefile -> genotypes/1KG_phase3_subset_chr1.gds
+- kinship -> kinship/1KG_kins.Rda 
 
 Parameter inputs:
-* output folder: output/YOURFOLDERNAME
-* outcome: outcome 
-* covariates: Population,sex 
-* outputfilename: single_chr1
-* test_type: Single 
-* ID:sample.id
+- output folder: output/YOURFOLDERNAME
+- outcome: outcome 
+- covariates: Population,sex 
+- outputfilename: single_chr1
+- test_type: Single 
+- ID:sample.id
 
 
 
