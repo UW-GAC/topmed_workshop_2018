@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="gds-format.html">
-<link rel="next" href="pc-relate.html">
+<link rel="prev" href="index.html">
+<link rel="next" href="gds-format.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -150,44 +150,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="computing-a-grm" class="section level1">
-<h1><span class="header-section-number">4</span> Computing a GRM</h1>
-<p>We can use the <a href="https://github.com/zhengxwen/SNPRelate">SNPRelate package</a> to compute a Genetic Relationship matrix (GRM).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SeqArray)
-data.path &lt;-<span class="st"> &quot;https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata&quot;</span>
-gdsfile &lt;-<span class="st"> &quot;1KG_phase3_subset_chr1.gds&quot;</span>
-<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(gdsfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, gdsfile), gdsfile)
-gds &lt;-<span class="st"> </span><span class="kw">seqOpen</span>(gdsfile)
+<div id="downloading-data-from-the-topmed-exchange-area" class="section level1">
+<h1><span class="header-section-number">2</span> Downloading Data From The TOPMed Exchange Area</h1>
 
-<span class="kw">library</span>(SNPRelate)
-grm &lt;-<span class="st"> </span><span class="kw">snpgdsGRM</span>(gds, <span class="dt">method=</span><span class="st">&quot;GCTA&quot;</span>)</code></pre></div>
-<pre><code>## Genetic Relationship Matrix (GRM, GCTA):
-## Calculating allele counts/frequencies ...
-## 
-[..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed      
-## Excluding 13 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
-## Working space: 1,126 samples, 1,107 SNVs
-##     using 1 (CPU) core
-## CPU capabilities: Double-Precision SSE2
-## Fri Jul 28 13:57:02 2017    (internal increment: 680)
-## 
-[..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 0s
-## Fri Jul 28 13:57:02 2017    Done.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(grm)</code></pre></div>
-<pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;grm&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(grm<span class="op">$</span>grm)</code></pre></div>
-<pre><code>## [1] 1126 1126</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqClose</span>(gds)</code></pre></div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="gds-format.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="pc-relate.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="gds-format.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
