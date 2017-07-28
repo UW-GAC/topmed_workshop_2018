@@ -35,23 +35,23 @@ Parameter inputs:
 _Italic_ inputs below are the same as single variant; update the parameters & files to change to a SKAT test.  Go to the monitor tab.  Click on the Name of a job ( or someone’s) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.   
 
 File inputs:
-* _phenofile -> phenotype/1KG_pheno.csv_
-* _genotypefile -> genotypes/1KG_phase3_subset_chr1.gds_
-* _kinship -> kinship/1KG_kins.Rda_
-* annotation -> annotation/1KG_annotation_CHR1.txt 
-* genefile -> aggregation/AggUnit_CHR1_ucscgene.csv 
+- _phenofile -> phenotype/1KG_pheno.csv_
+- _genotypefile -> genotypes/1KG_phase3_subset_chr1.gds_
+- _kinship -> kinship/1KG_kins.Rda_
+- annotation -> annotation/1KG_annotation_CHR1.txt 
+- genefile -> aggregation/AggUnit_CHR1_ucscgene.csv 
 
 Parameter inputs:	
-* _outcome: outcome_
-* _covariates: Population,sex_
-* _ID:sample.id_
-* output folder: output/YOURFOLDERNAME
-* outputfilename: skat_chr1_geneBased_CADDgt2
-* test_type: SKAT
-* snp_filter: CADD_phred>2
-* min_mac:0
-* top_maf: 0.05
-* weights: c(1,25)
+- _outcome: outcome_
+- _covariates: Population,sex_
+- _ID:sample.id_
+- output folder: output/YOURFOLDERNAME
+- outputfilename: skat_chr1_geneBased_CADDgt2
+- test_type: SKAT
+- snp_filter: CADD_phred>2
+- min_mac:0
+- top_maf: 0.05
+- weights: c(1,25)
 
 ## Command line interface
 
