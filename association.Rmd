@@ -1,0 +1,147 @@
+# Association tests
+
+Since TOPMed has many studies with related participants, we focus on linear mixed models. Logistic mixed models are also possible using GENESIS, see the [GMMAT paper](https://www.ncbi.nlm.nih.gov/pubmed/27018471).
+
+## Null model
+
+The first step in an association test is to fit the null model. We use the `AnnotatedDataFrame` with phenotypes, and a GRM. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups.
+
+```{r null_model}
+data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+sampfile <- "1KG_phase3_subset_annot.RData"
+if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile)
+annot <- TopmedPipeline::getobj(sampfile)
+
+grmfile <- "grm.RData"
+if (!file.exists(grmfile)) download.file(file.path(data.path, grmfile), grmfile)
+grm <- TopmedPipeline::getobj(grmfile)
+rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
+
+library(GENESIS)
+nullmod <- fitNullMM(annot, outcome="outcome", covars=c("sex", "Population"), 
+                     covMatList=grm$grm, group.var="Population", verbose=FALSE)
+```
+
+We also recommend taking an inverse normal transform of the residuals and refitting the model. This is done separately for each group, and the transformed residuals are rescaled. See the full procedure in the  
+[pipeline documenation](https://github.com/smgogarten/analysis_pipeline#association-testing).
+
+## Single-variant tests
+
+Single-variant tests are the same as in GWAS. We use the `assocTestMM` function in GENESIS. We have to create a `SeqVarData` object including both the GDS file and the sample annotation containing phenotypes.
+
+```{r assoc_single}
+library(SeqVarTools)
+gdsfile <- "1KG_phase3_subset_chr1.gds"
+if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
+gds <- seqOpen(gdsfile)
+seqData <- SeqVarData(gds, sampleData=annot)
+assoc <- assocTestMM(seqData, nullmod)
+head(assoc)
+```
+
+We make a QQ plot to examine the results.
+
+```{r assoc_single_qq}
+library(ggplot2)
+qqPlot <- function(pval) {
+    pval <- pval[!is.na(pval)]
+    n <- length(pval)
+    x <- 1:n
+    dat <- data.frame(obs=sort(pval),
+                      exp=x/n,
+                      upper=qbeta(0.025, x, rev(x)),
+                      lower=qbeta(0.975, x, rev(x)))
+    
+    ggplot(dat, aes(-log10(exp), -log10(obs))) +
+        geom_line(aes(-log10(exp), -log10(upper)), color="gray") +
+        geom_line(aes(-log10(exp), -log10(lower)), color="gray") +
+        geom_point() +
+        geom_abline(intercept=0, slope=1, color="red") +
+        xlab(expression(paste(-log[10], "(expected P)"))) +
+        ylab(expression(paste(-log[10], "(observed P)"))) +
+        theme_bw()
+}    
+
+qqPlot(assoc$Wald.pval)
+```
+
+## Sliding window tests
+
+For rare variants, we can do burden tests or SKAT on sliding windows using the GENESIS function `assocTestSeqWindow`. We restrict the test to variants with alternate allele frequency < 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme.
+
+```{r assoc_window_burden}
+assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
+                            weight.beta=c(1,1), window.size=5, window.shift=2)
+names(assoc)
+head(assoc$results)
+head(assoc$variantInfo)
+
+qqPlot(assoc$results$Score.pval)
+```
+
+For SKAT, we use the Wu weights.
+
+```{r assoc_window_skat}
+assoc <- assocTestSeqWindow(seqData, nullmod, test="SKAT", AF.range=c(0,0.1),
+                            weight.beta=c(1,25), window.size=5, window.shift=2)
+head(assoc$results)
+head(assoc$variantInfo)
+
+qqPlot(assoc$results$pval_0)
+```
+
+
+## Aggregate tests
+
+### Variant annotation
+Rare variants are generally aggregated into some meaningful units for association testing to decrease multiple testing burden and increase statistical power. Various genomic and epigenomic annotations can be used to define aggregation units and filter them. A large number of annotations are available through the Whole Genome Sequence Annotator (WGSA) to the TOPMed users. 
+
+### Defining aggregate units
+We will be using a gene-based aggregation unit, where each unit is a GENCODE gene and 20 kb flanking region upstream and downstream of it. For real data, one will likely filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).
+
+The aggregation units are defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (for example a variant can be assigned to mutiple genes).
+
+```{r agg_unit}
+aggfile <- "variants_by_gene.RData"
+if (!file.exists(aggfile)) download.file(file.path(workshop.path, aggfile), aggfile)
+aggunit <- TopmedPipeline::getobj(aggfile)
+names(aggunit)
+head(aggunit)
+
+# an example of variant that is present in mutiple groups
+library(dplyr)
+mult <- aggunit %>%
+    group_by(chromosome, position) %>%
+    summarise(n=n()) %>%
+    filter(n > 1)
+inner_join(aggunit, mult[2,1:2])
+```
+
+### Association testing with aggregate units
+
+We can run a burden test or SKAT on each of these units using the GENESIS function `assocTestSeq`. This function expects a list, where each element of the list is a dataframe representing a single aggregation unit and containing the unique variant.id assigned to each variant in a GDS file. We use the TopmedPipeline function `aggregateListByAllele` to quickly convert our single dataframe to the required format. This function can account for multiallelic variants (the same chromosome, position, and ref, but different alt alleles). The first argument is the GDS object returned by `seqOpen` (see above).
+
+```{r aggVarList}
+library(TopmedPipeline)
+aggVarList <- aggregateListByAllele(gds, aggunit)
+length(aggVarList)
+head(names(aggVarList))
+aggVarList[[1]]
+```
+
+As in the previous section, we must fit the null model before running the association test.
+
+```{r assoc_aggregate}
+assoc <- assocTestSeq(seqData, nullmod, test="Burden", aggVarList=aggVarList, 
+                      AF.range=c(0,0.1), weight.beta=c(1,1))
+names(assoc)
+head(assoc$results)
+head(names(assoc$variantInfo))
+head(assoc$variantInfo[[1]])
+
+qqPlot(assoc$results$Score.pval)
+```
+
+```{r assoc_close}
+seqClose(gds)
+```

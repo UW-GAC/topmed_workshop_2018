@@ -1,0 +1,51 @@
+# GDS format
+
+GDS is Genomic Data Structure, a storage format that can efficiently store genomic data and provide fast random access to subsets of the data. For more information on GDS for sequence data, read the [SeqArray package vignette](https://github.com/zhengxwen/SeqArray/blob/master/vignettes/SeqArrayTutorial.Rmd).
+
+To use the R packages developed at the DCC for sequence data, we first need to convert a VCF file to GDS. (If the file is BCF, use [https://samtools.github.io/bcftools/bcftools.html](bcftools) to convert to VCF.)
+
+```{r vcf2gds}
+library(SeqArray)
+data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+vcffile <- "1KG_phase3_subset_chr1.vcf.gz"
+if (!file.exists(vcffile)) download.file(file.path(data.path, vcffile), vcffile)
+gdsfile <- "1KG_phase3_subset_chr1.gds"
+seqVCF2GDS(vcffile, gdsfile, fmt.import="GT", storage.option="LZMA_RA", verbose=FALSE)
+```
+
+We can interact with the GDS file using the SeqArray package.
+
+```{r seqarray}
+gds <- seqOpen(gdsfile)
+gds
+
+sample.id <- seqGetData(gds, "sample.id")
+length(sample.id)
+head(sample.id)
+
+variant.id <- seqGetData(gds, "variant.id")
+length(variant.id)
+head(variant.id)
+
+# define a filter to read a subset of data
+seqSetFilter(gds, variant.id=1:10, sample.id=sample.id[1:5])
+
+geno <- seqGetData(gds, "genotype")
+dim(geno)
+geno[,,1:2]
+```
+
+The [SeqVarTools package](http://bioconductor.org/packages/SeqVarTools) has some additional functions for interacting with SeqArray-format GDS files.
+
+```{r seqvartools}
+library(SeqVarTools)
+
+getGenotype(gds)
+refDosage(gds)
+altDosage(gds)
+
+refChar(gds)
+altChar(gds)
+
+seqClose(gds)
+```

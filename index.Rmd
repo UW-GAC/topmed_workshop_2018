@@ -12,3 +12,7 @@ description: "Course materials for the TOPMed analysis workshop"
 # Introduction
 
 This site contains course materials for the TOPMed Analysis Workshop, August 7-9 2017.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, message=FALSE)
+```
