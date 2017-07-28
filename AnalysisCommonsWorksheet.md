@@ -14,7 +14,7 @@
 Note that the job will finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
 
-Log into http://dnanexus.com using the user name and password listed on the handout.  Should be in the form of **dxuser#**.
+Log into http://dnanexus.com using the user name and password listed on the handout.  Should be in the form of Username:**topmed#** and Password:**Topmed_#**.
 Navigate to and select **(tools/genesis_v0.7)**
 File inputs:
 - phenofile -> phenotype/1KG_pheno.csv
@@ -60,9 +60,9 @@ References:
 * Index of [dx commands](https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands)
 
 ### Log in to AWI
-**Replace dxuserX with the user ID from your handout**
+**Replace topmed# with the user ID from your handout**
 ```
-$ ssh -i ~/.ssh/tm_workshop.pem dxuserX@34.209.245.0
+$ ssh -i ~/.ssh/tm_workshop.pem topmed#@34.209.245.0
 $ source /usr/local/dx-toolkit/environment
 ```
 
@@ -70,8 +70,8 @@ $ source /usr/local/dx-toolkit/environment
 ```
 $ dx login 
 	Enter the following at the prompts
-		username: dxuserX
-		password: dxuserX
+		username: topmed#
+		password: Topmed_#
 		project:dcc
 
 $ dx select project dcc
