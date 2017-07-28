@@ -22,6 +22,8 @@ seqClose(gds)
 
 To disentangle ancestry from recent familial relatedness, we use the [PC-Relate](http://www.ncbi.nlm.nih.gov/pubmed/26748516) method.
 
+## KING
+
 Step 1 is to get initial estimates of kinship using [KING](http://www.ncbi.nlm.nih.gov/pubmed/20926424), which is robust to population structure but not admixture. The KING algorithm is available in SNPRelate. Typically we select a subset of variants for this calculation with LD pruning.
 
 ```{r king}
@@ -66,6 +68,8 @@ ggplot(kinship, aes(IBS0, kinship)) +
     ylab("kinship estimate") +
     theme_bw()
 ```
+
+## PC-AiR
 
 The next step is [PC-AiR](http://www.ncbi.nlm.nih.gov/pubmed/25810074), in which we select a set of unrelated samples that is maximally informative about all ancestries in the sample. We use this unrelated set for Principal Component Analysis (PCA), then project the relatives onto the PCs.
 
@@ -130,6 +134,8 @@ ggparcoord(pc.df, columns=1:12, groupColumn="Population", scale="uniminmax") +
 ```
 
 
+## PC-Relate
+
 The first 2 PCs separate populations, so we use them to compute kinship estimates adjusting for ancestry. The PC-Relate function expects a `SeqVarData` object, which allows linking sample and variant annotation with a GDS file in a single object. We will cover these in more detail later for association testing, but for now we create a bare object with no annotation.
 
 ```{r pcrelate_1}
@@ -185,3 +191,8 @@ ggplot(kinship, aes(k0, kin)) +
 ```{r close}
 seqClose(gds)
 ```
+
+
+## Exercise
+
+Complete one round of iteration using all samples from the test dataset and plot the results.

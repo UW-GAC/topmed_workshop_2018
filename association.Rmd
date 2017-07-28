@@ -90,6 +90,18 @@ head(assoc$variantInfo)
 qqPlot(assoc$results$pval_0)
 ```
 
+## Exercise: logistic regression
+
+`fitNullMM` can use a binary phenotype as the outcome variable by specifying the argument `family=binomial`. Use the `status` column in the sample annotation to fit a null model for simulated case/control status. Then run a single-variant test and a sliding window test using this model.
+
+```{r exercise_logistic, include=FALSE, eval=FALSE}
+nullmod <- fitNullMM(annot, outcome="status", covars=c("sex", "Population"), 
+                     covMatList=grm$grm, family=binomial)
+assoc <- assocTestMM(seqData, nullmod, test="Score")
+assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
+                            weight.beta=c(1,1), window.size=5, window.shift=2)
+```
+
 
 ## Aggregate tests
 
@@ -144,4 +156,20 @@ qqPlot(assoc$results$Score.pval)
 
 ```{r assoc_close}
 seqClose(gds)
+```
+
+
+### Exercise
+
+Since we are working with a subset of the data, many of the genes listed in `group_id` have a very small number of variants. Create a new set of units combining adjacent genes, and run SKAT using those units.
+
+```{r exercise_aggregate, include=FALSE, eval=FALSE}
+agg2 <- aggunit %>%
+    arrange(chromosome, position)
+# this might combine some variants across chromosomes, but good enough for an example
+agg2$new_id <- cut(1:nrow(agg2), breaks=100, labels=FALSE)
+## why does this take so long???
+aggVarList <- aggregateListByAllele(gds, agg2)
+assoc <- assocTestSeq(seqData, nullmod, test="Burden", aggVarList=aggVarList, 
+                      AF.range=c(0,0.1), weight.beta=c(1,1))
 ```

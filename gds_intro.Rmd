@@ -2,6 +2,8 @@
 
 GDS is Genomic Data Structure, a storage format that can efficiently store genomic data and provide fast random access to subsets of the data. For more information on GDS for sequence data, read the [SeqArray package vignette](https://github.com/zhengxwen/SeqArray/blob/master/vignettes/SeqArrayTutorial.Rmd).
 
+## Exploring a GDS file
+
 To use the R packages developed at the DCC for sequence data, we first need to convert a VCF file to GDS. (If the file is BCF, use [https://samtools.github.io/bcftools/bcftools.html](bcftools) to convert to VCF.)
 
 ```{r vcf2gds}
@@ -19,17 +21,24 @@ We can interact with the GDS file using the SeqArray package.
 gds <- seqOpen(gdsfile)
 gds
 
+# the unique sample identifier comes from the VCF header
 sample.id <- seqGetData(gds, "sample.id")
 length(sample.id)
 head(sample.id)
 
+# a unique integer ID is assigned to each variant
 variant.id <- seqGetData(gds, "variant.id")
 length(variant.id)
 head(variant.id)
 
+# reference allele frequency of each variant
+afreq <- seqAlleleFreq(gds)
+hist(afreq, breaks=50)
+
 # define a filter to read a subset of data
 seqSetFilter(gds, variant.id=1:10, sample.id=sample.id[1:5])
 
+# genotype data is stored as number of copies of each allele
 geno <- seqGetData(gds, "genotype")
 dim(geno)
 geno[,,1:2]
@@ -40,12 +49,47 @@ The [SeqVarTools package](http://bioconductor.org/packages/SeqVarTools) has some
 ```{r seqvartools}
 library(SeqVarTools)
 
+# return genotypes in matrix format
 getGenotype(gds)
+getGenotypeAlleles(gds)
 refDosage(gds)
 altDosage(gds)
 
+# look at reference and alternate alleles
 refChar(gds)
 altChar(gds)
 
+# reset the filter to all variants and samples
+seqResetFilter(gds)
+
+# how many alleles for each variant?
+n <- seqNumAllele(gds)
+table(n)
+
+# some variants have multiple alleles
+multi.allelic <- which(n > 2)
+altChar(gds)[multi.allelic]
+
+# extract a particular alternate allele
+altChar(gds, n=1)[multi.allelic]
+altChar(gds, n=2)[multi.allelic]
+
+# how many variants are SNVs vs INDELs?
+table(isSNV(gds, biallelic=TRUE))
+table(isSNV(gds, biallelic=FALSE))
+
 seqClose(gds)
+```
+
+## Exercise: HWE
+
+Use the `hwe` function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes.
+
+```{r exercise_gds, include=FALSE, eval=FALSE}
+hwe.res <- hwe(gds)
+lowp <- !is.na(hwe.res$p) & hwe.res$p < 1e-4
+head(hwe.res[lowp,])
+seqSetFilter(gds, variant.id=75)
+table(getGenotype(gds))
+table(refDosage(gds))
 ```
