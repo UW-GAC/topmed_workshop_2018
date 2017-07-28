@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
+<link rel="prev" href="analysis-pipeline.html">
 
-<link rel="next" href="gds-format.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -148,22 +148,156 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">TOPMed Analysis Workshop</h1>
-<h4 class="date"><em>2017-07-27</em></h4>
+<div id="analysis-commons" class="section level1">
+<h1><span class="header-section-number">7</span> Analysis Commons</h1>
+<div id="outline" class="section level2">
+<h2><span class="header-section-number">7.1</span> Outline</h2>
+<ul>
+<li>Introduction to web-interface</li>
+<li>Running a single variant analysis</li>
+<li>Workflows and monitoring jobs</li>
+<li>Running aggregate tests (SKAT)</li>
+<li>Run batch jobs from the command line</li>
+<li>Writing your own Apps</li>
+</ul>
 </div>
-<div id="introduction" class="section level1">
-<h1><span class="header-section-number">1</span> Introduction</h1>
-<p>This site contains course materials for the TOPMed Analysis Workshop, August 7-9 2017.</p>
+<div id="web-interface-and-running-an-analysis-application" class="section level2">
+<h2><span class="header-section-number">7.2</span> Web Interface and Running an Analysis Application</h2>
+<div id="task-1-run-a-single-variant-analysis." class="section level3">
+<h3><span class="header-section-number">7.2.1</span> Task 1) Run a single variant analysis.</h3>
+<p>Note that the job will finish instantaneously if you don’t change the output file name. It knows that you are running the exact same job and will just reuse results from previous analyses.</p>
+<p>Log into <a href="http://dnanexus.com" class="uri">http://dnanexus.com</a> using the user name and password listed on the handout. Should be in the form of <strong>dxuser#</strong>. Navigate to and select <strong>(tools/genesis_v0.7)</strong> File inputs: * phenofile -&gt; phenotype/1KG_pheno.csv * genotypefile -&gt; genotypes/1KG_phase3_subset_chr1.gds * kinship -&gt; kinship/1KG_kins.Rda</p>
+<p>Parameter inputs: * output folder: output/YOURFOLDERNAME * outcome: outcome * covariates: Population,sex * outputfilename: single_chr1 * test_type: Single * ID:sample.id</p>
+</div>
+<div id="task-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5." class="section level3">
+<h3><span class="header-section-number">7.2.2</span> Task 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</h3>
+<p><em>Italic</em> inputs below are the same as single variant; update the parameters &amp; files to change to a SKAT test. Go to the monitor tab. Click on the Name of a job ( or someone’s) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.</p>
+<p>File inputs: * <em>phenofile -&gt; phenotype/1KG_pheno.csv</em> * <em>genotypefile -&gt; genotypes/1KG_phase3_subset_chr1.gds</em> * <em>kinship -&gt; kinship/1KG_kins.Rda</em> * annotation -&gt; annotation/1KG_annotation_CHR1.txt * genefile -&gt; aggregation/AggUnit_CHR1_ucscgene.csv</p>
+<p>Parameter inputs:<br />
+* <em>outcome: outcome</em> * <em>covariates: Population,sex</em> * <em>ID:sample.id</em> * output folder: output/YOURFOLDERNAME * outputfilename: skat_chr1_geneBased_CADDgt2 * test_type: SKAT * snp_filter: CADD_phred&gt;2 * min_mac:0 * top_maf: 0.05 * weights: c(1,25)</p>
+</div>
+</div>
+<div id="command-line-interface" class="section level2">
+<h2><span class="header-section-number">7.3</span> Command line interface</h2>
+<p>References: * Command Line Interface <a href="https://wiki.dnanexus.com/Command-Line-Client/Quickstart">Quickstart</a> * Index of <a href="https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands">dx commands</a></p>
+<div id="log-in-to-awi" class="section level3">
+<h3><span class="header-section-number">7.3.1</span> Log in to AWI</h3>
+<p><strong>Replace dxuserX with the user ID from your handout</strong></p>
+<pre><code>$ ssh -i ~/.ssh/tm_workshop.pem dxuserX@34.209.245.0
+$ source /usr/local/dx-toolkit/environment</code></pre>
+<pre><code>$ dx login 
+    Enter the following at the prompts
+        username: dxuserX
+        password: dxuserX
+        project:dcc
 
+$ dx select project dcc</code></pre>
+</div>
+<div id="task-3-navigate-directories-make-output-directory-examine-files" class="section level3">
+<h3><span class="header-section-number">7.3.2</span> Task 3) Navigate directories, make output directory, examine files</h3>
+<ul>
+<li>File paths: <project>:/path/to/file.txt</li>
+<li>Example: dcc:/phenotypes/1KG_pheno.csv</li>
+</ul>
+<p>List directory contents:</p>
+<pre><code>$ dx select dcc
+$ dx ls
+$ dx ls /tools
+$ dx ls dcc:/tools</code></pre>
+<p>Get results from project</p>
+<pre><code>$ dx download dcc:/phenotype/1KG_pheno.csv</code></pre>
+</div>
+<div id="task-4-run-single-variant-analysis-from-command-line-using-bash-script" class="section level3">
+<h3><span class="header-section-number">7.3.3</span> Task 4) Run single variant analysis from command line using bash script</h3>
+<p>Open the Single.sh bash script and edit to replace the output directory “YOURNAME” to your folder</p>
+<pre><code>$ dx describe tools/genesis_v0.7</code></pre>
+<p>Either edit using vi</p>
+<pre><code>$ vi Single_multichrom.sh </code></pre>
+<p>Or if not a vi fan you can use this line to substitute your name for the directory name. Please replace ‘JenB’ with your output directory name in the line below.</p>
+<pre><code>$ sed -i &#39;s/YOURNAME/JenB/&#39; Single_multichrom.sh</code></pre>
+</div>
+</div>
+<div id="writing-your-own-apps" class="section level2">
+<h2><span class="header-section-number">7.4</span> Writing your own Apps</h2>
+<div id="task-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform" class="section level3">
+<h3><span class="header-section-number">7.4.1</span> Task 5) Write an App that creates phenotype residuals and performs an inverse normal transform</h3>
+<p>Use app wizard to create template</p>
+<pre><code>$ dx-app-wizard
+
+App Name: make_residuals
+Title []: Create inverse normal transformed residuals
+
+1st input name (&lt;ENTER&gt; to finish): phenofile
+Label (optional human-readable name) []: CSV phenotype file
+Choose a class (&lt;TAB&gt; twice for choices): file
+This is an optional parameter [y/n]: n
+
+2nd input name (&lt;ENTER&gt; to finish): model
+Label (optional human-readable name) []: model for creating residuals (e.g. outcome~age+Population )
+Choose a class (&lt;TAB&gt; twice for choices): string
+This is an optional parameter [y/n]: n
+
+3rd input name (&lt;ENTER&gt; to finish): prefix
+Label (optional human-readable name) []: Output filename prefix
+Choose a class (&lt;TAB&gt; twice for choices): string
+This is an optional parameter [y/n]: n
+
+4th input name (&lt;ENTER&gt; to finish): &lt;ENTER&gt;
+
+1st output name (&lt;ENTER&gt; to finish): output
+Label (optional human-readable name) []: 
+Choose a class (&lt;TAB&gt; twice for choices): file
+
+Timeout policy [48h]: 1h
+Programming language: bash</code></pre>
+<p>Look at the files created by the wizard</p>
+<pre><code>cd make_residuals/
+ls
+more dxapp.json </code></pre>
+<p>Edit App executable to run an R script</p>
+<pre><code>$ vi src/make_residuals.sh
+main() {
+
+    echo &quot;Value of phenofile: &#39;$phenofile&#39;&quot;
+    echo &quot;Value of model: &#39;$model&#39;&quot;
+    echo &quot;Value of prefix: &#39;$prefix&#39;&quot;
+
+    dx download &quot;$phenofile&quot; -o phenofile
+
+    Rscript /make_resid.R $model
+
+    output=$(dx upload output --brief)
+
+    dx-jobutil-add-output output &quot;$output&quot; --class=file
+    dx mv ${output} ${prefix}.csv
+}
+</code></pre>
+<p>Create an R script that does the ‘work’ <code>$ vi resources/make_resid.R</code></p>
+<pre><code>args&lt;-commandArgs(TRUE)
+model &lt;- as.formula(args[1])
+print(model)
+pheno = read.csv(&#39;phenofile&#39;,as.is=T)
+pheno$resid = residuals(lm(model,data=pheno))
+pheno$invnt_resid =  with(pheno,qnorm((rank(resid,na.last=&quot;keep&quot;)-0.5)/sum(!is.na(resid))))
+
+write.csv(pheno,file=&#39;output&#39;,row.names=F)</code></pre>
+<p>Build the App</p>
+<pre><code>$ dx build -f make_residuals --destination=output/YOURNAME/make_residuals</code></pre>
+<p>Run the App</p>
+<pre><code>$ dx run output/YOURNAME/make_residuals -iphenofile=phenotype/1KG_pheno.csv \
+-imodel=outcome~sex+Population -iprefix=1kg_pheno_invnt \
+--destination=output/YOURNAME --yes</code></pre>
+
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
+<a href="analysis-pipeline.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="gds-format.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-06-30">
+<meta name="date" content="2017-07-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="pc-relate.html">
-<link rel="next" href="variant-annotation.html">
+<link rel="next" href="analysis-pipeline.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -106,10 +106,30 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>5.1</b> Null model</a></li>
 <li class="chapter" data-level="5.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>5.2</b> Single-variant tests</a></li>
 <li class="chapter" data-level="5.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>5.3</b> Sliding window tests</a></li>
+<li class="chapter" data-level="5.4" data-path="association-tests.html"><a href="association-tests.html#aggregate-tests"><i class="fa fa-check"></i><b>5.4</b> Aggregate tests</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="association-tests.html"><a href="association-tests.html#variant-annotation"><i class="fa fa-check"></i><b>5.4.1</b> Variant annotation</a></li>
+<li class="chapter" data-level="5.4.2" data-path="association-tests.html"><a href="association-tests.html#defining-aggregate-units"><i class="fa fa-check"></i><b>5.4.2</b> Defining aggregate units</a></li>
+<li class="chapter" data-level="5.4.3" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>5.4.3</b> Association testing with aggregate units</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="variant-annotation.html"><a href="variant-annotation.html"><i class="fa fa-check"></i><b>6</b> Variant annotation</a><ul>
-<li class="chapter" data-level="6.1" data-path="variant-annotation.html"><a href="variant-annotation.html#defining-aggregate-units"><i class="fa fa-check"></i><b>6.1</b> Defining aggregate units</a></li>
-<li class="chapter" data-level="6.2" data-path="variant-annotation.html"><a href="variant-annotation.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>6.2</b> Association testing with aggregate units</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>6</b> Analysis Pipeline</a><ul>
+<li class="chapter" data-level="6.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-a-local-cluster"><i class="fa fa-check"></i><b>6.1</b> Running on a local cluster</a></li>
+<li class="chapter" data-level="6.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-aws-batch"><i class="fa fa-check"></i><b>6.2</b> Running on AWS Batch</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>7</b> Analysis Commons</a><ul>
+<li class="chapter" data-level="7.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>7.1</b> Outline</a></li>
+<li class="chapter" data-level="7.2" data-path="analysis-commons.html"><a href="analysis-commons.html#web-interface-and-running-an-analysis-application"><i class="fa fa-check"></i><b>7.2</b> Web Interface and Running an Analysis Application</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="analysis-commons.html"><a href="analysis-commons.html#task-1-run-a-single-variant-analysis."><i class="fa fa-check"></i><b>7.2.1</b> Task 1) Run a single variant analysis.</a></li>
+<li class="chapter" data-level="7.2.2" data-path="analysis-commons.html"><a href="analysis-commons.html#task-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5."><i class="fa fa-check"></i><b>7.2.2</b> Task 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="analysis-commons.html"><a href="analysis-commons.html#command-line-interface"><i class="fa fa-check"></i><b>7.3</b> Command line interface</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="analysis-commons.html"><a href="analysis-commons.html#log-in-to-awi"><i class="fa fa-check"></i><b>7.3.1</b> Log in to AWI</a></li>
+<li class="chapter" data-level="7.3.2" data-path="analysis-commons.html"><a href="analysis-commons.html#task-3-navigate-directories-make-output-directory-examine-files"><i class="fa fa-check"></i><b>7.3.2</b> Task 3) Navigate directories, make output directory, examine files</a></li>
+<li class="chapter" data-level="7.3.3" data-path="analysis-commons.html"><a href="analysis-commons.html#task-4-run-single-variant-analysis-from-command-line-using-bash-script"><i class="fa fa-check"></i><b>7.3.3</b> Task 4) Run single variant analysis from command line using bash script</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>7.4</b> Writing your own Apps</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#task-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>7.4.1</b> Task 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
+</ul></li>
 </ul></li>
 </ul>
 
@@ -176,7 +196,7 @@ assoc &lt;-<span class="st"> </span><span class="kw">assocTestMM</span>(seqData,
 ## 6 1.624413e+00 0.20247756</code></pre>
 <p>We make a QQ plot to examine the results.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
-qqplot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
+qqPlot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
     pval &lt;-<span class="st"> </span>pval[<span class="op">!</span><span class="kw">is.na</span>(pval)]
     n &lt;-<span class="st"> </span><span class="kw">length</span>(pval)
     x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>n
@@ -195,7 +215,7 @@ qqplot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 <span class="st">        </span><span class="kw">theme_bw</span>()
 }    
 
-<span class="kw">qqplot</span>(assoc<span class="op">$</span>Wald.pval)</code></pre></div>
+<span class="kw">qqPlot</span>(assoc<span class="op">$</span>Wald.pval)</code></pre></div>
 <p><img src="_main_files/figure-html/assoc_single_qq-1.png" width="672" /></p>
 </div>
 <div id="sliding-window-tests" class="section level2">
@@ -228,7 +248,7 @@ qqplot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 ## 4         4      1   1 1265550  1126 0.0008880995      1
 ## 5         5      1   1 1472676  1126 0.0071047957      1
 ## 6         6      1   1 1735725  1126 0.0022202487      1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqplot</span>(assoc<span class="op">$</span>results<span class="op">$</span>Score.pval)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqPlot</span>(assoc<span class="op">$</span>results<span class="op">$</span>Score.pval)</code></pre></div>
 <p><img src="_main_files/figure-html/assoc_window_burden-1.png" width="672" /></p>
 <p>For SKAT, we use the Wu weights.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">assoc &lt;-<span class="st"> </span><span class="kw">assocTestSeqWindow</span>(seqData, nullmod, <span class="dt">test=</span><span class="st">&quot;SKAT&quot;</span>, <span class="dt">AF.range=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>),
@@ -249,9 +269,95 @@ qqplot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 ## 4         4      1   1 1265550  1126 0.0008880995 24.472547
 ## 5         5      1   1 1472676  1126 0.0071047957 21.067933
 ## 6         6      1   1 1735725  1126 0.0022202487 23.701317</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqplot</span>(assoc<span class="op">$</span>results<span class="op">$</span>pval_<span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqPlot</span>(assoc<span class="op">$</span>results<span class="op">$</span>pval_<span class="dv">0</span>)</code></pre></div>
 <p><img src="_main_files/figure-html/assoc_window_skat-1.png" width="672" /></p>
+</div>
+<div id="aggregate-tests" class="section level2">
+<h2><span class="header-section-number">5.4</span> Aggregate tests</h2>
+<div id="variant-annotation" class="section level3">
+<h3><span class="header-section-number">5.4.1</span> Variant annotation</h3>
+<p>Rare variants are generally aggregated into some meaningful units for association testing to decrease multiple testing burden and increase statistical power. Various genomic and epigenomic annotations can be used to define aggregation units and filter them. A large number of annotations are available through the Whole Genome Sequence Annotator (WGSA) to the TOPMed users.</p>
+</div>
+<div id="defining-aggregate-units" class="section level3">
+<h3><span class="header-section-number">5.4.2</span> Defining aggregate units</h3>
+<p>We will be using a gene-based aggregation unit, where each unit is a GENCODE gene and 20 kb flanking region upstream and downstream of it. For real data, one will likely filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).</p>
+<p>The aggregation units are defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (for example a variant can be assigned to mutiple genes).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aggfile &lt;-<span class="st"> &quot;variants_by_gene.RData&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(aggfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(workshop.path, aggfile), aggfile)
+aggunit &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(aggfile)
+<span class="kw">names</span>(aggunit)</code></pre></div>
+<pre><code>## [1] &quot;group_id&quot;   &quot;chromosome&quot; &quot;position&quot;   &quot;ref&quot;        &quot;alt&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(aggunit)</code></pre></div>
+<pre><code>## # A tibble: 6 x 5
+##             group_id chromosome position   ref   alt
+##                &lt;chr&gt;      &lt;chr&gt;    &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
+## 1  ENSG00000000005.5          X 99850725     A     G
+## 2  ENSG00000000938.8          1 27960254     A     G
+## 3  ENSG00000001084.6          6 53357691     C     T
+## 4  ENSG00000001084.6          6 53413986     T     C
+## 5  ENSG00000001084.6          6 53466979     C     T
+## 6 ENSG00000001167.10          6 41064020     A     G</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># an example of variant that is present in mutiple groups</span>
+<span class="kw">library</span>(dplyr)
+mult &lt;-<span class="st"> </span>aggunit <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(chromosome, position) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarise</span>(<span class="dt">n=</span><span class="kw">n</span>()) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)
+<span class="kw">inner_join</span>(aggunit, mult[<span class="dv">2</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])</code></pre></div>
+<pre><code>## # A tibble: 4 x 5
+##            group_id chromosome position   ref   alt
+##               &lt;chr&gt;      &lt;chr&gt;    &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
+## 1 ENSG00000188157.9          1   985900     C     T
+## 2 ENSG00000217801.5          1   985900     C     T
+## 3 ENSG00000242590.1          1   985900     C     T
+## 4 ENSG00000273443.1          1   985900     C     T</code></pre>
+</div>
+<div id="association-testing-with-aggregate-units" class="section level3">
+<h3><span class="header-section-number">5.4.3</span> Association testing with aggregate units</h3>
+<p>We can run a burden test or SKAT on each of these units using the GENESIS function <code>assocTestSeq</code>. This function expects a list, where each element of the list is a dataframe representing a single aggregation unit and containing the unique variant.id assigned to each variant in a GDS file. We use the TopmedPipeline function <code>aggregateListByAllele</code> to quickly convert our single dataframe to the required format. This function can account for multiallelic variants (the same chromosome, position, and ref, but different alt alleles). The first argument is the GDS object returned by <code>seqOpen</code> (see above).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(TopmedPipeline)
+aggVarList &lt;-<span class="st"> </span><span class="kw">aggregateListByAllele</span>(gds, aggunit)
+<span class="kw">length</span>(aggVarList)</code></pre></div>
+<pre><code>## [1] 932</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">names</span>(aggVarList))</code></pre></div>
+<pre><code>## [1] &quot;ENSG00000188157.9&quot;  &quot;ENSG00000242590.1&quot;  &quot;ENSG00000217801.5&quot; 
+## [4] &quot;ENSG00000273443.1&quot;  &quot;ENSG00000131591.13&quot; &quot;ENSG00000237330.2&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aggVarList[[<span class="dv">1</span>]]</code></pre></div>
+<pre><code>##   variant.id chromosome position ref nAlleles allele allele.index
+## 1          1          1   970546   C        2      G            1
+## 2          2          1   985900   C        2      T            1</code></pre>
+<p>As in the previous section, we must fit the null model before running the association test.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">assoc &lt;-<span class="st"> </span><span class="kw">assocTestSeq</span>(seqData, nullmod, <span class="dt">test=</span><span class="st">&quot;Burden&quot;</span>, <span class="dt">aggVarList=</span>aggVarList, 
+                      <span class="dt">AF.range=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>), <span class="dt">weight.beta=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
+<span class="kw">names</span>(assoc)</code></pre></div>
+<pre><code>## [1] &quot;param&quot;       &quot;nsample&quot;     &quot;results&quot;     &quot;variantInfo&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>results)</code></pre></div>
+<pre><code>##                    n.site n.sample.alt burden.skew       Score        Var
+## ENSG00000188157.9       2          116    2.867095 16.33548164 99.2100284
+## ENSG00000242590.1       2          116    2.867095 16.33548164 99.2100284
+## ENSG00000217801.5       1          107    3.041979 16.03409196 92.5372698
+## ENSG00000273443.1       1          107    3.041979 16.03409196 92.5372698
+## ENSG00000131591.13      1            1   33.466573  0.03348047  0.9598379
+## ENSG00000237330.2       1            1   33.466573  0.03348047  0.9598379
+##                     Score.stat Score.pval
+## ENSG00000188157.9  2.689727688 0.10099707
+## ENSG00000242590.1  2.689727688 0.10099707
+## ENSG00000217801.5  2.778254702 0.09555224
+## ENSG00000273443.1  2.778254702 0.09555224
+## ENSG00000131591.13 0.001167845 0.97273860
+## ENSG00000237330.2  0.001167845 0.97273860</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">names</span>(assoc<span class="op">$</span>variantInfo))</code></pre></div>
+<pre><code>## [1] &quot;ENSG00000188157.9&quot;  &quot;ENSG00000242590.1&quot;  &quot;ENSG00000217801.5&quot; 
+## [4] &quot;ENSG00000273443.1&quot;  &quot;ENSG00000131591.13&quot; &quot;ENSG00000237330.2&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>variantInfo[[<span class="dv">1</span>]])</code></pre></div>
+<pre><code>##   variantID allele chr    pos n.obs        freq weight
+## 1         1      1   1 970546  1126 0.003996448      1
+## 2         2      1   1 985900  1126 0.049289520      1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqPlot</span>(assoc<span class="op">$</span>results<span class="op">$</span>Score.pval)</code></pre></div>
+<p><img src="_main_files/figure-html/assoc_aggregate-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqClose</span>(gds)</code></pre></div>
+
+</div>
 </div>
 </div>
             </section>
@@ -260,7 +366,7 @@ qqplot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
         </div>
       </div>
 <a href="pc-relate.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="variant-annotation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="analysis-pipeline.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

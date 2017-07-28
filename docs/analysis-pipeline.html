@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-
-<link rel="next" href="gds-format.html">
+<link rel="prev" href="association-tests.html">
+<link rel="next" href="analysis-commons.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -148,22 +148,47 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">TOPMed Analysis Workshop</h1>
-<h4 class="date"><em>2017-07-27</em></h4>
+<div id="analysis-pipeline" class="section level1">
+<h1><span class="header-section-number">6</span> Analysis Pipeline</h1>
+<p>The DCC’s analysis pipeline is hosted on github: <a href="https://github.com/smgogarten/analysis_pipeline" class="uri">https://github.com/smgogarten/analysis_pipeline</a></p>
+<div id="running-on-a-local-cluster" class="section level2">
+<h2><span class="header-section-number">6.1</span> Running on a local cluster</h2>
+<p>To run a burden test on our local SGE cluster, first we create a config file and call it <code>assoc_window_burden.config</code>:</p>
+<pre><code>out_prefix &quot;test&quot;
+gds_file &quot;testdata/1KG_phase3_subset_chr .gds&quot;
+phenotype_file &quot;testdata/1KG_phase3_subset_annot.RData&quot;
+pcrelate_file &quot;testdata/round2_pcrelate.gds&quot;
+pca_file &quot;testdata/round2_pcair.RData&quot;
+sample_include_file &quot;testdata/sample_include.RData&quot;
+variant_include_file &quot;testdata/variant_include_chr .RData&quot;
+outcome outcome
+covars &quot;sex&quot;
+n_pcs 4
+alt_freq_range &quot;0 0.1&quot;
+test &quot;burden&quot;
+test_type &quot;score&quot;</code></pre>
+<p>We will use the python script <code>assoc.py</code> to submit all jobs. First we look at the available options:</p>
+<pre><code>setenv PIPELINE /projects/topmed/working_code/analysis_pipeline
+$PIPELINE/assoc.py --help</code></pre>
+<p>Let’s run a sliding window test on chromosomes 1-10. We will also specify the cluster type, although UW_Cluster is actually the default. The last argument is our config file.</p>
+<p>First, we print the commands that will be be run without actually submitting jobs:</p>
+<pre><code>$PIPELINE/assoc.py --chromosomes 1-10 --cluster_type UW_Cluster --print_only window testdata/assoc_window_burden.config</code></pre>
+<p>The default segment length is 10,000 kb, but we can change that to 50,000 kb when we submit:</p>
+<pre><code>$PIPELINE/assoc.py --chromosomes 1-10 --cluster_type UW_Cluster --segment_length 50000 window testdata/assoc_window_burden.config</code></pre>
+<p>We can use the <code>qstat</code> command to check the status of our jobs.</p>
 </div>
-<div id="introduction" class="section level1">
-<h1><span class="header-section-number">1</span> Introduction</h1>
-<p>This site contains course materials for the TOPMed Analysis Workshop, August 7-9 2017.</p>
+<div id="running-on-aws-batch" class="section level2">
+<h2><span class="header-section-number">6.2</span> Running on AWS Batch</h2>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="gds-format.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="association-tests.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="analysis-commons.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
