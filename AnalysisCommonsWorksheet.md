@@ -1,6 +1,6 @@
 # Analysis Commons
 
-#### Outline:
+## Outline
 * Introduction to web-interface
 * Running a single variant analysis
 * Workflows and monitoring jobs
@@ -8,9 +8,9 @@
 * Run batch jobs from the command line
 * Writing your own Apps
 	
-# Web Interface and Running an Analysis Application 
+## Web Interface and Running an Analysis Application 
 
-#### Task 1) Run a single variant analysis.  
+### Task 1) Run a single variant analysis.  
 Note that the job will finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
 
@@ -31,7 +31,7 @@ Parameter inputs:
 
 
 
-#### Task 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score > 2 and MAF <= 5%.
+### Task 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score > 2 and MAF <= 5%.
 _Italic_ inputs below are the same as single variant; update the parameters & files to change to a SKAT test.  Go to the monitor tab.  Click on the Name of a job ( or someone’s) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.   
 
 File inputs:
@@ -53,13 +53,13 @@ Parameter inputs:
 * top_maf: 0.05
 * weights: c(1,25)
 
-# Command line interface
+## Command line interface
 
 References:
 * Command Line Interface [Quickstart](https://wiki.dnanexus.com/Command-Line-Client/Quickstart)
 * Index of [dx commands](https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands)
 
-#### Log in to AWI
+### Log in to AWI
 **Replace dxuserX with the user ID from your handout**
 ```
 $ ssh -i ~/.ssh/tm_workshop.pem dxuserX@34.209.245.0
@@ -79,7 +79,7 @@ $ dx select project dcc
 
 
 
-#### Task 3) Navigate directories, make output directory, examine files
+### Task 3) Navigate directories, make output directory, examine files
 
 * File paths:  <project>:/path/to/file.txt
 * Example: dcc:/phenotypes/1KG_pheno.csv
@@ -96,7 +96,7 @@ Get results from project
 ```
 $ dx download dcc:/phenotype/1KG_pheno.csv
 ```
-#### Task 4) Run single variant analysis from command line using bash script
+### Task 4) Run single variant analysis from command line using bash script
 
 Open the Single.sh bash script and edit to replace the output directory “YOURNAME” to your folder
 ```
@@ -111,8 +111,8 @@ Or if not a vi fan you can use this line to substitute your name for the directo
 $ sed -i 's/YOURNAME/JenB/' Single_multichrom.sh
 ```
 
-# Writing your own Apps 
-#### Task 5) Write an App that creates phenotype residuals and performs an inverse normal transform
+## Writing your own Apps 
+### Task 5) Write an App that creates phenotype residuals and performs an inverse normal transform
 
 
 Use app wizard to create template

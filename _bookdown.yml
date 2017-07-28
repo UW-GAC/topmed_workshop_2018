@@ -1,2 +1,2 @@
-rmd_files: ["index.Rmd", "workshop.Rmd"]
+rmd_files: ["index.Rmd", "workshop.Rmd", "AnalysisCommonsWorksheet.md"]
 output_dir: "docs"
