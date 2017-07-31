@@ -14,50 +14,51 @@
 Note that the job will finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
 
-Log into http://dnanexus.com using the user name and password listed on the handout.  Should be in the form of Username:**topmed_#** and Password:**Topmed_#**.
-Navigate to and select **(tools/genesis_v0.7)**
-File inputs:
-- phenofile -> phenotype/1KG_pheno.csv
-- genotypefile -> genotypes/1KG_phase3_subset_chr1.gds
-- kinship -> kinship/1KG_kins.Rda 
+Log into http://dnanexus.com using the user name and password listed on the handout.  Should be in the form of Username:**topmed\_#** and Password:**Topmed\_#**.
+Navigate to and select **(tools/genesis\_v0.7)**
 
-Parameter inputs:
-- output folder: output/YOURFOLDERNAME
-- outcome: outcome 
-- covariates: Population,sex 
-- outputfilename: single_chr1
-- test_type: Single 
-- ID:sample.id
+File inputs:  
+* phenofile -> phenotype/1KG_pheno.csv  
+* genotypefile -> genotypes/1KG_phase3_subset_chr1.gds  
+* kinship -> kinship/1KG_kins.Rda  
+
+Parameter inputs:  
+* output folder: output/YOURFOLDERNAME  
+* outcome: outcome  
+* covariates: Population,sex  
+* outputfilename: single\_chr1  
+* test_type: Single  
+* ID: sample.id  
 
 
 
 ### Task 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score > 2 and MAF <= 5%.
 _Italic_ inputs below are the same as single variant; update the parameters & files to change to a SKAT test.  Go to the monitor tab.  Click on the Name of a job ( or someone’s) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.   
 
-File inputs:
-- _phenofile -> phenotype/1KG_pheno.csv_
-- _genotypefile -> genotypes/1KG_phase3_subset_chr1.gds_
-- _kinship -> kinship/1KG_kins.Rda_
-- annotation -> annotation/1KG_annotation_CHR1.txt 
-- genefile -> aggregation/AggUnit_CHR1_ucscgene.csv 
+File inputs:  
+* _phenofile -> phenotype/1KG\_pheno.csv_  
+* _genotypefile -> genotypes/1KG\_phase3\_subset\_chr1.gds_  
+* _kinship -> kinship/1KG\_kins.Rda_  
+* annotation -> annotation/1KG\_annotation\_CHR1.txt  
+* genefile -> aggregation/AggUnit\_CHR1\_ucscgene.csv  
 
-Parameter inputs:	
-- _outcome: outcome_
-- _covariates: Population,sex_
-- _ID:sample.id_
-- output folder: output/YOURFOLDERNAME
-- outputfilename: skat_chr1_geneBased_CADDgt2
-- test_type: SKAT
-- snp_filter: CADD_phred>2
-- min_mac:0
-- top_maf: 0.05
-- weights: c(1,25)
+Parameter inputs:  
+* _outcome: outcome_  
+* _covariates: Population,sex_  
+* _ID: sample.id_  
+* output folder: output/YOURFOLDERNAME  
+* outputfilename: skat\_chr1\_geneBased\_CADDgt2  
+* test_type: SKAT  
+* snp_filter: CADD\_phred>2  
+* min_mac:0  
+* top_maf: 0.05  
+* weights: c(1,25)  
 
 ## Command line interface
 
-References:
-- Command Line Interface [Quickstart](https://wiki.dnanexus.com/Command-Line-Client/Quickstart)
-- Index of [dx commands](https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands)
+References:  
+* Command Line Interface [Quickstart](https://wiki.dnanexus.com/Command-Line-Client/Quickstart)  
+* Index of [dx commands](https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands)  
 
 ### Log in to AWI
 **Replace topmed# with the user ID from your handout**
@@ -81,8 +82,8 @@ $ dx select project dcc
 
 ### Task 3) Navigate directories, make output directory, examine files
 
-- File paths:  <project>:/path/to/file.txt
-- Example: dcc:/phenotypes/1KG_pheno.csv
+* File paths: <project>:/path/to/file.txt
+* Example: dcc:/phenotypes/1KG\_pheno.csv
 
 
 List directory contents:
