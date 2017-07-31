@@ -14,7 +14,7 @@
 Note that the job will finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
 
-Log into http://dnanexus.com using the user name and password listed on the handout.  Should be in the form of Username:**topmed#** and Password:**Topmed_#**.
+Log into http://dnanexus.com using the user name and password listed on the handout.  Should be in the form of Username:**topmed_#** and Password:**Topmed_#**.
 Navigate to and select **(tools/genesis_v0.7)**
 File inputs:
 - phenofile -> phenotype/1KG_pheno.csv
@@ -56,8 +56,8 @@ Parameter inputs:
 ## Command line interface
 
 References:
-* Command Line Interface [Quickstart](https://wiki.dnanexus.com/Command-Line-Client/Quickstart)
-* Index of [dx commands](https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands)
+- Command Line Interface [Quickstart](https://wiki.dnanexus.com/Command-Line-Client/Quickstart)
+- Index of [dx commands](https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands)
 
 ### Log in to AWI
 **Replace topmed# with the user ID from your handout**
@@ -70,7 +70,7 @@ $ source /usr/local/dx-toolkit/environment
 ```
 $ dx login 
 	Enter the following at the prompts
-		username: topmed#
+		username: topmed_#
 		password: Topmed_#
 		project:dcc
 
@@ -81,8 +81,8 @@ $ dx select project dcc
 
 ### Task 3) Navigate directories, make output directory, examine files
 
-* File paths:  <project>:/path/to/file.txt
-* Example: dcc:/phenotypes/1KG_pheno.csv
+- File paths:  <project>:/path/to/file.txt
+- Example: dcc:/phenotypes/1KG_pheno.csv
 
 
 List directory contents:
