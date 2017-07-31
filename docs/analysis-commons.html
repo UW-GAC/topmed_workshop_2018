@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-07-28">
+<meta name="date" content="2017-07-31">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -126,7 +126,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="8" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>8</b> Analysis Pipeline</a><ul>
 <li class="chapter" data-level="8.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-a-local-cluster"><i class="fa fa-check"></i><b>8.1</b> Running on a local cluster</a></li>
-<li class="chapter" data-level="8.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-aws-batch"><i class="fa fa-check"></i><b>8.2</b> Running on AWS Batch</a></li>
+<li class="chapter" data-level="8.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-aws-batch"><i class="fa fa-check"></i><b>8.2</b> Running on AWS Batch</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#log-in-aws-docker-image"><i class="fa fa-check"></i><b>8.2.1</b> Log in AWS docker image</a></li>
+<li class="chapter" data-level="8.2.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#cd-to-working-directory-and-create-config-file"><i class="fa fa-check"></i><b>8.2.2</b> cd to working directory and create config file</a></li>
+<li class="chapter" data-level="8.2.3" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#print-out-aws-commands-if-executing-the-pipeline"><i class="fa fa-check"></i><b>8.2.3</b> Print out AWS commands if executing the pipeline</a></li>
+<li class="chapter" data-level="8.2.4" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#execute-the-pipeline"><i class="fa fa-check"></i><b>8.2.4</b> Execute the pipeline</a></li>
+<li class="chapter" data-level="8.2.5" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#monitor-the-jobs"><i class="fa fa-check"></i><b>8.2.5</b> Monitor the jobs</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>9</b> Analysis Commons</a><ul>
 <li class="chapter" data-level="9.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>9.1</b> Outline</a></li>
@@ -178,20 +184,46 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="task-1-run-a-single-variant-analysis." class="section level3">
 <h3><span class="header-section-number">9.2.1</span> Task 1) Run a single variant analysis.</h3>
 <p>Note that the job will finish instantaneously if you don’t change the output file name. It knows that you are running the exact same job and will just reuse results from previous analyses.</p>
-<p>Log into <a href="http://dnanexus.com" class="uri">http://dnanexus.com</a> using the user name and password listed on the handout. Should be in the form of Username:<strong>topmed#</strong> and Password:<strong>Topmed_#</strong>. Navigate to and select <strong>(tools/genesis_v0.7)</strong> File inputs: - phenofile -&gt; phenotype/1KG_pheno.csv - genotypefile -&gt; genotypes/1KG_phase3_subset_chr1.gds - kinship -&gt; kinship/1KG_kins.Rda</p>
-<p>Parameter inputs: - output folder: output/YOURFOLDERNAME - outcome: outcome - covariates: Population,sex - outputfilename: single_chr1 - test_type: Single - ID:sample.id</p>
+<p>Log into <a href="http://dnanexus.com" class="uri">http://dnanexus.com</a> using the user name and password listed on the handout. Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong>Topmed_#</strong>. Navigate to and select <strong>(tools/genesis_v0.7)</strong></p>
+<p>File inputs:<br />
+* phenofile -&gt; phenotype/1KG_pheno.csv<br />
+* genotypefile -&gt; genotypes/1KG_phase3_subset_chr1.gds<br />
+* kinship -&gt; kinship/1KG_kins.Rda</p>
+<p>Parameter inputs:<br />
+* output folder: output/YOURFOLDERNAME<br />
+* outcome: outcome<br />
+* covariates: Population,sex<br />
+* outputfilename: single_chr1<br />
+* test_type: Single<br />
+* ID: sample.id</p>
 </div>
 <div id="task-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5." class="section level3">
 <h3><span class="header-section-number">9.2.2</span> Task 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</h3>
 <p><em>Italic</em> inputs below are the same as single variant; update the parameters &amp; files to change to a SKAT test. Go to the monitor tab. Click on the Name of a job ( or someone’s) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.</p>
-<p>File inputs: - <em>phenofile -&gt; phenotype/1KG_pheno.csv</em> - <em>genotypefile -&gt; genotypes/1KG_phase3_subset_chr1.gds</em> - <em>kinship -&gt; kinship/1KG_kins.Rda</em> - annotation -&gt; annotation/1KG_annotation_CHR1.txt - genefile -&gt; aggregation/AggUnit_CHR1_ucscgene.csv</p>
+<p>File inputs:<br />
+* <em>phenofile -&gt; phenotype/1KG_pheno.csv</em><br />
+* <em>genotypefile -&gt; genotypes/1KG_phase3_subset_chr1.gds</em><br />
+* <em>kinship -&gt; kinship/1KG_kins.Rda</em><br />
+* annotation -&gt; annotation/1KG_annotation_CHR1.txt<br />
+* genefile -&gt; aggregation/AggUnit_CHR1_ucscgene.csv</p>
 <p>Parameter inputs:<br />
-- <em>outcome: outcome</em> - <em>covariates: Population,sex</em> - <em>ID:sample.id</em> - output folder: output/YOURFOLDERNAME - outputfilename: skat_chr1_geneBased_CADDgt2 - test_type: SKAT - snp_filter: CADD_phred&gt;2 - min_mac:0 - top_maf: 0.05 - weights: c(1,25)</p>
+* <em>outcome: outcome</em><br />
+* <em>covariates: Population,sex</em><br />
+* <em>ID: sample.id</em><br />
+* output folder: output/YOURFOLDERNAME<br />
+* outputfilename: skat_chr1_geneBased_CADDgt2<br />
+* test_type: SKAT<br />
+* snp_filter: CADD_phred&gt;2<br />
+* min_mac:0<br />
+* top_maf: 0.05<br />
+* weights: c(1,25)</p>
 </div>
 </div>
 <div id="command-line-interface" class="section level2">
 <h2><span class="header-section-number">9.3</span> Command line interface</h2>
-<p>References: * Command Line Interface <a href="https://wiki.dnanexus.com/Command-Line-Client/Quickstart">Quickstart</a> * Index of <a href="https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands">dx commands</a></p>
+<p>References:<br />
+* Command Line Interface <a href="https://wiki.dnanexus.com/Command-Line-Client/Quickstart">Quickstart</a><br />
+* Index of <a href="https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands">dx commands</a></p>
 <div id="log-in-to-awi" class="section level3">
 <h3><span class="header-section-number">9.3.1</span> Log in to AWI</h3>
 <p><strong>Replace topmed# with the user ID from your handout</strong></p>
@@ -199,7 +231,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 $ source /usr/local/dx-toolkit/environment</code></pre>
 <pre><code>$ dx login 
     Enter the following at the prompts
-        username: topmed#
+        username: topmed_#
         password: Topmed_#
         project:dcc
 
