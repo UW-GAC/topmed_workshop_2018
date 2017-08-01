@@ -14,7 +14,9 @@
 Note that the job will finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
 
-Log into http://dnanexus.com using the user name and password listed on the handout.  Should be in the form of Username:**topmed\_#** and Password:**Topmed\_#**.
+Log into http://dnanexus.com using the user name and password listed on the handout.  
+Should be in the form of Username:**topmed\_#** and Password:**Topmed\_#**.
+*Ignore warning about default billing account.*
 Navigate to and select **(tools/genesis\_v0.7)**
 
 File inputs:  
@@ -33,7 +35,7 @@ Parameter inputs:
 
 
 ### Task 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score > 2 and MAF <= 5%.
-_Italic_ inputs below are the same as single variant; update the parameters & files to change to a SKAT test.  Go to the monitor tab.  Click on the Name of a job ( or someone’s) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.   
+_Italic_ inputs below are the same as single variant; update the parameters & files to change to a SKAT test.  Go to the monitor tab.  Click on the Name of a job ( or someone’s ) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.   
 
 File inputs:  
 * _phenofile -> phenotype/1KG\_pheno.csv_  
@@ -82,7 +84,7 @@ $ dx select project dcc
 
 ### Task 3) Navigate directories, make output directory, examine files
 
-* File paths: <project>:/path/to/file.txt
+* File paths: \<project\>:/path/to/file.txt
 * Example: dcc:/phenotypes/1KG\_pheno.csv
 
 
