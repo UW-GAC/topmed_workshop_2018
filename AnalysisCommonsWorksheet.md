@@ -209,5 +209,10 @@ $ dx run output/YOURNAME/make_residuals -iphenofile=phenotype/1KG_pheno.csv \
 ```
 
 
+Monitor Progress
+```
+$ dx watch jobid
+```
+
 
 
