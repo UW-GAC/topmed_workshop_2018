@@ -31,7 +31,7 @@ Parameter inputs:
 * covariates _(case sepecific)_: Population,sex  
 * prefix for output filename: single\_chr1  
 * test_type: Single  
-* ID: sample.id  
+* pheno_id: sample.id  
 * Note: Other options can be left as their defaults, some are only used for aggreagate tests
 
 
@@ -49,7 +49,7 @@ File inputs:
 Parameter inputs:  
 * _outcome: outcome_  
 * _covariates: Population,sex_  
-* _ID: sample.id_  
+* _pheno_id: sample.id_  
 * output folder: output/YOURFOLDERNAME  
 * outputfilename: skat\_chr1\_geneBased\_CADDgt2  
 * test_type: SKAT  
@@ -65,9 +65,12 @@ References:
 * Index of [dx commands](https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands)  
 
 ### Log in to AWI
-**Replace topmed# with the user ID from your handout**
+**Replace topmed_## with the user ID from your handout**
 ```
-$ ssh -i ~/.ssh/tm_workshop.pem topmed_#@34.209.245.0
+$ ssh topmed_##@34.212.243.167 --timeout 2h
+You will be prompted for your password, e.g. Topmed_## (Note capitolization)
+_Please ignore login warnings
+
 $ source /usr/local/dx-toolkit/environment
 ```
 
@@ -75,10 +78,11 @@ $ source /usr/local/dx-toolkit/environment
 ```
 $ dx login 
 	Enter the following at the prompts
-		username: topmed_#
-		password: Topmed_#
-		project:dcc
+		username: topmed_##
+		password: Topmed_##
+		project:dcc ( type 0 to select dcc )
 
+You can select or change project once you are logged in
 $ dx select dcc
 ```
 
@@ -100,20 +104,21 @@ $ dx ls dcc:/tools
 Get results from project
 ```
 $ dx download dcc:/phenotype/1KG_pheno.csv
+$ ls
+$ head 1KG_pheno.csv
 ```
 ### Exercise 4) Run single variant analysis from command line using bash script
 
-Open the Single.sh bash script and edit to replace the output directory “YOURNAME” to your folder
+Open the single_multichrom.sh bash script and edit to replace the output directory “YOURNAME” to your folder
 ```
 $ dx describe tools/genesis_v0.7
 ```
-Either edit using vi
+Either edit using nano
 ```
-$ vi Single_multichrom.sh 
-```
-Or if not a vi fan you can use this line to substitute your name for the directory name.  Please replace ‘JenB’ with your output directory name in the line below. 
-```
-$ sed -i 's/YOURNAME/JenB/' Single_multichrom.sh
+$ nano single_multichrom.sh 
+
+Run the App.  Will loop over 2 chromosomes running the single variant analyses
+$ ./single_multichrom.sh
 ```
 
 ## Writing your own Apps 
@@ -214,5 +219,11 @@ Monitor Progress
 $ dx watch jobid
 ```
 
+### Optional Exercise 6) Make QQ plot
+Make QQ plot of your single variant results.  
+Select results from the multiple chromosome run (chr21 and chr22).  
 
+You will need to identify the p-value column name.  Use (dx head)[https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--] to view column names, or (dx download)[https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download] to download the results for viewing.  Alternately, view through web interface using Visualize ( next to Monitor near top of the page ) and select (*Gzipped File Previewer*)[https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#]
 
+Run first through web interface then try running interactivly from the web interface then from the command line. 
+`dx run tools/qqplot`
