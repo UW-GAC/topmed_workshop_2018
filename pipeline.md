@@ -57,7 +57,7 @@ To run a burden test on AWS Batch, we do the following general steps:
 5. Execute the association pipeline specifying the AWS Batch service to run the pipeline
 6. Monitor the pipeline via the AWS Batch console
 
-### Log in AWS docker image
+### Log into AWS docker image
 ssh into our image which is running docker.  Various docker commands can be executed including running TOPMed version of R (note: TOPMed data is not part of the docker image).
 ```
 ssh -i ~/.ssh/<some private key> kuraisa@54.244.25.94
