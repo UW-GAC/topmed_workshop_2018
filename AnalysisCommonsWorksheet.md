@@ -224,9 +224,9 @@ Make QQ plot of your single variant results.
 Select results from the multiple chromosome run (chr21 and chr22).  
 
 You will need to identify the p-value column name.  To view the results file try these options:
-	* [dx head](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--) to view column names
-	* [dx download](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download) to download the results for viewing.  
-	* view through web interface using Visualize ( next to Monitor near top of the page ) and select [*Gzipped File Previewer*](https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#)
+* [dx head](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--) to view column names
+* [dx download](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download) to download the results for viewing.  
+* view through web interface using Visualize ( next to Monitor near top of the page ) and select [*Gzipped File Previewer*](https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#)
 
 Run first through web interface then try running interactivly from the web interface then from the command line. 
 
