@@ -224,14 +224,21 @@ Make QQ plot of your single variant results.
 Select results from the multiple chromosome run (chr21 and chr22).  
 
 You will need to identify the p-value column name.  To view the results file try these options:
-* [dx head](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--) to view column names
 * [dx download](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download) to download the results for viewing.  
 * view through web interface using Visualize ( next to Monitor near top of the page ) and select [*Gzipped File Previewer*](https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#)
+* Pipe zipped file though regular linux commands [dx cat](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--) to view column names
+```
+$ dx cat output/folder/file | gunzip | head
+```
 
-Run first through web interface then try running interactivly from the web interface then from the command line. 
+Once you know the name of the p-value column, run qqplot first through web interface and then try running interactivly from the web interface then from the command line. 
 
 ```
 $ dx run tools/qqplot
    note the plot label must not contain spaces
 
 ```
+
+
+### Optional Exercise 7) Run conditional analysis
+Find the name of one variant in the single snp results and rerun the single variant analysis conditioning on that variant. (e.g. 22:17105517).  Note that the output file name cannot contain a colon (e.g. output file name cannot be single\_chr22\_single\_22:17105517, try single\_chr22\_single\_22\_17105517 instead ).
