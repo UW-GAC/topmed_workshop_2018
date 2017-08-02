@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-01">
+<meta name="date" content="2017-08-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,7 +99,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <ul class="summary">
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html"><i class="fa fa-check"></i><b>2</b> Downloading Data From The TOPMed Exchange Area</a></li>
+<li class="chapter" data-level="2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html"><i class="fa fa-check"></i><b>2</b> Downloading Data From The TOPMed Exchange Area</a><ul>
+<li class="chapter" data-level="2.1" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#what-is-the-topmed-exchange-area-ea"><i class="fa fa-check"></i><b>2.1</b> What is the TOPMed Exchange Area (EA)?</a></li>
+<li class="chapter" data-level="2.2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#how-does-the-ea-work"><i class="fa fa-check"></i><b>2.2</b> How does the EA work?</a></li>
+<li class="chapter" data-level="2.3" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#what-data-can-i-find-in-the-ea"><i class="fa fa-check"></i><b>2.3</b> What data can I find in the EA?</a></li>
+<li class="chapter" data-level="2.4" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#who-can-access-the-topmed-ea"><i class="fa fa-check"></i><b>2.4</b> Who can access the TOPMed EA?</a></li>
+<li class="chapter" data-level="2.5" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#how-can-i-download-data-from-the-ea"><i class="fa fa-check"></i><b>2.5</b> How can I download data from the EA?</a></li>
+<li class="chapter" data-level="2.6" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#quick-how-to"><i class="fa fa-check"></i><b>2.6</b> Quick How-to</a></li>
+<li class="chapter" data-level="2.7" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#useful-resources"><i class="fa fa-check"></i><b>2.7</b> Useful resources</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>3</b> GDS format</a><ul>
 <li class="chapter" data-level="3.1" data-path="gds-format.html"><a href="gds-format.html#exploring-a-gds-file"><i class="fa fa-check"></i><b>3.1</b> Exploring a GDS file</a></li>
 <li class="chapter" data-level="3.2" data-path="gds-format.html"><a href="gds-format.html#exercise-hwe"><i class="fa fa-check"></i><b>3.2</b> Exercise: HWE</a></li>
@@ -147,6 +155,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="9.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>9.4</b> Writing your own Apps</a><ul>
 <li class="chapter" data-level="9.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>9.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
+<li class="chapter" data-level="9.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>9.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -201,34 +210,34 @@ snpset &lt;-<span class="st"> </span><span class="kw">snpgdsLDpruning</span>(gds
 ##     sliding window: 10,000,000 basepairs, Inf SNPs
 ##     |LD| threshold: 0.316228
 ##     method: correlation
-## Chromosome 1: 31.34%, 351/1,120
-## Chromosome 2: 31.61%, 354/1,120
-## Chromosome 3: 30.80%, 345/1,120
-## Chromosome 4: 30.98%, 347/1,120
+## Chromosome 1: 31.25%, 350/1,120
+## Chromosome 2: 31.43%, 352/1,120
+## Chromosome 3: 29.91%, 335/1,120
+## Chromosome 4: 30.62%, 343/1,120
 ## Chromosome 5: 29.73%, 333/1,120
-## Chromosome 6: 30.54%, 342/1,120
-## Chromosome 7: 28.57%, 320/1,120
+## Chromosome 6: 31.07%, 348/1,120
+## Chromosome 7: 28.04%, 314/1,120
 ## Chromosome 8: 25.98%, 291/1,120
-## Chromosome 9: 28.30%, 317/1,120
-## Chromosome 10: 28.48%, 319/1,120
-## Chromosome 11: 26.70%, 299/1,120
-## Chromosome 12: 28.21%, 316/1,120
-## Chromosome 13: 25.45%, 285/1,120
-## Chromosome 14: 24.38%, 273/1,120
-## Chromosome 15: 22.59%, 253/1,120
+## Chromosome 9: 27.59%, 309/1,120
+## Chromosome 10: 28.93%, 324/1,120
+## Chromosome 11: 26.88%, 301/1,120
+## Chromosome 12: 28.39%, 318/1,120
+## Chromosome 13: 25.54%, 286/1,120
+## Chromosome 14: 24.64%, 276/1,120
+## Chromosome 15: 21.96%, 246/1,120
 ## Chromosome 16: 22.41%, 251/1,120
-## Chromosome 17: 21.88%, 245/1,120
-## Chromosome 18: 23.48%, 263/1,120
-## Chromosome 19: 21.07%, 236/1,120
-## Chromosome 20: 20.36%, 228/1,120
-## Chromosome 21: 17.05%, 191/1,120
-## Chromosome 22: 17.86%, 200/1,120
-## 6,359 markers are selected in total.</code></pre>
+## Chromosome 17: 21.79%, 244/1,120
+## Chromosome 18: 23.75%, 266/1,120
+## Chromosome 19: 21.43%, 240/1,120
+## Chromosome 20: 20.62%, 231/1,120
+## Chromosome 21: 17.14%, 192/1,120
+## Chromosome 22: 17.68%, 198/1,120
+## 6,348 markers are selected in total.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(snpset, length)</code></pre></div>
 <pre><code>##  chr1  chr2  chr3  chr4  chr5  chr6  chr7  chr8  chr9 chr10 chr11 chr12 
-##   351   354   345   347   333   342   320   291   317   319   299   316 
+##   350   352   335   343   333   348   314   291   309   324   301   318 
 ## chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 
-##   285   273   253   251   245   263   236   228   191   200</code></pre>
+##   286   276   246   251   244   266   240   231   192   198</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pruned &lt;-<span class="st"> </span><span class="kw">unlist</span>(snpset, <span class="dt">use.names=</span><span class="ot">FALSE</span>)
 
 <span class="co"># KING</span>
@@ -238,16 +247,16 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Working space: 100 samples, 6,359 SNVs
+## Working space: 100 samples, 6,348 SNVs
 ##     using 1 (CPU) core
 ## No family is specified, and all individuals are treated as singletons.
 ## Relationship inference in the presence of population stratification.
 ## CPU capabilities: Double-Precision SSE2
-## Tue Aug  1 18:15:59 2017    (internal increment: 65536)
+## Wed Aug  2 15:45:14 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Tue Aug  1 18:15:59 2017    Done.</code></pre>
+## Wed Aug  2 15:45:14 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(king)</code></pre></div>
 <pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;afreq&quot;     &quot;IBS0&quot;      &quot;kinship&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(king<span class="op">$</span>kinship)</code></pre></div>
@@ -257,13 +266,13 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 <p>We extract pairwise kinship estimates and IBS0 to plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kinship &lt;-<span class="st"> </span><span class="kw">snpgdsIBDSelection</span>(king)
 <span class="kw">head</span>(kinship)</code></pre></div>
-<pre><code>##       ID1     ID2       IBS0     kinship
-## 1 HG00110 HG00116 0.02484667 -0.01058041
-## 2 HG00110 HG00120 0.02641925 -0.02357920
-## 3 HG00110 HG00128 0.02563296 -0.02359069
-## 4 HG00110 HG00136 0.02940714 -0.04534462
-## 5 HG00110 HG00137 0.02752005 -0.04715840
-## 6 HG00110 HG00141 0.02893537 -0.04927449</code></pre>
+<pre><code>##       ID1     ID2       IBS0      kinship
+## 1 HG00110 HG00116 0.02457467 -0.003915663
+## 2 HG00110 HG00120 0.02646503 -0.021686747
+## 3 HG00110 HG00128 0.02441714 -0.011529126
+## 4 HG00110 HG00136 0.02961563 -0.046385542
+## 5 HG00110 HG00137 0.02567738 -0.029819277
+## 6 HG00110 HG00141 0.02867045 -0.043975904</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(kinship, <span class="kw">aes</span>(IBS0, kinship)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">2</span><span class="op">^</span>(<span class="op">-</span><span class="kw">seq</span>(<span class="dv">3</span>,<span class="dv">9</span>,<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>), <span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>, <span class="dt">color=</span><span class="st">&quot;grey&quot;</span>) <span class="op">+</span>
@@ -292,37 +301,37 @@ pca.unrel &lt;-<span class="st"> </span><span class="kw">snpgdsPCA</span>(gds, <
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Excluding 249 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
-## Working space: 85 samples, 6,110 SNVs
+## Excluding 217 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
+## Working space: 85 samples, 6,131 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Tue Aug  1 18:16:02 2017    (internal increment: 9056)
-## 
-[..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 0s
-## Tue Aug  1 18:16:02 2017    Begin (eigenvalues and eigenvectors)
-## Tue Aug  1 18:16:02 2017    Done.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project values for relatives</span>
-snp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASNPLoading</span>(pca.unrel, <span class="dt">gdsobj=</span>gds)</code></pre></div>
-<pre><code>## SNP loading:
-## Working space: 85 samples, 6110 SNPs
-##     using 1 (CPU) core
-##     using the top 32 eigenvectors
-## Tue Aug  1 18:16:02 2017    (internal increment: 65536)
-## 
-[..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 0s
-## Tue Aug  1 18:16:02 2017    Done.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASampLoading</span>(snp.load, <span class="dt">gdsobj=</span>gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>rels)</code></pre></div>
-<pre><code>## Sample loading:
-## Working space: 15 samples, 6110 SNPs
-##     using 1 (CPU) core
-##     using the top 32 eigenvectors
-## Tue Aug  1 18:16:02 2017    (internal increment: 65536)
+## Wed Aug  2 15:45:16 2017    (internal increment: 9056)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 1s
-## Tue Aug  1 18:16:03 2017    Done.</code></pre>
+## Wed Aug  2 15:45:17 2017    Begin (eigenvalues and eigenvectors)
+## Wed Aug  2 15:45:17 2017    Done.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project values for relatives</span>
+snp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASNPLoading</span>(pca.unrel, <span class="dt">gdsobj=</span>gds)</code></pre></div>
+<pre><code>## SNP loading:
+## Working space: 85 samples, 6131 SNPs
+##     using 1 (CPU) core
+##     using the top 32 eigenvectors
+## Wed Aug  2 15:45:17 2017    (internal increment: 65536)
+## 
+[..................................................]  0%, ETC: ---    
+[==================================================] 100%, completed in 0s
+## Wed Aug  2 15:45:17 2017    Done.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASampLoading</span>(snp.load, <span class="dt">gdsobj=</span>gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>rels)</code></pre></div>
+<pre><code>## Sample loading:
+## Working space: 15 samples, 6131 SNPs
+##     using 1 (CPU) core
+##     using the top 32 eigenvectors
+## Wed Aug  2 15:45:17 2017    (internal increment: 65536)
+## 
+[..................................................]  0%, ETC: ---    
+[==================================================] 100%, completed in 0s
+## Wed Aug  2 15:45:17 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># combine unrelated and related PCs and order as in GDS file</span>
 pcs &lt;-<span class="st"> </span><span class="kw">rbind</span>(pca.unrel<span class="op">$</span>eigenvect, samp.load<span class="op">$</span>eigenvect)
 <span class="kw">rownames</span>(pcs) &lt;-<span class="st"> </span><span class="kw">c</span>(pca.unrel<span class="op">$</span>sample.id, samp.load<span class="op">$</span>sample.id)

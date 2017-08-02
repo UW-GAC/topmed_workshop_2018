@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-01">
+<meta name="date" content="2017-08-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,7 +99,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <ul class="summary">
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html"><i class="fa fa-check"></i><b>2</b> Downloading Data From The TOPMed Exchange Area</a></li>
+<li class="chapter" data-level="2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html"><i class="fa fa-check"></i><b>2</b> Downloading Data From The TOPMed Exchange Area</a><ul>
+<li class="chapter" data-level="2.1" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#what-is-the-topmed-exchange-area-ea"><i class="fa fa-check"></i><b>2.1</b> What is the TOPMed Exchange Area (EA)?</a></li>
+<li class="chapter" data-level="2.2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#how-does-the-ea-work"><i class="fa fa-check"></i><b>2.2</b> How does the EA work?</a></li>
+<li class="chapter" data-level="2.3" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#what-data-can-i-find-in-the-ea"><i class="fa fa-check"></i><b>2.3</b> What data can I find in the EA?</a></li>
+<li class="chapter" data-level="2.4" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#who-can-access-the-topmed-ea"><i class="fa fa-check"></i><b>2.4</b> Who can access the TOPMed EA?</a></li>
+<li class="chapter" data-level="2.5" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#how-can-i-download-data-from-the-ea"><i class="fa fa-check"></i><b>2.5</b> How can I download data from the EA?</a></li>
+<li class="chapter" data-level="2.6" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#quick-how-to"><i class="fa fa-check"></i><b>2.6</b> Quick How-to</a></li>
+<li class="chapter" data-level="2.7" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#useful-resources"><i class="fa fa-check"></i><b>2.7</b> Useful resources</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>3</b> GDS format</a><ul>
 <li class="chapter" data-level="3.1" data-path="gds-format.html"><a href="gds-format.html#exploring-a-gds-file"><i class="fa fa-check"></i><b>3.1</b> Exploring a GDS file</a></li>
 <li class="chapter" data-level="3.2" data-path="gds-format.html"><a href="gds-format.html#exercise-hwe"><i class="fa fa-check"></i><b>3.2</b> Exercise: HWE</a></li>
@@ -147,6 +155,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="9.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>9.4</b> Writing your own Apps</a><ul>
 <li class="chapter" data-level="9.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>9.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
+<li class="chapter" data-level="9.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>9.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -186,11 +195,11 @@ grm &lt;-<span class="st"> </span><span class="kw">snpgdsGRM</span>(gds, <span c
 ## Working space: 1,126 samples, 1,107 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Tue Aug  1 18:15:54 2017    (internal increment: 680)
+## Wed Aug  2 15:45:10 2017    (internal increment: 680)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 1s
-## Tue Aug  1 18:15:55 2017    Done.</code></pre>
+## Wed Aug  2 15:45:11 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(grm)</code></pre></div>
 <pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;grm&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(grm<span class="op">$</span>grm)</code></pre></div>

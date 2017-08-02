@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-01">
+<meta name="date" content="2017-08-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,7 +99,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <ul class="summary">
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html"><i class="fa fa-check"></i><b>2</b> Downloading Data From The TOPMed Exchange Area</a></li>
+<li class="chapter" data-level="2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html"><i class="fa fa-check"></i><b>2</b> Downloading Data From The TOPMed Exchange Area</a><ul>
+<li class="chapter" data-level="2.1" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#what-is-the-topmed-exchange-area-ea"><i class="fa fa-check"></i><b>2.1</b> What is the TOPMed Exchange Area (EA)?</a></li>
+<li class="chapter" data-level="2.2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#how-does-the-ea-work"><i class="fa fa-check"></i><b>2.2</b> How does the EA work?</a></li>
+<li class="chapter" data-level="2.3" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#what-data-can-i-find-in-the-ea"><i class="fa fa-check"></i><b>2.3</b> What data can I find in the EA?</a></li>
+<li class="chapter" data-level="2.4" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#who-can-access-the-topmed-ea"><i class="fa fa-check"></i><b>2.4</b> Who can access the TOPMed EA?</a></li>
+<li class="chapter" data-level="2.5" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#how-can-i-download-data-from-the-ea"><i class="fa fa-check"></i><b>2.5</b> How can I download data from the EA?</a></li>
+<li class="chapter" data-level="2.6" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#quick-how-to"><i class="fa fa-check"></i><b>2.6</b> Quick How-to</a></li>
+<li class="chapter" data-level="2.7" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#useful-resources"><i class="fa fa-check"></i><b>2.7</b> Useful resources</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>3</b> GDS format</a><ul>
 <li class="chapter" data-level="3.1" data-path="gds-format.html"><a href="gds-format.html#exploring-a-gds-file"><i class="fa fa-check"></i><b>3.1</b> Exploring a GDS file</a></li>
 <li class="chapter" data-level="3.2" data-path="gds-format.html"><a href="gds-format.html#exercise-hwe"><i class="fa fa-check"></i><b>3.2</b> Exercise: HWE</a></li>
@@ -147,6 +155,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="9.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>9.4</b> Writing your own Apps</a><ul>
 <li class="chapter" data-level="9.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>9.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
+<li class="chapter" data-level="9.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>9.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -168,7 +177,81 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="downloading-data-from-the-topmed-exchange-area" class="section level1">
 <h1><span class="header-section-number">2</span> Downloading Data From The TOPMed Exchange Area</h1>
+<p>If you know you have access to your study’s TOPMed Exchange Area, you can follow along with these instructions: <a href="https://www.nhlbiwgs.org/system/files/Information/How%20to%20Download%20Data%20from%20the%20dbGaP%20Exchange%20Area.pdf">https://www.nhlbiwgs.org/system/files/Information/How%20to%20Download%20Data%20from%20the%20dbGaP%20Exchange%20Area.pdf</a></p>
+<div id="what-is-the-topmed-exchange-area-ea" class="section level2">
+<h2><span class="header-section-number">2.1</span> What is the TOPMed Exchange Area (EA)?</h2>
+<ul>
+<li>Exchange Areas are a special section of dbGaP storage that facilitates collaboration in large multicenter projects.</li>
+<li>The TOPMed EA allows pre-release data (genotypes, phenotypes, <em>etc.</em>) to be stored and exchanged between TOPMed investigators.</li>
+</ul>
+</div>
+<div id="how-does-the-ea-work" class="section level2">
+<h2><span class="header-section-number">2.2</span> How does the EA work?</h2>
+<ul>
+<li>There isn’t just one TOPMed EA, but <strong>one EA for each TOPMed project study</strong></li>
+<li>Each project study’s <strong>TOPMed accession</strong> has a section of “Provisional files” - this is the EA
+<ul>
+<li>You’ll get more information about dbGaP parent accession vs. child accession vs. TOPMed accession later</li>
+</ul></li>
+<li>Project studies may upload additional data to the EA, where those with access can download it</li>
+<li>TOPMed genotype freezes are available for TOPMed investigators before general release</li>
+<li>EA data should only be downloaded to appropriately protected computer systems (i.e. <strong>not your personal laptop</strong>)</li>
+</ul>
+</div>
+<div id="what-data-can-i-find-in-the-ea" class="section level2">
+<h2><span class="header-section-number">2.3</span> What data can I find in the EA?</h2>
+<ul>
+<li>IRC’s combined sequencing result .vcfs (genotype freezes)</li>
+<li>DCC-harmonized phenotypes</li>
+<li>DCC’s sample annotation
+<ul>
+<li>Corrected sample swaps</li>
+<li>Unique individuals (excludes duplicates, MZ twins)</li>
+<li>Inferred sex chromosome karyotype</li>
+</ul></li>
+<li>DCC’s kinship estimates</li>
+<li>DCC’s principal components</li>
+<li>Phenotype data shared for specific working groups</li>
+</ul>
+</div>
+<div id="who-can-access-the-topmed-ea" class="section level2">
+<h2><span class="header-section-number">2.4</span> Who can access the TOPMed EA?</h2>
+<ol style="list-style-type: decimal">
+<li>An “elligible investigator” who has been nominated for access by a TOPMed project study</li>
+<li>A designated downloader for one of the nominated investigators</li>
+</ol>
+<ul>
+<li>If you are an analyst who needs to work with TOPMed data, you will probably gain access to it through your PI</li>
+<li>See <a href="https://www.nhlbiwgs.org/topmed-data-sharing-policies#D">detailed information</a> at the TOPMed website</li>
+</ul>
+</div>
+<div id="how-can-i-download-data-from-the-ea" class="section level2">
+<h2><span class="header-section-number">2.5</span> How can I download data from the EA?</h2>
+<ul>
+<li>An elligible investigator must be nominated by their study and complete a Data Access Request (DAR) before accessing the EA data</li>
+<li>See <a href="https://www.nhlbiwgs.org/system/files/Information/How%20to%20Download%20Data%20from%20the%20dbGaP%20Exchange%20Area.pdf">detailed instructions</a> (with screenshots!) on the TOPMed website</li>
+</ul>
+</div>
+<div id="quick-how-to" class="section level2">
+<h2><span class="header-section-number">2.6</span> Quick How-to</h2>
+<ol style="list-style-type: decimal">
+<li>Log in to the <a href="https://dbgap.ncbi.nlm.nih.gov/aa/wga.cgi?page=login">dbGaP controlled access area</a></li>
+<li>Go to “My Requests” tab</li>
+<li>Find the TOPMed accession (has “NHLBI TOPMed” in the study name) for a study you’re associated with and click on “Request Files”</li>
+<li>Click on the “Provisional files” tab</li>
+<li>Select the files you want to download</li>
+<li>Use the information provided to start an Aspera download of the data</li>
+</ol>
+</div>
+<div id="useful-resources" class="section level2">
+<h2><span class="header-section-number">2.7</span> Useful resources</h2>
+<ul>
+<li><a href="https://www.nhlbiwgs.org/topmed-data-sharing-policies/">TOPMed Data Sharing Policies</a></li>
+<li><a href="https://www.nhlbiwgs.org/system/files/Information/TOPMed_EA_dbgap_study_accession_nums.pdf">List of TOPMed study accession numbers</a></li>
+<li><a href="https://www.ncbi.nlm.nih.gov/books/NBK36439/#Download.Download_Procedure">General dbGaP download instructions</a></li>
+</ul>
 
+</div>
 </div>
             </section>
 

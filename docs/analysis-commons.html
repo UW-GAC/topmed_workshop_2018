@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-01">
+<meta name="date" content="2017-08-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,7 +99,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <ul class="summary">
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html"><i class="fa fa-check"></i><b>2</b> Downloading Data From The TOPMed Exchange Area</a></li>
+<li class="chapter" data-level="2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html"><i class="fa fa-check"></i><b>2</b> Downloading Data From The TOPMed Exchange Area</a><ul>
+<li class="chapter" data-level="2.1" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#what-is-the-topmed-exchange-area-ea"><i class="fa fa-check"></i><b>2.1</b> What is the TOPMed Exchange Area (EA)?</a></li>
+<li class="chapter" data-level="2.2" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#how-does-the-ea-work"><i class="fa fa-check"></i><b>2.2</b> How does the EA work?</a></li>
+<li class="chapter" data-level="2.3" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#what-data-can-i-find-in-the-ea"><i class="fa fa-check"></i><b>2.3</b> What data can I find in the EA?</a></li>
+<li class="chapter" data-level="2.4" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#who-can-access-the-topmed-ea"><i class="fa fa-check"></i><b>2.4</b> Who can access the TOPMed EA?</a></li>
+<li class="chapter" data-level="2.5" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#how-can-i-download-data-from-the-ea"><i class="fa fa-check"></i><b>2.5</b> How can I download data from the EA?</a></li>
+<li class="chapter" data-level="2.6" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#quick-how-to"><i class="fa fa-check"></i><b>2.6</b> Quick How-to</a></li>
+<li class="chapter" data-level="2.7" data-path="downloading-data-from-the-topmed-exchange-area.html"><a href="downloading-data-from-the-topmed-exchange-area.html#useful-resources"><i class="fa fa-check"></i><b>2.7</b> Useful resources</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>3</b> GDS format</a><ul>
 <li class="chapter" data-level="3.1" data-path="gds-format.html"><a href="gds-format.html#exploring-a-gds-file"><i class="fa fa-check"></i><b>3.1</b> Exploring a GDS file</a></li>
 <li class="chapter" data-level="3.2" data-path="gds-format.html"><a href="gds-format.html#exercise-hwe"><i class="fa fa-check"></i><b>3.2</b> Exercise: HWE</a></li>
@@ -147,6 +155,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="9.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>9.4</b> Writing your own Apps</a><ul>
 <li class="chapter" data-level="9.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>9.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
+<li class="chapter" data-level="9.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>9.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -197,7 +206,7 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 * covariates <em>(case sepecific)</em>: Population,sex<br />
 * prefix for output filename: single_chr1<br />
 * test_type: Single<br />
-* ID: sample.id<br />
+* pheno_id: sample.id<br />
 * Note: Other options can be left as their defaults, some are only used for aggreagate tests</p>
 </div>
 <div id="exercise-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5." class="section level3">
@@ -212,7 +221,7 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 <p>Parameter inputs:<br />
 * <em>outcome: outcome</em><br />
 * <em>covariates: Population,sex</em><br />
-* <em>ID: sample.id</em><br />
+* <em>pheno_id: sample.id</em><br />
 * output folder: output/YOURFOLDERNAME<br />
 * outputfilename: skat_chr1_geneBased_CADDgt2<br />
 * test_type: SKAT<br />
@@ -229,15 +238,19 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 * Index of <a href="https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands">dx commands</a></p>
 <div id="log-in-to-awi" class="section level3">
 <h3><span class="header-section-number">9.3.1</span> Log in to AWI</h3>
-<p><strong>Replace topmed# with the user ID from your handout</strong></p>
-<pre><code>$ ssh -i ~/.ssh/tm_workshop.pem topmed_#@34.209.245.0
+<p><strong>Replace topmed_## with the user ID from your handout</strong></p>
+<pre><code>$ ssh topmed_##@34.212.243.167 --timeout 2h
+You will be prompted for your password, e.g. Topmed_## (Note capitolization)
+_Please ignore login warnings
+
 $ source /usr/local/dx-toolkit/environment</code></pre>
 <pre><code>$ dx login 
     Enter the following at the prompts
-        username: topmed_#
-        password: Topmed_#
-        project:dcc
+        username: topmed_##
+        password: Topmed_##
+        project:dcc ( type 0 to select dcc )
 
+You can select or change project once you are logged in
 $ dx select dcc</code></pre>
 </div>
 <div id="exercise-3-navigate-directories-make-output-directory-examine-files" class="section level3">
@@ -252,16 +265,19 @@ $ dx ls
 $ dx ls /tools
 $ dx ls dcc:/tools</code></pre>
 <p>Get results from project</p>
-<pre><code>$ dx download dcc:/phenotype/1KG_pheno.csv</code></pre>
+<pre><code>$ dx download dcc:/phenotype/1KG_pheno.csv
+$ ls
+$ head 1KG_pheno.csv</code></pre>
 </div>
 <div id="exercise-4-run-single-variant-analysis-from-command-line-using-bash-script" class="section level3">
 <h3><span class="header-section-number">9.3.3</span> Exercise 4) Run single variant analysis from command line using bash script</h3>
-<p>Open the Single.sh bash script and edit to replace the output directory “YOURNAME” to your folder</p>
+<p>Open the single_multichrom.sh bash script and edit to replace the output directory “YOURNAME” to your folder</p>
 <pre><code>$ dx describe tools/genesis_v0.7</code></pre>
-<p>Either edit using vi</p>
-<pre><code>$ vi Single_multichrom.sh </code></pre>
-<p>Or if not a vi fan you can use this line to substitute your name for the directory name. Please replace ‘JenB’ with your output directory name in the line below.</p>
-<pre><code>$ sed -i &#39;s/YOURNAME/JenB/&#39; Single_multichrom.sh</code></pre>
+<p>Either edit using nano</p>
+<pre><code>$ nano single_multichrom.sh 
+
+Run the App.  Will loop over 2 chromosomes running the single variant analyses
+$ ./single_multichrom.sh</code></pre>
 </div>
 </div>
 <div id="writing-your-own-apps" class="section level2">
@@ -338,6 +354,17 @@ write.csv(pheno,file=&quot;output&quot;,row.names=F)</code></pre>
 --destination=output/YOURNAME --yes</code></pre>
 <p>Monitor Progress</p>
 <pre><code>$ dx watch jobid</code></pre>
+</div>
+<div id="optional-exercise-6-make-qq-plot" class="section level3">
+<h3><span class="header-section-number">9.4.2</span> Optional Exercise 6) Make QQ plot</h3>
+<p>Make QQ plot of your single variant results.<br />
+Select results from the multiple chromosome run (chr21 and chr22).</p>
+<p>You will need to identify the p-value column name. To view the results file try these options: * <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--">dx head</a> to view column names * <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download">dx download</a> to download the results for viewing.<br />
+* view through web interface using Visualize ( next to Monitor near top of the page ) and select <a href="https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#"><em>Gzipped File Previewer</em></a></p>
+<p>Run first through web interface then try running interactivly from the web interface then from the command line.</p>
+<pre><code>$ dx run tools/qqplot
+   note the plot label must not contain spaces
+</code></pre>
 
 </div>
 </div>
