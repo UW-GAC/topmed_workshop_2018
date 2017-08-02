@@ -3,14 +3,14 @@
 If you know you have access to your study's TOPMed Exchange Area, you can follow along with these instructions:
 https://www.nhlbiwgs.org/system/files/Information/How%20to%20Download%20Data%20from%20the%20dbGaP%20Exchange%20Area.pdf
 
-
 ## What is the TOPMed Exchange Area (EA)?
 * Exchange Areas are a special section of dbGaP storage that facilitates collaboration in large multicenter projects.
 * The TOPMed EA allows pre-release data (genotypes, phenotypes, *etc.*) to be stored and exchanged between TOPMed investigators.
 
 ## How does the EA work?
 * There isn't just one TOPMed EA, but **one EA for each TOPMed project study**
-* Each project study's TOPMed accession has a section of "Provisional files" - this is the EA
+* Each project study's **TOPMed accession** has a section of "Provisional files" - this is the EA
+    * You'll get more information about dbGaP parent accession vs. child accession vs. TOPMed accession later
 * Project studies may upload additional data to the EA, where those with access can download it
 * TOPMed genotype freezes are available for TOPMed investigators before general release
 * EA data should only be downloaded to appropriately protected computer systems (i.e. **not your personal laptop**)
@@ -19,6 +19,9 @@ https://www.nhlbiwgs.org/system/files/Information/How%20to%20Download%20Data%20f
 * IRC's combined sequencing result .vcfs (genotype freezes)
 * DCC-harmonized phenotypes
 * DCC's sample annotation
+    * Corrected sample swaps
+    * Unique individuals (excludes duplicates, MZ twins)
+    * Inferred sex chromosome karyotype
 * DCC's kinship estimates
 * DCC's principal components
 * Phenotype data shared for specific working groups
