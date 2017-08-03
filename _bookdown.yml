@@ -1,4 +1,4 @@
-rmd_files: ["index.Rmd", "exchange_area.md", "gds_intro.Rmd", "kinship.Rmd",
+rmd_files: ["index.Rmd", "gds_intro.Rmd", "kinship.Rmd",
     "phenotype_harmonization.Rmd", "dbgap_phenotype_search.md",
     "association.Rmd", "pipeline.md", "AnalysisCommonsWorksheet.md"]
 output_dir: "docs"
