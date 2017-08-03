@@ -224,9 +224,9 @@ Make QQ plot of your single variant results.
 Select results from the multiple chromosome run (chr21 and chr22).  
 
 You will need to identify the p-value column name.  To view the results file try these options:
-* [dx download](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download) to download the results for viewing.  
-* view through web interface using Visualize ( next to Monitor near top of the page ) and select [*Gzipped File Previewer*](https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#)
-* Pipe zipped file though regular linux commands [dx cat](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--) to view column names
+1) [dx download](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download) to download the results for viewing.  
+2) View file through web interface using Visualize ( next to Monitor near top of the page ) and select [*Gzipped File Previewer*](https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#)
+3) Pipe zipped file though regular linux commands [dx cat](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--) to view column names
 ```
 $ dx cat output/folder/file | gunzip | head
 ```
@@ -261,7 +261,7 @@ Parameter inputs:
 * label for results file -> "LD_chr22"  _output\_LD\_filename_
 * output/YOURNAME
 
-_Note this can take 10-15 mins to complete_
+_Note: this can take 10-15 mins to complete_
 
 Step 2: Run AssocPlot (tools/assocplot)
 
