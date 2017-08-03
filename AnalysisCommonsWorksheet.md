@@ -247,7 +247,7 @@ _Note that the output file name cannot contain a colon (e.g. output file name ca
 
 
 ### Optional Exercise 8) Run custom annotation App and then download App to examine how it works
-This App will take your annotation file and add columns to indicate if you variant falls into a region identified in a BED file.  Many ENCODE and other noncoding annotation experiments (DHS sites, Histone marks etc.) record regions as 'peaks' as start-stop positions in BED files.  This App uses the (BEDOPS)[https://bedops.readthedocs.io/en/latest/] suite of tools to annotate if your variant falls in the regions of the selected BED file.
+This App will take your annotation file and add columns to indicate if each variant falls into a region identified in a BED file.  Many ENCODE and other noncoding annotation experiments (DHS sites, Histone marks etc.) record regions as 'peaks' as start-stop positions in BED files.  This App uses the (BEDOPS)[https://bedops.readthedocs.io/en/latest/] suite of tools to annotate if your variant falls in the regions of the selected BED file.
 
 Navigate to and select **(dcc:tools/bed_annot)**
 
