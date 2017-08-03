@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-02">
+<meta name="date" content="2017-08-03">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -156,6 +156,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>9.4</b> Writing your own Apps</a><ul>
 <li class="chapter" data-level="9.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>9.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
 <li class="chapter" data-level="9.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>9.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
+<li class="chapter" data-level="9.4.3" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-7-run-conditional-analysis"><i class="fa fa-check"></i><b>9.4.3</b> Optional Exercise 7) Run conditional analysis</a></li>
+<li class="chapter" data-level="9.4.4" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set"><i class="fa fa-check"></i><b>9.4.4</b> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -359,12 +361,39 @@ write.csv(pheno,file=&quot;output&quot;,row.names=F)</code></pre>
 <h3><span class="header-section-number">9.4.2</span> Optional Exercise 6) Make QQ plot</h3>
 <p>Make QQ plot of your single variant results.<br />
 Select results from the multiple chromosome run (chr21 and chr22).</p>
-<p>You will need to identify the p-value column name. To view the results file try these options: * <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--">dx head</a> to view column names * <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download">dx download</a> to download the results for viewing.<br />
-* view through web interface using Visualize ( next to Monitor near top of the page ) and select <a href="https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#"><em>Gzipped File Previewer</em></a></p>
-<p>Run first through web interface then try running interactivly from the web interface then from the command line.</p>
-<pre><code>$ dx run tools/qqplot
-   note the plot label must not contain spaces
-</code></pre>
+<p>You will need to identify the p-value column name. To view the results file try these options: 1) <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download">dx download</a> to download the results for viewing.<br />
+2) View file through web interface using Visualize ( next to Monitor near top of the page ) and select <a href="https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#"><em>Gzipped File Previewer</em></a> 3) Pipe zipped file though regular linux commands <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--">dx cat</a> to view column names</p>
+<pre><code>$ dx cat output/folder/file | gunzip | head</code></pre>
+<p>Once you know the name of the p-value column, run qqplot first through web interface and then try running interactivly from the web interface then from the command line.</p>
+<pre><code>$ dx run tools/qqplot</code></pre>
+<p><em>Note: the plot label must not contain spaces.</em></p>
+</div>
+<div id="optional-exercise-7-run-conditional-analysis" class="section level3">
+<h3><span class="header-section-number">9.4.3</span> Optional Exercise 7) Run conditional analysis</h3>
+<p>Find the name of one associated variant in the single snp results and rerun the single variant analysis conditioning on that variant (e.g. 22:17105517).<br />
+<em>Note that the output file name cannot contain a colon (e.g. output file name cannot be single_chr22_single_22:17105517, try single_chr22_single_22_17105517 instead).</em></p>
+</div>
+<div id="optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set" class="section level3">
+<h3><span class="header-section-number">9.4.4</span> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</h3>
+<p>This process requires two steps, one to extract the LD for all variants in the region and one to create the plot. Sequencing data sets often contain variants not in external refernce panels, so it is helpful to create your own LD reference.</p>
+<p>Step 1: Run GILD (<strong>G</strong>DS <strong>I</strong>nto <strong>LD</strong>) App (tools/gild_v1)</p>
+<p>File inputs: * gds_file -&gt; genotypes/1KG_phase3_subset_chr22.gds</p>
+<p>Parameter inputs:<br />
+* lead_snp -&gt; 22:17105517 * start_pos -&gt; 1 * stop_pos -&gt; 51237069 * label for results file -&gt; “LD_chr22” <em>output_LD_filename</em> * output/YOURNAME</p>
+<p><em>Note: this can take 10-15 mins to complete</em></p>
+<p>Step 2: Run AssocPlot (tools/assocplot)</p>
+<p>File inputs:</p>
+<ul>
+<li>datafile -&gt; single variant association results output for chr22</li>
+<li>ldfile -&gt; Output file from Step 1 with .ld suffix</li>
+</ul>
+<p>Parameter inputs (Minimum required to have the App run successfully with GENESIS output):</p>
+<ul>
+<li>Output folder -&gt; output/YOURNAME</li>
+<li>Marker Column Name -&gt; snpID</li>
+<li>P value Column Name -&gt; Score.pval</li>
+<li>Index SNP -&gt; 22:17105517</li>
+</ul>
 
 </div>
 </div>

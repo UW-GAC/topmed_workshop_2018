@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-02">
+<meta name="date" content="2017-08-03">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -156,6 +156,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>9.4</b> Writing your own Apps</a><ul>
 <li class="chapter" data-level="9.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>9.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
 <li class="chapter" data-level="9.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>9.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
+<li class="chapter" data-level="9.4.3" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-7-run-conditional-analysis"><i class="fa fa-check"></i><b>9.4.3</b> Optional Exercise 7) Run conditional analysis</a></li>
+<li class="chapter" data-level="9.4.4" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set"><i class="fa fa-check"></i><b>9.4.4</b> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -210,34 +212,34 @@ snpset &lt;-<span class="st"> </span><span class="kw">snpgdsLDpruning</span>(gds
 ##     sliding window: 10,000,000 basepairs, Inf SNPs
 ##     |LD| threshold: 0.316228
 ##     method: correlation
-## Chromosome 1: 31.25%, 350/1,120
-## Chromosome 2: 31.43%, 352/1,120
-## Chromosome 3: 29.91%, 335/1,120
-## Chromosome 4: 30.62%, 343/1,120
-## Chromosome 5: 29.73%, 333/1,120
-## Chromosome 6: 31.07%, 348/1,120
-## Chromosome 7: 28.04%, 314/1,120
+## Chromosome 1: 31.16%, 349/1,120
+## Chromosome 2: 30.89%, 346/1,120
+## Chromosome 3: 31.07%, 348/1,120
+## Chromosome 4: 30.98%, 347/1,120
+## Chromosome 5: 29.46%, 330/1,120
+## Chromosome 6: 31.43%, 352/1,120
+## Chromosome 7: 28.12%, 315/1,120
 ## Chromosome 8: 25.98%, 291/1,120
-## Chromosome 9: 27.59%, 309/1,120
-## Chromosome 10: 28.93%, 324/1,120
-## Chromosome 11: 26.88%, 301/1,120
-## Chromosome 12: 28.39%, 318/1,120
-## Chromosome 13: 25.54%, 286/1,120
-## Chromosome 14: 24.64%, 276/1,120
-## Chromosome 15: 21.96%, 246/1,120
-## Chromosome 16: 22.41%, 251/1,120
-## Chromosome 17: 21.79%, 244/1,120
-## Chromosome 18: 23.75%, 266/1,120
-## Chromosome 19: 21.43%, 240/1,120
-## Chromosome 20: 20.62%, 231/1,120
-## Chromosome 21: 17.14%, 192/1,120
-## Chromosome 22: 17.68%, 198/1,120
-## 6,348 markers are selected in total.</code></pre>
+## Chromosome 9: 27.86%, 312/1,120
+## Chromosome 10: 28.75%, 322/1,120
+## Chromosome 11: 26.79%, 300/1,120
+## Chromosome 12: 28.04%, 314/1,120
+## Chromosome 13: 25.27%, 283/1,120
+## Chromosome 14: 24.82%, 278/1,120
+## Chromosome 15: 22.50%, 252/1,120
+## Chromosome 16: 22.50%, 252/1,120
+## Chromosome 17: 21.61%, 242/1,120
+## Chromosome 18: 23.84%, 267/1,120
+## Chromosome 19: 21.61%, 242/1,120
+## Chromosome 20: 19.91%, 223/1,120
+## Chromosome 21: 17.95%, 201/1,120
+## Chromosome 22: 17.59%, 197/1,120
+## 6,363 markers are selected in total.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(snpset, length)</code></pre></div>
 <pre><code>##  chr1  chr2  chr3  chr4  chr5  chr6  chr7  chr8  chr9 chr10 chr11 chr12 
-##   350   352   335   343   333   348   314   291   309   324   301   318 
+##   349   346   348   347   330   352   315   291   312   322   300   314 
 ## chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 
-##   286   276   246   251   244   266   240   231   192   198</code></pre>
+##   283   278   252   252   242   267   242   223   201   197</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pruned &lt;-<span class="st"> </span><span class="kw">unlist</span>(snpset, <span class="dt">use.names=</span><span class="ot">FALSE</span>)
 
 <span class="co"># KING</span>
@@ -247,16 +249,16 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Working space: 100 samples, 6,348 SNVs
+## Working space: 100 samples, 6,363 SNVs
 ##     using 1 (CPU) core
 ## No family is specified, and all individuals are treated as singletons.
 ## Relationship inference in the presence of population stratification.
 ## CPU capabilities: Double-Precision SSE2
-## Wed Aug  2 15:45:14 2017    (internal increment: 65536)
+## Thu Aug  3 12:00:41 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Wed Aug  2 15:45:14 2017    Done.</code></pre>
+## Thu Aug  3 12:00:41 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(king)</code></pre></div>
 <pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;afreq&quot;     &quot;IBS0&quot;      &quot;kinship&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(king<span class="op">$</span>kinship)</code></pre></div>
@@ -266,13 +268,13 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 <p>We extract pairwise kinship estimates and IBS0 to plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kinship &lt;-<span class="st"> </span><span class="kw">snpgdsIBDSelection</span>(king)
 <span class="kw">head</span>(kinship)</code></pre></div>
-<pre><code>##       ID1     ID2       IBS0      kinship
-## 1 HG00110 HG00116 0.02457467 -0.003915663
-## 2 HG00110 HG00120 0.02646503 -0.021686747
-## 3 HG00110 HG00128 0.02441714 -0.011529126
-## 4 HG00110 HG00136 0.02961563 -0.046385542
-## 5 HG00110 HG00137 0.02567738 -0.029819277
-## 6 HG00110 HG00141 0.02867045 -0.043975904</code></pre>
+<pre><code>##       ID1     ID2       IBS0     kinship
+## 1 HG00110 HG00116 0.02593116 -0.01874244
+## 2 HG00110 HG00120 0.02703127 -0.02932285
+## 3 HG00110 HG00128 0.02561685 -0.01725182
+## 4 HG00110 HG00136 0.02954581 -0.04383313
+## 5 HG00110 HG00137 0.02813138 -0.04292624
+## 6 HG00110 HG00141 0.02844570 -0.04201935</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(kinship, <span class="kw">aes</span>(IBS0, kinship)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">2</span><span class="op">^</span>(<span class="op">-</span><span class="kw">seq</span>(<span class="dv">3</span>,<span class="dv">9</span>,<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>), <span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>, <span class="dt">color=</span><span class="st">&quot;grey&quot;</span>) <span class="op">+</span>
@@ -292,7 +294,7 @@ sampset &lt;-<span class="st"> </span><span class="kw">pcairPartition</span>(<sp
 <pre><code>## [1] &quot;rels&quot;   &quot;unrels&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(sampset, length)</code></pre></div>
 <pre><code>##   rels unrels 
-##     15     85</code></pre>
+##     14     86</code></pre>
 <p>Typically we would repeat the LD pruning step on the set of unrelated samples we just identified, but for this example we will re-use the pruned set of variants from step 1. Using the SNPRelate package, we run PCA on the unrelated set and project values for the related set.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># run PCA on unrelated set</span>
 pca.unrel &lt;-<span class="st"> </span><span class="kw">snpgdsPCA</span>(gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>unrels, <span class="dt">snp.id=</span>pruned)</code></pre></div>
@@ -301,37 +303,37 @@ pca.unrel &lt;-<span class="st"> </span><span class="kw">snpgdsPCA</span>(gds, <
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Excluding 217 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
-## Working space: 85 samples, 6,131 SNVs
+## Excluding 222 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
+## Working space: 86 samples, 6,141 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Wed Aug  2 15:45:16 2017    (internal increment: 9056)
+## Thu Aug  3 12:00:44 2017    (internal increment: 8952)
 ## 
 [..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 1s
-## Wed Aug  2 15:45:17 2017    Begin (eigenvalues and eigenvectors)
-## Wed Aug  2 15:45:17 2017    Done.</code></pre>
+[==================================================] 100%, completed in 0s
+## Thu Aug  3 12:00:44 2017    Begin (eigenvalues and eigenvectors)
+## Thu Aug  3 12:00:44 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project values for relatives</span>
 snp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASNPLoading</span>(pca.unrel, <span class="dt">gdsobj=</span>gds)</code></pre></div>
 <pre><code>## SNP loading:
-## Working space: 85 samples, 6131 SNPs
+## Working space: 86 samples, 6141 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Wed Aug  2 15:45:17 2017    (internal increment: 65536)
+## Thu Aug  3 12:00:44 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Wed Aug  2 15:45:17 2017    Done.</code></pre>
+## Thu Aug  3 12:00:44 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASampLoading</span>(snp.load, <span class="dt">gdsobj=</span>gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>rels)</code></pre></div>
 <pre><code>## Sample loading:
-## Working space: 15 samples, 6131 SNPs
+## Working space: 14 samples, 6141 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Wed Aug  2 15:45:17 2017    (internal increment: 65536)
+## Thu Aug  3 12:00:44 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Wed Aug  2 15:45:17 2017    Done.</code></pre>
+## Thu Aug  3 12:00:44 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># combine unrelated and related PCs and order as in GDS file</span>
 pcs &lt;-<span class="st"> </span><span class="kw">rbind</span>(pca.unrel<span class="op">$</span>eigenvect, samp.load<span class="op">$</span>eigenvect)
 <span class="kw">rownames</span>(pcs) &lt;-<span class="st"> </span><span class="kw">c</span>(pca.unrel<span class="op">$</span>sample.id, samp.load<span class="op">$</span>sample.id)
