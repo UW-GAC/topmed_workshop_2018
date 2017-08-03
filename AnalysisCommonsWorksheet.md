@@ -235,10 +235,8 @@ Once you know the name of the p-value column, run qqplot first through web inter
 
 ```
 $ dx run tools/qqplot
-   note the plot label must not contain spaces
-
 ```
-
+_Note: the plot label must not contain spaces._
 
 ### Optional Exercise 7) Run conditional analysis
 Find the name of one associated variant in the single snp results and rerun the single variant analysis conditioning on that variant (e.g. 22:17105517).  
