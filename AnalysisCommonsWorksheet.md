@@ -242,7 +242,7 @@ $ dx run tools/qqplot
 
 ### Optional Exercise 7) Run conditional analysis
 Find the name of one associated variant in the single snp results and rerun the single variant analysis conditioning on that variant (e.g. 22:17105517).  
-_Note that the output file name cannot contain a colon (e.g. output file name cannot be single\_chr22\_single\_22:17105517, try single\_chr22\_single\_22\_17105517 instead).
+_Note that the output file name cannot contain a colon (e.g. output file name cannot be single\_chr22\_single\_22:17105517, try single\_chr22\_single\_22\_17105517 instead)._
 
 
 
