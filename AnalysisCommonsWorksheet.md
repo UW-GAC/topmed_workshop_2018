@@ -250,7 +250,7 @@ This process requires two steps, one to extract the LD for all variants in the r
 Step 1: Run GILD (**G**DS **I**nto **LD**) App (tools/gild_v1)
 
 File inputs:
-* gds_file=genotypes/1KG_phase3_subset_chr22.gds
+* gds_file -> genotypes/1KG_phase3_subset_chr22.gds
 
 Parameter inputs:  
 * lead_snp -> 22:17105517
