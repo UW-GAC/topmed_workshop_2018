@@ -1,0 +1,302 @@
+# Phenotype Harmonization
+
+Because TOPMed comprises multiple, distinct studies, it is necessary to perform phenotype harmonization before running a cross-study analysis.
+Harmonization is generally performed by "harmonization unit", which is defined as a group of subjects whose phenotypes can be similarly processed.
+In many cases, one study corresponds to one harmonization unit, but more complicated studies may require multiple harmonization units.
+For example, the Framingham Heart study has multiple subcohorts (Original, Offspring, etc.), with phenotypes measured differently for subjects in different cohorts.
+Since the phenotypes have been measured differently, the different subcohorts have to be harmonized separately.
+
+## Exercise overview: run diagnostics on a harmonized phenotype
+
+In this exercise, we assume that you have
+created a phenotype harmonization plan for height,
+sent it to members from three studies to perform the harmonization,
+and
+received a harmonized phenotype file from each study.
+We will generate some diagnostic information about the harmonized phenotype.
+
+The exercise uses 1000 Genomes data, with simulated phenotypes for study, age, and height.
+
+## Import phentoype files into R
+
+The first step is to read the files into R for processing.
+Before we begin, you need to download the data from github so you have access to it.
+
+```{r}
+repo_path <- "https://github.com/UW-GAC/topmed_workshop_2017/"
+pheno_files <- c("pheno_data_study_1.txt", "pheno_data_study_2.txt", "pheno_data_study_3.txt")
+for (pheno_file in pheno_files) {
+  if (!file.exists(pheno_file)) download.file(file.path(repo_path, pheno_file), pheno_file)
+}
+```
+
+Next, read the study phenotype files into R.
+In this case, each file is tab-delimited and has the same phenotype variable names.
+
+```{r}
+study_1 <- read.table("pheno_data_study_1.txt", header = TRUE, sep = "\t", as.is = TRUE)
+head(study_1)
+
+study_2 <- read.table("pheno_data_study_2.txt", header = TRUE, sep = "\t", as.is = TRUE)
+head(study_2)
+
+study_3 <- read.table("pheno_data_study_3.txt", header = TRUE, sep = "\t", as.is = TRUE)
+head(study_3)
+```
+
+We will be looking at differences by harmonization unit (in this case, study), so add the study identifier to the data frame.
+```{r}
+study_1$study <- "study_1"
+study_2$study <- "study_2"
+study_3$study <- "study_3"
+```
+
+Combine the three different study data frames into one large data frame for joint analysis.
+Before doing this, we should check that the column headers are the same.
+```{r, message = FALSE}
+all.equal(names(study_1), names(study_2))
+all.equal(names(study_1), names(study_3))
+
+library(dplyr)
+phen <- dplyr::bind_rows(study_1, study_2, study_3)
+```
+
+
+## Run some quick diagnostics on the files
+
+We can look at the distribution of phenotype data with text-based reports or with plots.
+
+First, inspect distributions with `table` for categorical traits and with `summary` for quantitative traits.
+The commads are shown here for study_1, but you should run them for study_2 and study_3 as well to see if you can see any differences.
+```{r}
+table(study_1$sex)
+
+summary(study_1$age)
+
+summary(study_1$height)
+```
+
+It is also helpful to use plots to inspect the distributions of phenotype data.
+Here, we will look at boxplots of height by study.
+```{r, message = FALSE}
+library(ggplot2)
+ggplot(phen, aes(x = study, y = height)) + geom_boxplot()
+```
+
+You may also want to see the difference in height when you include both study and sex:
+```{r}
+ggplot(phen, aes(x = study, fill = sex, y = height)) + geom_boxplot()
+```
+
+These diagnostics are helpful to get a feel for the data.
+They can help you see if one study is vastly different from the others or detect outlier values.
+Some of the differences could be accounted for by covariates, so we will assess the statistical significance of study differences in the next section.
+
+
+## Fit a mixed model for statistical comparisons
+
+The quick diagnostics in the previous section let you see if the data from one study are completely different from the others, but they don't provide much statistical insight.
+For that, we need to fit a statistical model to the data.
+Because some of the studies in TOPMed have related individuals, we need to fit a mixed model to account for the correlation in the data.
+In this case, because the phenotype is quantitative, we will use a linear mixed model.
+More information about mixed models will be given during presentations tomorrow.
+
+We use the `GENESIS` R package for fitting the mixed model.
+This package can accept a correlation matrix as a random effect in the mixed model, insetad of requiring a categorical or indicator variable.
+It therefore can account for the observed genetic relatedness between subjects.
+It is also the same package that we use for the association analyses, so this exercise provides a brief introduction to the package and some of the associated data structures.
+
+### Create an Annotated Data Frame
+
+The first step in fitting the mixed model is to create an Annotated Data Frame.
+This data structure is provided by the Bioconductor `Biobase` package, and it contains both the data and metadata (primarily the variable description).
+
+The `GENESIS` code to fit the mixed model requires a `scanID` column.
+Typically the `scanID` column identifies a unique genotyping instance and is linked to a sample id, not a subject id.
+In this case, we are only working with subject-level data, so we can use the subject identifier as the scan identifier for model-fitting purposes.
+```{r}
+phen$scanID <- phen$subject_id
+```
+
+Next, create the Annotated Data Frame.
+You should include a description of each variable in the metadata.
+```{r, message = FALSE}
+library(Biobase)
+
+metadata <- data.frame(labelDescription = c(
+  "scan identifier",
+  "subject identifier",
+  "subject's sex",
+  "study identifier",
+  "age at measurement of height",
+  "subject's height in cm"
+))
+
+annot <- AnnotatedDataFrame(phen, metadata)
+
+# access the data with the pData() function
+head(pData(annot))
+
+# access the metadata with the varMetadata() function
+varMetadata(annot)
+```
+
+
+### Fit the mixed model
+
+Becase it is an input to the mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.
+```{r}
+data_path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+grmfile <- "grm.RData"
+if (!file.exists(grmfile)) download.file(file.path(data_path, grmfile), grmfile)
+grm <- TopmedPipeline::getobj(grmfile)
+rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
+```
+
+Now, set up the model.
+We will use `height` as the outcome variable and adjust for `sex`, `age`, and harmonzation unit (here, `study`) as fixed effects.
+We will also include the genetic relatedness matrix as a random effect.
+The code also requires the AnnotatedDataFrame scan identifiers to be in the same order as the samples in the genetic relatedness matrix.
+````{r, message = FALSE}
+library(GENESIS)
+
+outcome <- "height"
+covars <- c("sex", "age", "study")
+
+covariance_matrices <- grm$grm
+
+# put the phenotype data in the same order as the GRM
+annot <- annot[match(grm$sample.id, annot$scanID), ]
+```
+
+
+Next, we will fit two models:
+
+1. Homoskedastic - do not allow different variances by harmonization unit
+2. Heteroskedastic - allow for difference variances by harmonization unit
+
+Both models adjust for the same set of covariates and account for the same random effects.
+To fit the heteroskedastic model, we use the `group.var` argument to specify a column in the Annotated Data Frame to use to allow for different variances by study.
+In this case, we will allow the different studies to have different fitted variances.
+```{r}
+nullmod_hom <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars,
+                     covMatList = covariance_matrices, verbose = FALSE)
+nullmod_het <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars, group.var = "study",
+                     covMatList = covariance_matrices, verbose = FALSE)
+```
+
+The output of `fitNullMM` is a list with a number of components.
+```{r}
+names(nullmod_hom)
+```
+
+The elements that we will work with in this exercise are:
+
+* `varComp`: The fitted variance component for each input covariance matrix
+* `fixef`: The fitted fixed effects
+* `betaCov`: The covariance of the fitted fixed effects
+* `resid.marginal`: The (marginal) residuals from the model, which have been adjusted for the fixed effects but not for the covariance structure
+* `logLik`: The log-likelihood of the model fit
+* `hetResid`: an indicator of whether the model was heteroskedastic
+* `converged`: an indicator of whether the model successfully converged
+* `model.matrix`: The matrix of subject-covariate values used to fit the model
+
+### Model interpretation
+
+The fixed effects from the models should be roughly the same, with small differences only due to the iterative fitting algorithm:
+```{r}
+nullmod_hom$fixef
+
+nullmod_het$fixef
+```
+
+However, the variance components are different between the two models.
+In both models, `V_A` represents the variance due to genetic relatedness.
+In the homoskedastic model, `V_E` represents the remainder of variance; there is only one value.
+On the other hand, the heteroskedastic model has three residual variance components - one for each study.
+In this case, the variance components are different for different studies, indicating that the distribution of height in the three studies has different variance even after accounting for the other parameters.
+```{r}
+nullmod_hom$varComp
+
+nullmod_het$varComp
+```
+
+We can run a likelihood ratio test to check if this difference is statistically significant.
+Because the models are identical other than the number of variance components fit, the heterogeneous model has 2 more degrees of freedom.
+We use the log-likelihood difference and the additional degrees of freedom to calculate a p-value.
+```{r}
+D <- 2 * (nullmod_het$logLik - nullmod_hom$logLik)
+pchisq(D, df = 2, lower.tail = FALSE)
+```
+Here, a small p-value means that study-specific variances are significantly different from each other.
+In this case, the heterogeneous model has a significantly better likelihood, so we will work with it for the future checks.
+If you were to run an association analysis with this phenotype, it would be important to use a heteroskedastic model to account for the different variances by study.
+
+Now, add the residuals to the phenotype data frame for plotting.
+We first need to make sure that we are matching the each residual value to the correct subject.
+To do this, we use the row names of the `model.matrix` element of the output, which are in the same order as the `residual` matrix.
+We then match them to the order of the subjects in the phenotype file using the base R function `match`.
+```{r}
+j <- match(phen$subject_id, rownames(nullmod_het$model.matrix))
+phen$residuals <- nullmod_het$resid.marginal[j]
+```
+
+
+We start by plotting the distribution of the residuals by study.
+```{r}
+ggplot(phen, aes(x = study, y = residuals)) +
+  geom_boxplot()
+```
+
+We had earlier seen that the likelihood ratio test indicated that the variance was different for the studies.
+Here we can see that `study_1` has a smaller variance than the others.
+
+
+We also want to check if the different studies have the same mean height after adjustment for other covariates (here, age and sex).
+This information is available in the fixed effects part of the null model, which we briefly looked at earlier.
+```{r}
+nullmod_het$fixef
+```
+In particular, the rows associated with study effects have significant estimates associated with them.
+
+We can also run a Wald test, where the null hypothesis is that all of the studies have the same mean height.
+First, identify the fixed effects and covariance for the study indicator variables.
+```{r}
+# these rows are associated with the study effects
+idx <- 4:5
+
+# fixed effect estimates for the studies
+study_effect <- nullmod_het$fixef[idx, ]
+study_effect
+
+# covariance of the study effects
+study_cov <- nullmod_het$betaCov[idx, idx]
+study_cov
+```
+
+Next, calculate the Wald test statistic and associated p-value.
+```{r}
+test_stat <- t(study_effect$Est) %*% solve(study_cov) %*% study_effect$Est
+pval <- pchisq(test_stat, df = length(study_effect), lower.tail = FALSE)
+pval
+```
+
+The small p-value indicates that the null hypothesis is rejected; the studies do not have the same mean height.
+
+## Final considerations
+
+We have determined that the different studies have both different variance and different mean for height.
+Before performing genotype-phenotype association tests with these data, you would need to think carefully about whether the phenotype is homogeneous enough to be analyzed together.
+In some cases, there may be a valid reason for different means or variances, for example:
+
+* different heights in different study populations, such as a study composed primarily of Asian participants vs. a study with primarily European participants
+* possible secular trends in height, such as comparing the Framingham Original cohort from ~1950 to a cohort from the present day
+
+In other cases, there may be good reasons to exclude one or more studies, for example:
+
+* a systematic measurement error in one study
+* miscalculation or misinterpretation of the harmonization algorithm
+* study populations that are too different to be compared, such as trying to include a study composed primarily of children with one composed of adults in a height analysis
+
+Unfortunately there is no single set of guidelines you can use to make this decision, so it requires careful consideration before proceeding with analyses.
+It is necessary to involve domain experts (e.g., the Working Group members) and study experts to determine whether the phenotype is homogeneous enough to be analyzed together.
