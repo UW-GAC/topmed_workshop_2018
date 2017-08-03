@@ -9,10 +9,24 @@ github-repo: UW-GAC/topmed_workshop_2017
 description: "Course materials for the TOPMed analysis workshop"
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, message=FALSE)
+```
+
 # Introduction
 
 This site contains course materials for the TOPMed Analysis Workshop, August 7-9 2017.
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=TRUE, message=FALSE)
-```
+To work through the exercises, log into RStudio Server at [http://52.25.72.68:8787](http://52.25.72.68:8787) with your username and password.
+
+Slides for lectures will be posted here:\
+[https://www.nhlbiwgs.org/topmed-analysis-workshop-2017-materials](https://www.nhlbiwgs.org/topmed-analysis-workshop-2017-materials)
+
+Join the Slack channel here:\
+[https://join.slack.com/t/topmed-analysis-2017/signup](https://join.slack.com/t/topmed-analysis-2017/signup)
+
+If you are new to R, you might find the following material helpful:
+
+- [Introduction to R](http://faculty.washington.edu/kenrice/rintro/indexSEA15.shtml) class from the Summer Institute in Statistical Genetics
+- [Graphics with ggplot2](http://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html) tutorial
+- Data manipulation with [dplyr](http://dplyr.tidyverse.org/)
