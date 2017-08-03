@@ -23,7 +23,7 @@ The first step is to read the files into R for processing.
 Before we begin, you need to download the data from github so you have access to it.
 
 ```{r}
-repo_path <- "https://github.com/UW-GAC/topmed_workshop_2017/"
+repo_path <- "https://github.com/UW-GAC/topmed_workshop_2017/raw/master"
 pheno_files <- c("pheno_data_study_1.txt", "pheno_data_study_2.txt", "pheno_data_study_3.txt")
 for (pheno_file in pheno_files) {
   if (!file.exists(pheno_file)) download.file(file.path(repo_path, pheno_file), pheno_file)
