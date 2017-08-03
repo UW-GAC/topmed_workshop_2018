@@ -19,12 +19,11 @@ and
 received a harmonized phenotype file from each study.
 We will generate some diagnostic information about the harmonized phenotype.
 
-In this exercise, we will be working with some randomized phenotype data from three studies.
 
 ## Import phentoype files into R
 
 The first step is to read the files into R for processing.
-Before we begin, we need to download the data from github so you have access to it.
+Before we begin, you need to download the data from github so you have access to it.
 
 ```{r}
 repo_path <- "https://github.com/UW-GAC/topmed_workshop_2017/"
@@ -59,7 +58,6 @@ study_3$study <- "study_3"
 
 Combine the three different study data frames into one large data frame for joint analysis.
 ```{r}
-# combine for later use
 library(dplyr)
 phen <- dplyr::bind_rows(study_1, study_2, study_3)
 ```
@@ -96,17 +94,18 @@ They can help you see if one study is vastly different from the others or detect
 You will then have to make decisions about how to handle these differences or outliers before running your association analysis.
 
 
-## Fit a linear model for statistical comparisons
+## Fit a mixed model for statistical comparisons
 
 The quick diagnostics in the previous section let you see if the data from one study are completely different from the others, but they don't provide much statistical insight.
 For that, we need to fit a statistical model to the data.
 Because some of the studies in TOPMed have related individuals, we need to fit a mixed model to account for the correlation in the data.
 In this case, because the phenotype is quantitative, we will use a linear mixed model.
+More information about mixed models will be given during presentations tomorrow.
 
 We use the `GENESIS` R package for fitting the linear model.
 This package can accept a correlation matrix as a random effect in the linear model, insetad of requiring indicator variables.
 It therefore can account for the observed genetic relatedness between subjects.
-It is also the same package that we use for the association analyses, so this exercise provides a brief introduction to the package and some of the data structures that are required.
+It is also the same package that we use for the association analyses, so this exercise provides a brief introduction to the package and some of the associated data structures.
 
 ### Create an annotated data frame
 
@@ -136,15 +135,17 @@ metadata <- data.frame(labelDescription = c(
 
 annot <- AnnotatedDataFrame(phen, metadata)
 
+# access the data with the pData() function
 head(pData(annot))
 
+# access the metadata with the varMetadata() function
 varMetadata(annot)
 ```
 
 
-### Fit the linear model
+### Fit the linear mixed model
 
-Becase it is an input to the linear model, we need to download the genetic relatedness matrix calculated for these subjects.
+Becase it is an input to the linear mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.
 ```{r}
 grmfile <- "grm.RData"
 if (!file.exists(grmfile)) download.file(file.path(data.path, grmfile), grmfile)
@@ -153,7 +154,7 @@ rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
 ```
 
 Now, set up the model.
-We will use `height` as the outcome variable and adjust for `sex`, `age`, and harmonzation unit (`study`) as fixed effects.
+We will use `height` as the outcome variable and adjust for `sex`, `age`, and harmonzation unit (here, `study`) as fixed effects.
 We will also include the genetic relatedness matrix as a random effect.
 The code also requires the AnnotatedDataFrame scan identifiers to be in the same order as the samples in the genetic relatedness matrix.
 ````{r}
@@ -181,6 +182,21 @@ nullmod_het <- fitNullMM(annot, outcome = outcome, covars = covars, group.var = 
                      covMatList = covariance_matrices, verbose = FALSE)
 ```
 
+These R objects are lists with a number of components.
+```{r}
+names(nullmod_hom)
+```
+
+The important ones to consider now are:
+
+* `varComp`: The fitted variance component for each input covariance matrix
+* `fixef`: The fitted fixed effects
+* `betaCov`: The covariane of the fitted fixed effects
+* `resid.marginal`: The (marginal) residuals from the model, which have been adjusted for the fixed effects but not for the covariance structure
+* `logLik`: The log-likelihood of the model fit
+* `hetResid`: an indicator of whether the model was heteroskedastic
+* `converged`: an indicator of whether the model successfully converged
+
 The fixed effects from the models should be roughly the same, with small differences only due to the iterative fitting algorithm:
 ```{r}
 nullmod_hom$fixef
@@ -191,7 +207,7 @@ nullmod_het$fixef
 However, the variance components are different.
 In both models, `V_A` represents the variance due to genetic relatedness.
 In the homoskedastic model, `V_E` represents the remainder of variance; there is only one value.
-On the other hand, the heteroskedastic model has three variance components - one for each study.
+On the other hand, the heteroskedastic model has three residual variance components - one for each study.
 In this case, the variance components are different for different studies, indicating that the distribution of height in the three studies has different variance even after accounting for the other parameters.
 ```{r}
 nullmod_hom$varComp
@@ -231,7 +247,7 @@ This information is available in the fixed effects part of the null model, which
 ```{r}
 nullmod_het$fixef
 ```
-In particular, the rows whose names start with `study` have significant estimates associated with them.
+In particular, the rows associated with study effects have significant estimates associated with them.
 
 We can also run a Wald test to see if the any one mean is significantly different from the average.
 First, identify the fixed effects and covariance for the study indicator variables.
@@ -256,7 +272,7 @@ Very small values indicate that means are significantly different for at least o
 ## Final considerations
 
 We have determined that the different studies have both different variance and different mean for height.
-Before performing genotype-phenotype association tests with these data, you should think carefully about whether the phenotype is homogeneous enough to be analyzed together.
+Before performing genotype-phenotype association tests with these data, you would need to think carefully about whether the phenotype is homogeneous enough to be analyzed together.
 In some cases, there may be a valid reason for different means or variances, for example:
 
 * different heights in different study populations, such as a study composed primarily of Asian participants vs. a study with primarily European participants
