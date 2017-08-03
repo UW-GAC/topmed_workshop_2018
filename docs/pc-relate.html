@@ -212,34 +212,34 @@ snpset &lt;-<span class="st"> </span><span class="kw">snpgdsLDpruning</span>(gds
 ##     sliding window: 10,000,000 basepairs, Inf SNPs
 ##     |LD| threshold: 0.316228
 ##     method: correlation
-## Chromosome 1: 31.16%, 349/1,120
-## Chromosome 2: 30.89%, 346/1,120
-## Chromosome 3: 31.07%, 348/1,120
+## Chromosome 1: 31.25%, 350/1,120
+## Chromosome 2: 31.61%, 354/1,120
+## Chromosome 3: 30.98%, 347/1,120
 ## Chromosome 4: 30.98%, 347/1,120
-## Chromosome 5: 29.46%, 330/1,120
-## Chromosome 6: 31.43%, 352/1,120
-## Chromosome 7: 28.12%, 315/1,120
-## Chromosome 8: 25.98%, 291/1,120
-## Chromosome 9: 27.86%, 312/1,120
-## Chromosome 10: 28.75%, 322/1,120
-## Chromosome 11: 26.79%, 300/1,120
-## Chromosome 12: 28.04%, 314/1,120
+## Chromosome 5: 29.73%, 333/1,120
+## Chromosome 6: 31.16%, 349/1,120
+## Chromosome 7: 28.39%, 318/1,120
+## Chromosome 8: 26.07%, 292/1,120
+## Chromosome 9: 28.39%, 318/1,120
+## Chromosome 10: 28.30%, 317/1,120
+## Chromosome 11: 26.88%, 301/1,120
+## Chromosome 12: 28.39%, 318/1,120
 ## Chromosome 13: 25.27%, 283/1,120
-## Chromosome 14: 24.82%, 278/1,120
-## Chromosome 15: 22.50%, 252/1,120
-## Chromosome 16: 22.50%, 252/1,120
-## Chromosome 17: 21.61%, 242/1,120
-## Chromosome 18: 23.84%, 267/1,120
-## Chromosome 19: 21.61%, 242/1,120
-## Chromosome 20: 19.91%, 223/1,120
+## Chromosome 14: 24.29%, 272/1,120
+## Chromosome 15: 22.59%, 253/1,120
+## Chromosome 16: 22.41%, 251/1,120
+## Chromosome 17: 22.32%, 250/1,120
+## Chromosome 18: 23.66%, 265/1,120
+## Chromosome 19: 21.88%, 245/1,120
+## Chromosome 20: 20.80%, 233/1,120
 ## Chromosome 21: 17.95%, 201/1,120
-## Chromosome 22: 17.59%, 197/1,120
-## 6,363 markers are selected in total.</code></pre>
+## Chromosome 22: 17.32%, 194/1,120
+## 6,391 markers are selected in total.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(snpset, length)</code></pre></div>
 <pre><code>##  chr1  chr2  chr3  chr4  chr5  chr6  chr7  chr8  chr9 chr10 chr11 chr12 
-##   349   346   348   347   330   352   315   291   312   322   300   314 
+##   350   354   347   347   333   349   318   292   318   317   301   318 
 ## chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 
-##   283   278   252   252   242   267   242   223   201   197</code></pre>
+##   283   272   253   251   250   265   245   233   201   194</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pruned &lt;-<span class="st"> </span><span class="kw">unlist</span>(snpset, <span class="dt">use.names=</span><span class="ot">FALSE</span>)
 
 <span class="co"># KING</span>
@@ -249,16 +249,16 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
-## Working space: 100 samples, 6,363 SNVs
+## Working space: 100 samples, 6,391 SNVs
 ##     using 1 (CPU) core
 ## No family is specified, and all individuals are treated as singletons.
 ## Relationship inference in the presence of population stratification.
 ## CPU capabilities: Double-Precision SSE2
-## Thu Aug  3 12:00:41 2017    (internal increment: 65536)
+## Thu Aug  3 13:53:35 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Thu Aug  3 12:00:41 2017    Done.</code></pre>
+## Thu Aug  3 13:53:35 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(king)</code></pre></div>
 <pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;afreq&quot;     &quot;IBS0&quot;      &quot;kinship&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(king<span class="op">$</span>kinship)</code></pre></div>
@@ -269,12 +269,12 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kinship &lt;-<span class="st"> </span><span class="kw">snpgdsIBDSelection</span>(king)
 <span class="kw">head</span>(kinship)</code></pre></div>
 <pre><code>##       ID1     ID2       IBS0     kinship
-## 1 HG00110 HG00116 0.02593116 -0.01874244
-## 2 HG00110 HG00120 0.02703127 -0.02932285
-## 3 HG00110 HG00128 0.02561685 -0.01725182
-## 4 HG00110 HG00136 0.02954581 -0.04383313
-## 5 HG00110 HG00137 0.02813138 -0.04292624
-## 6 HG00110 HG00141 0.02844570 -0.04201935</code></pre>
+## 1 HG00110 HG00116 0.02534815 -0.01566265
+## 2 HG00110 HG00120 0.02722579 -0.02831325
+## 3 HG00110 HG00128 0.02472227 -0.01707317
+## 4 HG00110 HG00136 0.03004225 -0.04909639
+## 5 HG00110 HG00137 0.02675638 -0.03674699
+## 6 HG00110 HG00141 0.02925990 -0.04608434</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(kinship, <span class="kw">aes</span>(IBS0, kinship)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">2</span><span class="op">^</span>(<span class="op">-</span><span class="kw">seq</span>(<span class="dv">3</span>,<span class="dv">9</span>,<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>), <span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>, <span class="dt">color=</span><span class="st">&quot;grey&quot;</span>) <span class="op">+</span>
@@ -304,36 +304,36 @@ pca.unrel &lt;-<span class="st"> </span><span class="kw">snpgdsPCA</span>(gds, <
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed      
 ## Excluding 222 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
-## Working space: 86 samples, 6,141 SNVs
+## Working space: 86 samples, 6,169 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Thu Aug  3 12:00:44 2017    (internal increment: 8952)
+## Thu Aug  3 13:53:37 2017    (internal increment: 8952)
 ## 
 [..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 0s
-## Thu Aug  3 12:00:44 2017    Begin (eigenvalues and eigenvectors)
-## Thu Aug  3 12:00:44 2017    Done.</code></pre>
+[==================================================] 100%, completed in 1s
+## Thu Aug  3 13:53:38 2017    Begin (eigenvalues and eigenvectors)
+## Thu Aug  3 13:53:38 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project values for relatives</span>
 snp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASNPLoading</span>(pca.unrel, <span class="dt">gdsobj=</span>gds)</code></pre></div>
 <pre><code>## SNP loading:
-## Working space: 86 samples, 6141 SNPs
+## Working space: 86 samples, 6169 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Thu Aug  3 12:00:44 2017    (internal increment: 65536)
+## Thu Aug  3 13:53:38 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Thu Aug  3 12:00:44 2017    Done.</code></pre>
+## Thu Aug  3 13:53:38 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASampLoading</span>(snp.load, <span class="dt">gdsobj=</span>gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>rels)</code></pre></div>
 <pre><code>## Sample loading:
-## Working space: 14 samples, 6141 SNPs
+## Working space: 14 samples, 6169 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Thu Aug  3 12:00:44 2017    (internal increment: 65536)
+## Thu Aug  3 13:53:38 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Thu Aug  3 12:00:44 2017    Done.</code></pre>
+## Thu Aug  3 13:53:38 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># combine unrelated and related PCs and order as in GDS file</span>
 pcs &lt;-<span class="st"> </span><span class="kw">rbind</span>(pca.unrel<span class="op">$</span>eigenvect, samp.load<span class="op">$</span>eigenvect)
 <span class="kw">rownames</span>(pcs) &lt;-<span class="st"> </span><span class="kw">c</span>(pca.unrel<span class="op">$</span>sample.id, samp.load<span class="op">$</span>sample.id)

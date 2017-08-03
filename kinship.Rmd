@@ -26,6 +26,11 @@ To disentangle ancestry from recent familial relatedness, we use the [PC-Relate]
 
 Step 1 is to get initial estimates of kinship using [KING](http://www.ncbi.nlm.nih.gov/pubmed/20926424), which is robust to population structure but not admixture. The KING algorithm is available in SNPRelate. Typically we select a subset of variants for this calculation with LD pruning.
 
+```{r seed, echo=FALSE}
+# set seed for LD pruning
+set.seed(100)
+```
+
 ```{r king}
 # use a GDS file with all chromosomes
 library(SeqArray)
