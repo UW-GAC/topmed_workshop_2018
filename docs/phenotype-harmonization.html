@@ -199,7 +199,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="import-phentoype-files-into-r" class="section level2">
 <h2><span class="header-section-number">6.2</span> Import phentoype files into R</h2>
 <p>The first step is to read the files into R for processing. Before we begin, you need to download the data from github so you have access to it.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">repo_path &lt;-<span class="st"> &quot;https://github.com/UW-GAC/topmed_workshop_2017/&quot;</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">repo_path &lt;-<span class="st"> &quot;https://github.com/UW-GAC/topmed_workshop_2017/raw/master&quot;</span>
 pheno_files &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;pheno_data_study_1.txt&quot;</span>, <span class="st">&quot;pheno_data_study_2.txt&quot;</span>, <span class="st">&quot;pheno_data_study_3.txt&quot;</span>)
 <span class="cf">for</span> (pheno_file <span class="cf">in</span> pheno_files) {
   <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(pheno_file)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(repo_path, pheno_file), pheno_file)
