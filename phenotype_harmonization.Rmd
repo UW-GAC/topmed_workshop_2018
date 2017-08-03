@@ -6,10 +6,6 @@ In many cases, one study corresponds to one harmonization unit, but more complic
 For example, the Framingham Heart study has multiple subcohorts (Original, Offspring, etc.), with phenotypes measured differently for subjects in different cohorts.
 Since the phenotypes have been measured differently, the different subcohorts have to be harmonized separately.
 
-We will start with a presentation, which is available here:
-[]()
-
-
 ## Exercise overview: run diagnostics on a harmonized phenotype
 
 In this exercise, we assume that you have
