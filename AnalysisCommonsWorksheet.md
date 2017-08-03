@@ -246,47 +246,34 @@ _Note that the output file name cannot contain a colon (e.g. output file name ca
 
 
 
-### Optional Exercise 8) Run custom annotation App and then download App to examine how it works
-This App will take your annotation file and add columns to indicate if each variant falls into a region identified in a BED file.  Many ENCODE and other noncoding annotation experiments (DHS sites, Histone marks etc.) record regions as 'peaks' as start-stop positions in BED files.  This App uses the (BEDOPS)[https://bedops.readthedocs.io/en/latest/] suite of tools to annotate if your variant falls in the regions of the selected BED file.
+### Optional Exercise 8) Create a regional association plot using LD extracted from your data set
+This process requires two steps, one to extract the LD for all variants in the region and one to create the plot.  Sequencing data sets often contain variants not in external refernce panels, so it is helpful to create your own LD reference.
 
-Navigate to and select **(dcc:tools/bed_annot)**
+Step 1: Run GILD (**G**DS **I**nto **LD**) App (tools/gild_v1)
 
-File inputs:  
-* variantfile -> annotation/1KG\_annotation\_CHR22.txt  
-
-For the BED files input, navigate to annotation/beds and select all files with the E066 prefix ( indicates adult liver ), or your files of interest
-* bedfiles -> annotation/beds/E066-H3K4me1.narrowPeak.beds 
-* bedfiles -> annotation/beds/E066-H3K4me3.narrowPeak.beds 
-* bedfiles -> annotation/beds/E066-H3K9ac.narrowPeak.beds 
-* bedfiles -> annotation/beds/E066-H3K9me3.narrowPeak.beds 
-* bedfiles -> annotation/beds/E066-H3K27ac.narrowPeak.beds 
-* bedfiles -> annotation/beds/E066-H3K27me3.narrowPeak.beds 
-* bedfiles -> annotation/beds/E066-H3K36me3.narrowPeak.beds
+File inputs:
+* gds_file=genotypes/1KG_phase3_subset_chr22.gds
 
 Parameter inputs:  
-* output folder: output/YOURFOLDERNAME  
-* prefix for output filename: chr22_liver_annot  
+* lead_snp -> 22:17105517
+* start_pos -> 1
+* stop_pos -> 51237069 
+* label for results file -> "LD_chr22"  _output\_LD\_filename_
+* output/YOURNAME
+
+_Note this can take 10-15 mins to complete_
+
+Step 2: Run AssocPlot (tools/assocplot)
+
+File inputs:  
+
+* datafile -> single variant association results output for chr22
+* ldfile -> Output file from Step 1 with .ld suffix
 
 
-Download the App and look at how it works.
-You can pull down and examine the code for any App using [dx get](https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands#get)
-```
-$ dx get tools/bed_annot
-```
+Parameter inputs (Minimum required to have the App run successfully with GENESIS output):
 
-The directory structure is the same as our make_residuals App
-```
-$ ls bed_annot
-```
-
-Apps can be written in bash or Python
-```
-$ cd bed_annot
-$ cat src/code.py
-```
-
-This App uses requires bedops tools _bedops_ and _sort-bed_
-```
-$ ls resources/usr/local/bin/
-```
-
+* Output folder -> output/YOURNAME
+* Marker Column Name -> snpID
+* P value Column Name -> Score.pval
+* Index SNP -> 22:17105517
