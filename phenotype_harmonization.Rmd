@@ -15,7 +15,7 @@ and
 received a harmonized phenotype file from each study.
 We will generate some diagnostic information about the harmonized phenotype.
 
-The exercise uses 1000 Genomes data, with simulated phenotypes for sex, age, and height.
+The exercise uses 1000 Genomes data, with simulated phenotypes for study, age, and height.
 
 ## Import phentoype files into R
 
@@ -26,9 +26,7 @@ Before we begin, you need to download the data from github so you have access to
 repo_path <- "https://github.com/UW-GAC/topmed_workshop_2017/"
 pheno_files <- c("pheno_data_study_1.txt", "pheno_data_study_2.txt", "pheno_data_study_3.txt")
 for (pheno_file in pheno_files) {
-  if (!file.exists(pheno_file)) {
-    download.file(file.path(pheno_data_path, pheno_file), pheno_file)
-  }
+  if (!file.exists(pheno_file)) download.file(file.path(pheno_data_path, pheno_file), pheno_file)
 }
 ```
 
@@ -92,7 +90,7 @@ ggplot(phen, aes(x = study, fill = sex, y = height)) + geom_boxplot()
 
 These diagnostics are helpful to get a feel for the data.
 They can help you see if one study is vastly different from the others or detect outlier values.
-Some of the differences could be accounted for by covariates, so we will look at how to assess the statistical significance of study differences in the next section.
+Some of the differences could be accounted for by covariates, so we will assess the statistical significance of study differences in the next section.
 
 
 ## Fit a mixed model for statistical comparisons
@@ -103,24 +101,24 @@ Because some of the studies in TOPMed have related individuals, we need to fit a
 In this case, because the phenotype is quantitative, we will use a linear mixed model.
 More information about mixed models will be given during presentations tomorrow.
 
-We use the `GENESIS` R package for fitting the linear model.
-This package can accept a correlation matrix as a random effect in the linear model, insetad of requiring indicator variables.
+We use the `GENESIS` R package for fitting the mixed model.
+This package can accept a correlation matrix as a random effect in the mixed model, insetad of requiring a categorical or indicator variable.
 It therefore can account for the observed genetic relatedness between subjects.
 It is also the same package that we use for the association analyses, so this exercise provides a brief introduction to the package and some of the associated data structures.
 
-### Create an annotated data frame
+### Create an Annotated Data Frame
 
-The first step in fitting the linear model is to create an Annotated Data Frame.
+The first step in fitting the mixed model is to create an Annotated Data Frame.
 This data structure is provided by the Bioconductor `Biobase` package, and it contains both the data and metadata (primarily the variable description).
 
-The `GENESIS` code to fit the linear model requires a `scanID` column.
+The `GENESIS` code to fit the mixed model requires a `scanID` column.
 Typically the `scanID` column identifies a unique genotyping instance and is linked to a sample id, not a subject id.
 In this case, we are only working with subject-level data, so we can use the subject identifier as the scan identifier for model-fitting purposes.
 ```{r}
 phen$scanID <- phen$subject_id
 ```
 
-Next, create the annotated data frame.
+Next, create the Annotated Data Frame.
 You should include a description of each variable in the metadata.
 ```{r, message = FALSE}
 library(Biobase)
@@ -144,9 +142,9 @@ varMetadata(annot)
 ```
 
 
-### Fit the linear mixed model
+### Fit the mixed model
 
-Becase it is an input to the linear mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.
+Becase it is an input to the mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.
 ```{r}
 grmfile <- "grm.RData"
 if (!file.exists(grmfile)) download.file(file.path(data.path, grmfile), grmfile)
@@ -166,7 +164,7 @@ covars <- c("sex", "age", "study")
 
 covariance_matrices <- grm$grm
 
-# put the phenotype data and the GRM in the same order
+# put the phenotype data in the same order as the GRM
 annot <- annot[match(grm$sample.id, annot$scanID), ]
 ```
 
@@ -177,12 +175,12 @@ Next, we will fit two models:
 2. Heteroskedastic - allow for difference variances by harmonization unit
 
 Both models adjust for the same set of covariates and account for the same random effects.
-To fit the heteroskedastic model, we use the `group.var` argument to specify a column in the Annotated Data Frame to use to fit group-specific variances.
+To fit the heteroskedastic model, we use the `group.var` argument to specify a column in the Annotated Data Frame to use to allow for different variances by study.
 In this case, we will allow the different studies to have different fitted variances.
 ```{r}
-nullmod_hom <- fitNullMM(annot, outcome = outcome, covars = covars,
+nullmod_hom <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars,
                      covMatList = covariance_matrices, verbose = FALSE)
-nullmod_het <- fitNullMM(annot, outcome = outcome, covars = covars, group.var = "study",
+nullmod_het <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars, group.var = "study",
                      covMatList = covariance_matrices, verbose = FALSE)
 ```
 
@@ -211,7 +209,7 @@ nullmod_hom$fixef
 nullmod_het$fixef
 ```
 
-However, the variance components are different.
+However, the variance components are different between the two models.
 In both models, `V_A` represents the variance due to genetic relatedness.
 In the homoskedastic model, `V_E` represents the remainder of variance; there is only one value.
 On the other hand, the heteroskedastic model has three residual variance components - one for each study.
@@ -222,21 +220,21 @@ nullmod_hom$varComp
 nullmod_het$varComp
 ```
 
-We can run a likelihood ratio test to check this hypothesis statistically.
+We can run a likelihood ratio test to check if this difference is statistically significant.
 Because the models are identical other than the number of variance components fit, the heterogeneous model has 2 more degrees of freedom.
-We use the likelihood ratio difference and the additional degrees of freedom to calculate a p-value.
+We use the log-likelihood difference and the additional degrees of freedom to calculate a p-value.
 ```{r}
 D <- 2 * (nullmod_het$logLik - nullmod_hom$logLik)
 pchisq(D, df = 2, lower.tail = FALSE)
 ```
 Here, a small p-value means that study-specific variances are significantly different from each other.
-In this case, the heterogeneous model is preferred, so we will work with it for the future checks.
+In this case, the heterogeneous model has a significantly better likelihood, so we will work with it for the future checks.
 If you were to run an association analysis with this phenotype, it would be important to use a heteroskedastic model to account for the different variances by study.
 
 Now, add the residuals to the phenotype data frame for plotting.
 We first need to make sure that we are matching the each residual value to the correct subject.
 To do this, we use the row names of the `model.matrix` element of the output, which are in the same order as the `residual` matrix.
-We then match them to the order of the subjects in the phenotype file using the base R command `match`.
+We then match them to the order of the subjects in the phenotype file using the base R function `match`.
 ```{r}
 j <- match(phen$subject_id, rownames(nullmod_het$model.matrix))
 phen$residuals <- nullmod_het$resid.marginal[j]
@@ -246,14 +244,14 @@ phen$residuals <- nullmod_het$resid.marginal[j]
 We start by plotting the distribution of the residuals by study.
 ```{r}
 ggplot(phen, aes(x = study, y = residuals)) +
-  geom_violin() +
-  geom_boxplot(width = 0.1)
+  geom_boxplot()
 ```
 
 We had earlier seen that the likelihood ratio test indicated that the variance was different for the studies.
 Here we can see that `study_1` has a smaller variance than the others.
 
-We also want to check if the different studies have different means.
+
+We also want to check if the different studies have the same mean height after adjustment for other covariates (here, age and sex).
 This information is available in the fixed effects part of the null model, which we briefly looked at earlier.
 ```{r}
 nullmod_het$fixef
