@@ -241,4 +241,52 @@ $ dx run tools/qqplot
 
 
 ### Optional Exercise 7) Run conditional analysis
-Find the name of one variant in the single snp results and rerun the single variant analysis conditioning on that variant. (e.g. 22:17105517).  Note that the output file name cannot contain a colon (e.g. output file name cannot be single\_chr22\_single\_22:17105517, try single\_chr22\_single\_22\_17105517 instead ).
+Find the name of one associated variant in the single snp results and rerun the single variant analysis conditioning on that variant (e.g. 22:17105517).  
+_Note that the output file name cannot contain a colon (e.g. output file name cannot be single\_chr22\_single\_22:17105517, try single\_chr22\_single\_22\_17105517 instead).
+
+
+
+### Optional Exercise 8) Run custom annotation App and then download App to examine how it works
+This App will take your annotation file and add columns to indicate if you variant falls into a region identified in a BED file.  Many ENCODE and other noncoding annotation experiments (DHS sites, Histone marks etc.) record regions as 'peaks' as start-stop positions in BED files.  This App uses the (BEDOPS)[https://bedops.readthedocs.io/en/latest/] suite of tools to annotate if your variant falls in the regions of the selected BED file.
+
+Navigate to and select **(dcc:tools/bed_annot)**
+
+File inputs:  
+* variantfile -> annotation/1KG\_annotation\_CHR22.txt  
+
+For the BED files input, navigate to annotation/beds and select all files with the E066 prefix ( indicates adult liver ), or your files of interest
+* bedfiles -> annotation/beds/E066-H3K4me1.narrowPeak.beds 
+* bedfiles -> annotation/beds/E066-H3K4me3.narrowPeak.beds 
+* bedfiles -> annotation/beds/E066-H3K9ac.narrowPeak.beds 
+* bedfiles -> annotation/beds/E066-H3K9me3.narrowPeak.beds 
+* bedfiles -> annotation/beds/E066-H3K27ac.narrowPeak.beds 
+* bedfiles -> annotation/beds/E066-H3K27me3.narrowPeak.beds 
+* bedfiles -> annotation/beds/E066-H3K36me3.narrowPeak.beds
+
+Parameter inputs:  
+* output folder: output/YOURFOLDERNAME  
+* prefix for output filename: chr22_liver_annot  
+
+
+Download the App and look at how it works.
+You can pull down and examine the code for any App using [dx get](https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands#get)
+```
+$ dx get tools/bed_annot
+```
+
+The directory structure is the same as our make_residuals App
+```
+$ ls bed_annot
+```
+
+Apps can be written in bash or Python
+```
+$ cd bed_annot
+$ cat src/code.py
+```
+
+This App uses requires bedops tools _bedops_ and _sort-bed_
+```
+$ ls resources/usr/local/bin/
+```
+
