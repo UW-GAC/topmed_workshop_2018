@@ -111,25 +111,17 @@ It is also the same package that we use for the association analyses, so this ex
 The first step in fitting the mixed model is to create an Annotated Data Frame.
 This data structure is provided by the Bioconductor `Biobase` package, and it contains both the data and metadata (primarily the variable description).
 
-The `GENESIS` code to fit the mixed model requires a `scanID` column.
-Typically the `scanID` column identifies a unique genotyping instance and is linked to a sample id, not a subject id.
-In this case, we are only working with subject-level data, so we can use the subject identifier as the scan identifier for model-fitting purposes.
-```{r}
-phen$scanID <- phen$subject_id
-```
-
 Next, create the Annotated Data Frame.
 You should include a description of each variable in the metadata.
 ```{r, message = FALSE}
 library(Biobase)
 
 metadata <- data.frame(labelDescription = c(
-  "scan identifier",
   "subject identifier",
   "subject's sex",
-  "study identifier",
   "age at measurement of height",
-  "subject's height in cm"
+  "subject's height in cm",
+  "study identifier"
 ))
 
 annot <- AnnotatedDataFrame(phen, metadata)
@@ -142,6 +134,11 @@ varMetadata(annot)
 ```
 
 
+Save the AnnotatedDataFrame for future use.
+```{r}
+save(annot, file = "phenotype_annotation.RData")
+```
+
 ### Fit the mixed model
 
 Becase it is an input to the mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.
@@ -153,10 +150,22 @@ grm <- TopmedPipeline::getobj(grmfile)
 rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
 ```
 
+The `GENESIS` code to fit the mixed model also requires a `sample.id` column.
+Typically the `sample.id` column represents a sample identifier, not a subject id.
+In this case, we are only working with subject-level data, so we can use the subject identifier as the sample identifier for model-fitting purposes.
+```{r}
+annot$sample.id <- annot$subject_id
+```
+
+It also requires that the AnnotatedDataFrame `sample.id` is in the same order as the samples genetic relatedness matrix.
+```{r}
+# put the phenotype data in the same order as the GRM
+annot <- annot[match(grm$sample.id, annot$sample.id), ]
+```
+
 Now, set up the model.
 We will use `height` as the outcome variable and adjust for `sex`, `age`, and harmonzation unit (here, `study`) as fixed effects.
 We will also include the genetic relatedness matrix as a random effect.
-The code also requires the AnnotatedDataFrame scan identifiers to be in the same order as the samples in the genetic relatedness matrix.
 ````{r, message = FALSE}
 library(GENESIS)
 
@@ -164,100 +173,52 @@ outcome <- "height"
 covars <- c("sex", "age", "study")
 
 covariance_matrices <- grm$grm
-
-# put the phenotype data in the same order as the GRM
-annot <- annot[match(grm$sample.id, annot$scanID), ]
 ```
 
 
-Next, we will fit two models:
-
-1. Homoskedastic - do not allow different variances by harmonization unit
-2. Heteroskedastic - allow for difference variances by harmonization unit
-
-Both models adjust for the same set of covariates and account for the same random effects.
-To fit the heteroskedastic model, we use the `group.var` argument to specify a column in the Annotated Data Frame to use to allow for different variances by study.
-In this case, we will allow the different studies to have different fitted variances.
-```{r}
-nullmod_hom <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars,
-                     covMatList = covariance_matrices, verbose = FALSE)
-nullmod_het <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars, group.var = "study",
-                     covMatList = covariance_matrices, verbose = FALSE)
+Next, we will fit a model that allows for group-specific residual variance by harmonization unit (here, `study`) by using the `group.var` argument of `fitNulLMM`.
+```{r, results = 'hide'}
+mod <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars, group.var = "study",
+                     covMatList = covariance_matrices)
 ```
 
 The output of `fitNullMM` is a list with a number of components.
 ```{r}
-names(nullmod_hom)
+names(mod)
 ```
 
 The elements that we will work with in this exercise are:
 
-* `varComp`: The fitted variance component for each input covariance matrix
+* `converged`: an indicator of whether the model successfully converged
+* `model.matrix`: The matrix of subject-covariate values used to fit the model
 * `fixef`: The fitted fixed effects
 * `betaCov`: The covariance of the fitted fixed effects
 * `resid.marginal`: The (marginal) residuals from the model, which have been adjusted for the fixed effects but not for the covariance structure
+* `varComp`: The fitted variance component for each input covariance matrix
 * `logLik`: The log-likelihood of the model fit
-* `hetResid`: an indicator of whether the model was heteroskedastic
-* `converged`: an indicator of whether the model successfully converged
-* `model.matrix`: The matrix of subject-covariate values used to fit the model
+
 
 ### Model interpretation
 
-The fixed effects from the models should be roughly the same, with small differences only due to the iterative fitting algorithm:
-```{r}
-nullmod_hom$fixef
-
-nullmod_het$fixef
-```
-
-However, the variance components are different between the two models.
-In both models, `V_A` represents the variance due to genetic relatedness.
-In the homoskedastic model, `V_E` represents the remainder of variance; there is only one value.
-On the other hand, the heteroskedastic model has three residual variance components - one for each study.
-In this case, the variance components are different for different studies, indicating that the distribution of height in the three studies has different variance even after accounting for the other parameters.
-```{r}
-nullmod_hom$varComp
-
-nullmod_het$varComp
-```
-
-We can run a likelihood ratio test to check if this difference is statistically significant.
-Because the models are identical other than the number of variance components fit, the heterogeneous model has 2 more degrees of freedom.
-We use the log-likelihood difference and the additional degrees of freedom to calculate a p-value.
-```{r}
-D <- 2 * (nullmod_het$logLik - nullmod_hom$logLik)
-pchisq(D, df = 2, lower.tail = FALSE)
-```
-Here, a small p-value means that study-specific variances are significantly different from each other.
-In this case, the heterogeneous model has a significantly better likelihood, so we will work with it for the future checks.
-If you were to run an association analysis with this phenotype, it would be important to use a heteroskedastic model to account for the different variances by study.
-
-Now, add the residuals to the phenotype data frame for plotting.
-We first need to make sure that we are matching the each residual value to the correct subject.
+First, add the residuals to the phenotype data frame for plotting later in this section.
+We need to make sure that we are matching each residual value to the correct subject.
+In this case, we already ordered the AnnotatedDataFrame to match the genetic relatedness marix, but this may not always be the case (for example, if subjects are excluded due to missing phentoype data).
 To do this, we use the row names of the `model.matrix` element of the output, which are in the same order as the `residual` matrix.
-We then match them to the order of the subjects in the phenotype file using the base R function `match`.
+We then match the row names (and therefore the residuals) to the order of the subjects in the phenotype file using the base R function `match`.
 ```{r}
-j <- match(phen$subject_id, rownames(nullmod_het$model.matrix))
-phen$residuals <- nullmod_het$resid.marginal[j]
+j <- match(annot$subject_id, rownames(mod$model.matrix))
+annot$residuals <- mod$resid.marginal[j]
 ```
 
 
-We start by plotting the distribution of the residuals by study.
+Next, we want to check if the different studies have the same mean height after adjustment for other covariates (here, age and sex).
+This information is available in the `fixef` (fixed effects) element of the model output.
+
 ```{r}
-ggplot(phen, aes(x = study, y = residuals)) +
-  geom_boxplot()
+mod$fixef
 ```
 
-We had earlier seen that the likelihood ratio test indicated that the variance was different for the studies.
-Here we can see that `study_1` has a smaller variance than the others.
-
-
-We also want to check if the different studies have the same mean height after adjustment for other covariates (here, age and sex).
-This information is available in the fixed effects part of the null model, which we briefly looked at earlier.
-```{r}
-nullmod_het$fixef
-```
-In particular, the rows associated with study effects have significant estimates associated with them.
+In particular, the rows associated with the study effects have significant estimates associated with them.
 
 We can also run a Wald test, where the null hypothesis is that all of the studies have the same mean height.
 First, identify the fixed effects and covariance for the study indicator variables.
@@ -266,11 +227,11 @@ First, identify the fixed effects and covariance for the study indicator variabl
 idx <- 4:5
 
 # fixed effect estimates for the studies
-study_effect <- nullmod_het$fixef[idx, ]
+study_effect <- mod$fixef[idx, ]
 study_effect
 
 # covariance of the study effects
-study_cov <- nullmod_het$betaCov[idx, idx]
+study_cov <- mod$betaCov[idx, idx]
 study_cov
 ```
 
@@ -281,11 +242,35 @@ pval <- pchisq(test_stat, df = length(study_effect), lower.tail = FALSE)
 pval
 ```
 
-The small p-value indicates that the null hypothesis is rejected; the studies do not have the same mean height.
+The small p-value indicates that the null hypothesis is rejected; the height measurements from the studies do not have the same mean height even after adjusting for the other covariates.
+
+
+Finally, we want to check if the height distributes from the different studies have the same variance.
+Start by looking at the variance components `varComp` element of the model.
+```{r}
+mod$varComp
+```
+
+`V_A` represents the variance in height due to genetic relatedness.
+The other variance components (`V_study_1`, `V_study_2`, and `V_study_3`) represent the residual variance in each study.
+The fitted values of the variance components are different for the different studies, indicating that the distribution of height in the three studies has different variance even after accounting for the other covariates.
+
+We can also show this same information by plotting the residuals by study.
+```{r}
+ggplot(pData(annot), aes(x = study, y = residuals)) +
+  geom_boxplot()
+```
+
+Both methods of looking at the variance components indicate that study 1 has a much smaller residual variance than the others.
+It is more complicated to perform a test to see if the difference is statistically significant.
+The distribution of the null hypothesis is not a simple chi-square distribution due to the fact that variance components cannot be negative.
+Therefore, we will only discuss the qualitative differences in variance between the studies at this point.
+The observed difference in variance may be due to a biological reason, or it might be due to differences in measurement that might disqualify study 1 from inclusion in the combined analysis.
+
 
 ## Final considerations
 
-We have determined that the different studies have both different variance and different mean for height.
+We have determined that the different studies have both different mean and different variance by study for height.
 Before performing genotype-phenotype association tests with these data, you would need to think carefully about whether the phenotype is homogeneous enough to be analyzed together.
 In some cases, there may be a valid reason for different means or variances, for example:
 
@@ -298,5 +283,9 @@ In other cases, there may be good reasons to exclude one or more studies, for ex
 * miscalculation or misinterpretation of the harmonization algorithm
 * study populations that are too different to be compared, such as trying to include a study composed primarily of children with one composed of adults in a height analysis
 
-Unfortunately there is no single set of guidelines you can use to make this decision, so it requires careful consideration before proceeding with analyses.
-It is necessary to involve domain experts (e.g., the Working Group members) and study experts to determine whether the phenotype is homogeneous enough to be analyzed together.
+It may be necessary to look at other variables that you had not previously considered.
+Studies may have used different measurement equipment, which could produce some of the observed differences in height by study.
+There might also be other batch effects due to lab procedures or assays that could result in differences in the variance or mean by study.
+
+Unfortunately there is no single set of guidelines you can use to decide how to proceedw ith analysis of a phenotype.
+It is necessary to involve domain experts (e.g., the Working Group members) and study experts to determine whether the phenotype is homogeneous enough to analyze the studies together.
