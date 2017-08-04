@@ -34,11 +34,17 @@ head(variant.id)
 # reference allele frequency of each variant
 afreq <- seqAlleleFreq(gds)
 hist(afreq, breaks=50)
+```
 
-# define a filter to read a subset of data
+We can define a filter on the `gds` object. After using the `seqSetFilter` command, all subsequent reads from the `gds` object are restricted to the selected subset of data, until a new filter is defined or `seqResetFilter` is called.
+
+```{r filter}
 seqSetFilter(gds, variant.id=1:10, sample.id=sample.id[1:5])
+```
 
-# genotype data is stored as number of copies of each allele
+Genotype data is stored in a 3-dimensional array, where the first dimension is always 2 for diploid genotypes. The second and third dimensions are samples and variants, respectively. The values of the array denote alleles: `0` is the reference allele and `1` is the alternate allele. For multiallelic variants, other alternate alleles are represented as integers `> 1`.
+
+```{r genotypes}
 geno <- seqGetData(gds, "genotype")
 dim(geno)
 geno[,,1:2]
@@ -66,29 +72,62 @@ seqResetFilter(gds)
 n <- seqNumAllele(gds)
 table(n)
 
-# some variants have multiple alleles
+# some variants have more than one alternate allele
 multi.allelic <- which(n > 2)
 altChar(gds)[multi.allelic]
 
 # extract a particular alternate allele
+# first alternate
 altChar(gds, n=1)[multi.allelic]
+# second alternate
 altChar(gds, n=2)[multi.allelic]
 
 # how many variants are SNVs vs INDELs?
 table(isSNV(gds, biallelic=TRUE))
 table(isSNV(gds, biallelic=FALSE))
+# 11 SNVs are multi-allelic
 
 seqClose(gds)
 ```
 
-## Exercise: HWE
+## Exercises 
 
-Use the `hwe` function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes.
+1. Set a filter selecting only multi-allelic variants. Inspect their genotypes using the different methods you learned above. Use the `alleleDosage` method to find dosage for the second (and third, etc.) alternate allele.
 
 ```{r exercise_gds, include=FALSE, eval=FALSE}
+seqSetFilter(gds, variant.sel=multi.allelic)
+
+geno <- seqGetData(gds, "genotype")
+dim(geno)
+geno[,1:5,]
+
+geno <- getGenotype(gds)
+dim(geno)
+head(geno)
+
+geno <- getGenotypeAlleles(gds)
+head(geno)
+
+dos <- refDosage(gds)
+head(dos)
+
+dos <- altDosage(gds)
+head(dos)
+
+dos <- alleleDosage(gds, n=2)
+head(dos)
+
+dos <- alleleDosage(gds, n=3)
+head(dos)
+```
+
+2. Use the `hwe` function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes. (Note that the HWE test is only valid for biallelic variants.)
+
+```{r exercise_hwe, include=FALSE, eval=FALSE}
 hwe.res <- hwe(gds)
 lowp <- !is.na(hwe.res$p) & hwe.res$p < 1e-4
 head(hwe.res[lowp,])
+
 seqSetFilter(gds, variant.id=75)
 table(getGenotype(gds))
 table(refDosage(gds))
