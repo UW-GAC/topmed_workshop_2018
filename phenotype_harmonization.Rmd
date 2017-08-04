@@ -111,11 +111,11 @@ It is also the same package that we use for the association analyses, so this ex
 The first step in fitting the mixed model is to create an Annotated Data Frame.
 This data structure is provided by the Bioconductor `Biobase` package, and it contains both the data and metadata (primarily the variable description).
 
-The `GENESIS` code to fit the mixed model requires a `scanID` column.
-Typically the `scanID` column identifies a unique genotyping instance and is linked to a sample id, not a subject id.
-In this case, we are only working with subject-level data, so we can use the subject identifier as the scan identifier for model-fitting purposes.
+The `GENESIS` code to fit the mixed model requires a `sample.id` column.
+Typically the `sample.id` column represents a sample identifier, not a subject id.
+In this case, we are only working with subject-level data, so we can use the subject identifier as the sample identifier for model-fitting purposes.
 ```{r}
-phen$scanID <- phen$subject_id
+phen$sample.id <- phen$subject_id
 ```
 
 Next, create the Annotated Data Frame.
@@ -129,7 +129,7 @@ metadata <- data.frame(labelDescription = c(
   "age at measurement of height",
   "subject's height in cm",
   "study identifier",
-  "scan identifier"
+  "sample identifier"
 ))
 
 annot <- AnnotatedDataFrame(phen, metadata)
@@ -166,7 +166,7 @@ covars <- c("sex", "age", "study")
 covariance_matrices <- grm$grm
 
 # put the phenotype data in the same order as the GRM
-annot <- annot[match(grm$sample.id, annot$scanID), ]
+annot <- annot[match(grm$sample.id, annot$sample.id), ]
 ```
 
 
