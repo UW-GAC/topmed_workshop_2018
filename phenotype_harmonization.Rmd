@@ -111,13 +111,6 @@ It is also the same package that we use for the association analyses, so this ex
 The first step in fitting the mixed model is to create an Annotated Data Frame.
 This data structure is provided by the Bioconductor `Biobase` package, and it contains both the data and metadata (primarily the variable description).
 
-The `GENESIS` code to fit the mixed model requires a `sample.id` column.
-Typically the `sample.id` column represents a sample identifier, not a subject id.
-In this case, we are only working with subject-level data, so we can use the subject identifier as the sample identifier for model-fitting purposes.
-```{r}
-phen$sample.id <- phen$subject_id
-```
-
 Next, create the Annotated Data Frame.
 You should include a description of each variable in the metadata.
 ```{r, message = FALSE}
@@ -128,8 +121,7 @@ metadata <- data.frame(labelDescription = c(
   "subject's sex",
   "age at measurement of height",
   "subject's height in cm",
-  "study identifier",
-  "sample identifier"
+  "study identifier"
 ))
 
 annot <- AnnotatedDataFrame(phen, metadata)
@@ -142,6 +134,11 @@ varMetadata(annot)
 ```
 
 
+Save the AnnotatedDataFrame for future use.
+```{r}
+save(annot, file = "phenotype_annotation.RData")
+```
+
 ### Fit the mixed model
 
 Becase it is an input to the mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.
@@ -153,10 +150,22 @@ grm <- TopmedPipeline::getobj(grmfile)
 rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
 ```
 
+The `GENESIS` code to fit the mixed model also requires a `sample.id` column.
+Typically the `sample.id` column represents a sample identifier, not a subject id.
+In this case, we are only working with subject-level data, so we can use the subject identifier as the sample identifier for model-fitting purposes.
+```{r}
+annot$sample.id <- annot$subject_id
+```
+
+It also requires that the AnnotatedDataFrame `sample.id` is in the same order as the samples genetic relatedness matrix.
+```{r}
+# put the phenotype data in the same order as the GRM
+annot <- annot[match(grm$sample.id, annot$sample.id), ]
+```
+
 Now, set up the model.
 We will use `height` as the outcome variable and adjust for `sex`, `age`, and harmonzation unit (here, `study`) as fixed effects.
 We will also include the genetic relatedness matrix as a random effect.
-The code also requires the AnnotatedDataFrame scan identifiers to be in the same order as the samples in the genetic relatedness matrix.
 ````{r, message = FALSE}
 library(GENESIS)
 
@@ -164,9 +173,6 @@ outcome <- "height"
 covars <- c("sex", "age", "study")
 
 covariance_matrices <- grm$grm
-
-# put the phenotype data in the same order as the GRM
-annot <- annot[match(grm$sample.id, annot$sample.id), ]
 ```
 
 
