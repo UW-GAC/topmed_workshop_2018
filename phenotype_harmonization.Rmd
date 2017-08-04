@@ -6,8 +6,6 @@ In many cases, one study corresponds to one harmonization unit, but more complic
 For example, the Framingham Heart study has multiple subcohorts (Original, Offspring, etc.), with phenotypes measured differently for subjects in different cohorts.
 Since the phenotypes have been measured differently, the different subcohorts have to be harmonized separately.
 
-## Exercise overview: run diagnostics on a harmonized phenotype
-
 In this exercise, we assume that you have
 created a phenotype harmonization plan for height,
 sent it to members from three studies to perform the harmonization,
@@ -93,23 +91,23 @@ They can help you see if one study is vastly different from the others or detect
 Some of the differences could be accounted for by covariates, so we will assess the statistical significance of study differences in the next section.
 
 
-## Fit a mixed model for statistical comparisons
+## Use using mixed models to compare studies
 
-The quick diagnostics in the previous section let you see if the data from one study are completely different from the others, but they don't provide much statistical insight.
-For that, we need to fit a statistical model to the data.
+The quick diagnostics in the previous section let you see if the data from one study are completely different from the others, but such differences could be due to other factors that could be adjusted for in analysis.
+To account for these other factors, we need to fit a statistical model to the data.
 Because some of the studies in TOPMed have related individuals, we need to fit a mixed model to account for the correlation in the data.
 In this case, because the phenotype is quantitative, we will use a linear mixed model.
 More information about mixed models will be given during presentations tomorrow.
 
 We use the `GENESIS` R package for fitting the mixed model.
-This package can accept a correlation matrix as a random effect in the mixed model, insetad of requiring a categorical or indicator variable.
+This package can accept a correlation matrix as a random effect in the mixed model, instead of requiring a categorical or indicator variable.
 It therefore can account for the observed genetic relatedness between subjects.
 It is also the same package that we use for the association analyses, so this exercise provides a brief introduction to the package and some of the associated data structures.
 
 ### Create an Annotated Data Frame
 
 The first step in fitting the mixed model is to create an Annotated Data Frame.
-This data structure is provided by the Bioconductor `Biobase` package, and it contains both the data and metadata (primarily the variable description).
+This data structure is provided by the Bioconductor `Biobase` package, and it contains both the data and metadata.
 
 Next, create the Annotated Data Frame.
 You should include a description of each variable in the metadata.
@@ -139,7 +137,7 @@ Save the AnnotatedDataFrame for future use.
 save(annot, file = "phenotype_annotation.RData")
 ```
 
-### Fit the mixed model
+### Obtain the genetic relatedness matrix
 
 Becase it is an input to the mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.
 ```{r}
@@ -157,34 +155,33 @@ In this case, we are only working with subject-level data, so we can use the sub
 annot$sample.id <- annot$subject_id
 ```
 
-It also requires that the AnnotatedDataFrame `sample.id` is in the same order as the samples genetic relatedness matrix.
+It also requires that the AnnotatedDataFrame `sample.id` is in the same order as the samples in the genetic relatedness matrix.
 ```{r}
 # put the phenotype data in the same order as the GRM
 annot <- annot[match(grm$sample.id, annot$sample.id), ]
 ```
 
-Now, set up the model.
-We will use `height` as the outcome variable and adjust for `sex`, `age`, and harmonzation unit (here, `study`) as fixed effects.
-We will also include the genetic relatedness matrix as a random effect.
-````{r, message = FALSE}
-library(GENESIS)
 
+### Fit a mixed model without harmonization unit
+
+We will first fit a mixed model that allows us to see if the mean of the height phenotype is different by study after adjusting for other covariates.
+In this case, we will adjust for age and sex, but not for harmonization unit (`study`), because we are interested in seeing differences in mean height by harmonization unit.
+We will also include the genetic relatedness matrix as a random effect to account for relatedness between the participants.
+
+````{r, message = FALSE}
 outcome <- "height"
-covars <- c("sex", "age", "study")
+covars <- c("sex", "age")
 
 covariance_matrices <- grm$grm
-```
 
-
-Next, we will fit a model that allows for group-specific residual variance by harmonization unit (here, `study`) by using the `group.var` argument of `fitNulLMM`.
-```{r, results = 'hide'}
-mod <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars, group.var = "study",
+library(GENESIS)
+mod_1 <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars,
                      covMatList = covariance_matrices)
 ```
 
-The output of `fitNullMM` is a list with a number of components.
+The output of `fitNullMM` is a list with a number of named elements
 ```{r}
-names(mod)
+names(mod_1)
 ```
 
 The elements that we will work with in this exercise are:
@@ -195,43 +192,66 @@ The elements that we will work with in this exercise are:
 * `betaCov`: The covariance of the fitted fixed effects
 * `resid.marginal`: The (marginal) residuals from the model, which have been adjusted for the fixed effects but not for the covariance structure
 * `varComp`: The fitted variance component for each input covariance matrix
-* `logLik`: The log-likelihood of the model fit
 
+Make sure the model converged.
+```{r}
+mod_1$converged
+```
 
-### Model interpretation
-
-First, add the residuals to the phenotype data frame for plotting later in this section.
+Now, add the residuals to the phenotype data frame for plotting.
 We need to make sure that we are matching each residual value to the correct subject.
 In this case, we already ordered the AnnotatedDataFrame to match the genetic relatedness marix, but this may not always be the case (for example, if subjects are excluded due to missing phentoype data).
-To do this, we use the row names of the `model.matrix` element of the output, which are in the same order as the `residual` matrix.
-We then match the row names (and therefore the residuals) to the order of the subjects in the phenotype file using the base R function `match`.
+To do match the same subject's values together, we use the row names of the `model.matrix` element of the output, which are in the same order as the `residual` matrix, and the `subject_id` column of the annotated data frame.
+We then match the row names (and therefore the residuals) to the subject identifier in the phenotype file using the base R function `match`.
 ```{r}
-j <- match(annot$subject_id, rownames(mod$model.matrix))
-annot$residuals <- mod$resid.marginal[j]
+j <- match(annot$subject_id, rownames(mod_1$model.matrix))
+annot$residuals <- mod_1$resid.marginal[j]
 ```
-
 
 Next, we want to check if the different studies have the same mean height after adjustment for other covariates (here, age and sex).
-This information is available in the `fixef` (fixed effects) element of the model output.
-
+We will first do this qualitatively by making a boxplot of the residuals by study.
 ```{r}
-mod$fixef
+ggplot(pData(annot), aes(x = study, y = residuals)) + geom_boxplot()
 ```
 
-In particular, the rows associated with the study effects have significant estimates associated with them.
+From the boxplot, it is clear that the different studies have different mean heights.
 
-We can also run a Wald test, where the null hypothesis is that all of the studies have the same mean height.
-First, identify the fixed effects and covariance for the study indicator variables.
+
+### Fit a model with harmonization unit
+
+Next, we can look at a model that adjusts for other covariates as well as harmonization unit.
+This model allows us to run a statistical test on the fitted study means and to qualitatively check if the variances are the same after adjusting for mean effects.
+The outcome is the same, but we now add the harmonization unit as a covariate.
+We also allow for group-specific residual variance by harmonization unit using the `group.var` argument to `fitNullMM`.
+
+```{r, results = 'hide', message = FALSE}
+# include the harmonization unit in the covariates
+covars <- c("age", "sex", "study")
+
+mod_2 <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars,
+                            group.var = "study", covMatList = covariance_matrices)
+```
+
+The `fixef` element now includes effects for study:
+```{r}
+mod_2$fixef
+```
+
+First we'll run a Wald test on the study effects to see how significant the mean difference is.
+The null hypothesis of this test is that all of the studies have the same mean height.
+
+First, identify the fixed effects and their covariance for the study indicator variables.
+There are only two studies in the fixed effects element because the other study is used as a reference group.
 ```{r}
 # these rows are associated with the study effects
 idx <- 4:5
 
 # fixed effect estimates for the studies
-study_effect <- mod$fixef[idx, ]
+study_effect <- mod_2$fixef[idx, ]
 study_effect
 
 # covariance of the study effects
-study_cov <- mod$betaCov[idx, idx]
+study_cov <- mod_2$betaCov[idx, idx]
 study_cov
 ```
 
@@ -243,29 +263,35 @@ pval
 ```
 
 The small p-value indicates that the null hypothesis is rejected; the height measurements from the studies do not have the same mean height even after adjusting for the other covariates.
+Even if this test were not significant, though, the studies' mean heights could still be different enough to indicate a problem with harmonization.
 
-
-Finally, we want to check if the height distributes from the different studies have the same variance.
-Start by looking at the variance components `varComp` element of the model.
+Finally, we want to check if the height distributions from the different studies have the same variance.
+Start by looking at the variance components (`varComp`) element of the model.
 ```{r}
-mod$varComp
+mod_2$varComp
 ```
 
 `V_A` represents the variance in height due to genetic relatedness.
 The other variance components (`V_study_1`, `V_study_2`, and `V_study_3`) represent the residual variance in each study.
-The fitted values of the variance components are different for the different studies, indicating that the distribution of height in the three studies has different variance even after accounting for the other covariates.
+The fitted values of the variance components are different for the different studies, indicating that the distributions of height in the three studies have different variance even after accounting for the other covariates.
 
-We can also show this same information by plotting the residuals by study.
+We can also show the same information by plotting the residuals by study.
+We first have to add the residuals from this model to the AnnotatedDataFrame, again making sure to match them correctly by subject.
+```{r}
+j <- match(annot$subject_id, rownames(mod_2$model.matrix))
+annot$residuals <- mod_2$resid.marginal[j]
+```
+
+Next make a boxplot of the residuals by study.
 ```{r}
 ggplot(pData(annot), aes(x = study, y = residuals)) +
   geom_boxplot()
 ```
 
-Both methods of looking at the variance components indicate that study 1 has a much smaller residual variance than the others.
+Both methods of looking at the variance components indicate that study 1 has a smaller residual variance than the others.
 It is more complicated to perform a test to see if the difference is statistically significant.
-The distribution of the null hypothesis is not a simple chi-square distribution due to the fact that variance components cannot be negative.
+The distribution of the null hypothesis is not a simple chi-squared distribution due to the fact that variance components cannot be negative.
 Therefore, we will only discuss the qualitative differences in variance between the studies at this point.
-The observed difference in variance may be due to a biological reason, or it might be due to differences in measurement that might disqualify study 1 from inclusion in the combined analysis.
 
 
 ## Final considerations
@@ -284,7 +310,7 @@ In other cases, there may be good reasons to exclude one or more studies, for ex
 * study populations that are too different to be compared, such as trying to include a study composed primarily of children with one composed of adults in a height analysis
 
 It may be necessary to look at other variables that you had not previously considered.
-Studies may have used different measurement equipment, which could produce some of the observed differences in height by study.
+Studies may have used different measurement equipment or calibrated their data differently.
 There might also be other batch effects due to lab procedures or assays that could result in differences in the variance or mean by study.
 
 Unfortunately there is no single set of guidelines you can use to decide how to proceedw ith analysis of a phenotype.
