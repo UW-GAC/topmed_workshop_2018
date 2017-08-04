@@ -200,4 +200,4 @@ seqClose(gds)
 
 ## Exercise
 
-Complete one round of iteration using all samples from the test dataset and plot the results.
+Complete one round of iteration using all samples from the test dataset and plot the results. Be sure to examine the parallel coordinates plot to determine the appropriate number of PCs to give as an argument to `pcrelate`.
