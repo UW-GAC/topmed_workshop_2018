@@ -177,9 +177,9 @@ covariance_matrices <- grm$grm
 
 
 Next, we will fit a model that allows for group-specific residual variance by harmonization unit (here, `study`) by using the `group.var` argument of `fitNulLMM`.
-```{r}
+```{r, results = 'hide'}
 mod <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars, group.var = "study",
-                     covMatList = covariance_matrices, verbose = FALSE)
+                     covMatList = covariance_matrices)
 ```
 
 The output of `fitNullMM` is a list with a number of components.
