@@ -4,23 +4,45 @@ Since TOPMed has many studies with related participants, we focus on linear mixe
 
 ## Null model
 
-The first step in an association test is to fit the null model. We use the `AnnotatedDataFrame` with phenotypes, and a GRM. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups with the parameter `group.var`.
+The first step in an association test is to fit the null model. We will need an `AnnotatedDataFrame` with phenotypes, and a GRM. We have a sample annotation with a `sample.id` column matched to the GDS file, and a phenotype file with `subject_id`. (In this example, we use the 1000 Genomes IDs for both sample and subject ID.) For TOPMed data, it is also important to match by study, as subject IDs are not unique across studies.
 
 ```{r null_model}
-data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
-sampfile <- "1KG_phase3_subset_annot.RData"
-if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile)
+# sample annotation
+workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2017/raw/master"
+sampfile <- "sample_annotation.RData"
+if (!file.exists(sampfile)) download.file(file.path(workshop.path, sampfile), sampfile)
 annot <- TopmedPipeline::getobj(sampfile)
+library(Biobase)
+head(pData(annot))
 
+# phenotypes by subject ID
+phenfile <- "phenotype_annotation.RData"
+if (!file.exists(phenfile)) download.file(file.path(data.path, phenfile), phenfile)
+phen <- TopmedPipeline::getobj(phenfile)
+head(pData(phen))
+varMetadata(phen)
+
+# merge sample annotation with phenotypes
+dat <- pData(annot) %>%
+    left_join(pData(phen), by=c("subject.id"="subject_id", "sex"="sex"))
+meta <- bind_rows(varMetadata(annot), varMetadata(phen)[3:5,,drop=FALSE])
+annot <- AnnotatedDataFrame(dat, meta)
+
+# load the GRM
+data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
 grmfile <- "grm.RData"
 if (!file.exists(grmfile)) download.file(file.path(data.path, grmfile), grmfile)
 grm <- TopmedPipeline::getobj(grmfile)
 # the row and column names of the covariance matrix must be set to sample.id
 rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
+```
 
+We will test for an association between genotype and height, adjusting for sex, age, and study as covariates. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups with the parameter `group.var`. We saw in a previous exercise that the variance differs by study.
+
+```{r}
 library(GENESIS)
-nullmod <- fitNullMM(annot, outcome="outcome", covars=c("sex", "Population"), 
-                     covMatList=grm$grm, group.var="Population", verbose=FALSE)
+nullmod <- fitNullMM(annot, outcome="height", covars=c("sex", "age", "study"), 
+                     covMatList=grm$grm, group.var="study", verbose=FALSE)
 ```
 
 We also recommend taking an inverse normal transform of the residuals and refitting the model. This is done separately for each group, and the transformed residuals are rescaled. See the full procedure in the  
@@ -93,20 +115,52 @@ qqPlot(assoc$results$pval_0)
 
 ## Exercises
 
-1. Logistic regression: `fitNullMM` can use a binary phenotype as the outcome variable by specifying the argument `family=binomial`. Use the `status` column in the sample annotation to fit a null model for simulated case/control status. Refer to the documentation for `fitNulMM` to see what other parameters need to be changed for a binary outcome. Then run a single-variant test and a sliding window test using this model.
+1. Logistic regression: `fitNullMM` can use a binary phenotype as the outcome variable by specifying the argument `family=binomial`. Use the `status` column in the sample annotation to fit a null model for simulated case/control status, with `sex` and `Population` as covariates. Refer to the documentation for `fitNulMM` to see what other parameters need to be changed for a binary outcome. Then run a single-variant test and a sliding window test using this model.
 
 ```{r exercise_logistic, include=FALSE, eval=FALSE}
-nullmod <- fitNullMM(annot, outcome="status", covars=c("sex", "Population"), 
-                     covMatList=grm$grm, family=binomial)
+nullmod.status <- fitNullMM(annot, outcome="status", covars=c("sex", "Population"), 
+                            covMatList=grm$grm, family=binomial)
 assoc <- assocTestMM(seqData, nullmod, test="Score")
 assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
                             weight.beta=c(1,1), window.size=5, window.shift=2)
 ```
 
-2. Inverse normal transform: use the TopmedPipeline function `addInvNorm` to perform an inverse normal transform on the `status` variable. (You will need to load the TopmedPipeline library.) Inspect the code for this function by typing `addInvNorm` at the R prompt, so you understand what it is doing.
+2. Inverse normal transform: use the TopmedPipeline function `addInvNorm` to perform an inverse normal transform on the `height` variable. (You will need to load the TopmedPipeline library.) Inspect the code for this function by typing `addInvNorm` at the R prompt, so you understand what it is doing. Then for each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.
+
+```{r exercise_invnorm, include=FALSE, eval=FALSE}
+library(TopmedPipeline)
+annot.norm <- addInvNorm(annot, nullmod, outcome="height", covars=c("sex", "age", "study"))
+head(pData(annot.norm))
+
+addInvNorm
+
+studies <- sort(unique(annot$study))
+resid.studies <- bind_rows(lapply(studies, function(x) {
+    print(x)
+    annot.study <- annot[annot$study == x,]
+    nullmod.study <- fitNullMM(annot.study, outcome="height", covars=c("sex", "age"), 
+                               covMatList=grm$grm, verbose=FALSE)
+    addInvNorm(annot.study, nullmod.study, outcome="height", covars=c("sex", "age")) %>%
+        pData() %>%
+        select(resid.norm) %>%
+        mutate(study=x, run="separate")
+}))
+head(resid.studies)
+
+library(tidyr)
+dat <- pData(annot.norm) %>%
+    select(resid.norm, study) %>% 
+    mutate(run="combined") %>%
+    bind_rows(resid.studies)
+ggplot(dat, aes(study, resid.norm, fill=run)) + geom_boxplot()
+
+dat %>% 
+    group_by(study, run) %>%
+    summarise(mean=mean(resid.norm), var=var(resid.norm))
+```
 
 
-## Aggregate tests
+## Annotation-based aggregate tests
 
 ### Variant annotation
 Rare variants are generally aggregated into some meaningful units for association testing to decrease multiple testing burden and increase statistical power. Various genomic and epigenomic annotations can be used to define aggregation units and filter them. A large number of annotations are available through the Whole Genome Sequence Annotator (WGSA) to the TOPMed users. 

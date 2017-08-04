@@ -109,8 +109,8 @@ We need to determine which PCs are ancestry informative. To do this we need popu
 
 ```{r annot}
 library(Biobase)
-sampfile <- "1KG_phase3_subset_annot.RData"
-if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile)
+sampfile <- "sample_annotation.RData"
+if (!file.exists(sampfile)) download.file(file.path(workshop.path, sampfile), sampfile)
 annot <- TopmedPipeline::getobj(sampfile)
 annot
 head(pData(annot))
