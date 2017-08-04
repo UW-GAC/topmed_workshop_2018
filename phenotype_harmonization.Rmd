@@ -277,5 +277,9 @@ In other cases, there may be good reasons to exclude one or more studies, for ex
 * miscalculation or misinterpretation of the harmonization algorithm
 * study populations that are too different to be compared, such as trying to include a study composed primarily of children with one composed of adults in a height analysis
 
-Unfortunately there is no single set of guidelines you can use to make this decision, so it requires careful consideration before proceeding with analyses.
-It is necessary to involve domain experts (e.g., the Working Group members) and study experts to determine whether the phenotype is homogeneous enough to be analyzed together.
+It may be necessary to look at other variables that you had not previously considered.
+Studies may have used different measurement equipment, which could produce some of the observed differences in height by study.
+There might also be other batch effects due to lab procedures or assays that could result in differences in the variance or mean by study.
+
+Unfortunately there is no single set of guidelines you can use to decide how to proceedw ith analysis of a phenotype.
+It is necessary to involve domain experts (e.g., the Working Group members) and study experts to determine whether the phenotype is homogeneous enough to analyze the studies together.
