@@ -111,15 +111,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.4" data-path="pc-relate.html"><a href="pc-relate.html#exercise"><i class="fa fa-check"></i><b>4.4</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html"><i class="fa fa-check"></i><b>5</b> Phenotype Harmonization</a><ul>
-<li class="chapter" data-level="5.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#exercise-overview-run-diagnostics-on-a-harmonized-phenotype"><i class="fa fa-check"></i><b>5.1</b> Exercise overview: run diagnostics on a harmonized phenotype</a></li>
-<li class="chapter" data-level="5.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#import-phentoype-files-into-r"><i class="fa fa-check"></i><b>5.2</b> Import phentoype files into R</a></li>
-<li class="chapter" data-level="5.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#run-some-quick-diagnostics-on-the-files"><i class="fa fa-check"></i><b>5.3</b> Run some quick diagnostics on the files</a></li>
-<li class="chapter" data-level="5.4" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-mixed-model-for-statistical-comparisons"><i class="fa fa-check"></i><b>5.4</b> Fit a mixed model for statistical comparisons</a><ul>
-<li class="chapter" data-level="5.4.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#create-an-annotated-data-frame"><i class="fa fa-check"></i><b>5.4.1</b> Create an Annotated Data Frame</a></li>
-<li class="chapter" data-level="5.4.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-the-mixed-model"><i class="fa fa-check"></i><b>5.4.2</b> Fit the mixed model</a></li>
-<li class="chapter" data-level="5.4.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#model-interpretation"><i class="fa fa-check"></i><b>5.4.3</b> Model interpretation</a></li>
+<li class="chapter" data-level="5.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#import-phentoype-files-into-r"><i class="fa fa-check"></i><b>5.1</b> Import phentoype files into R</a></li>
+<li class="chapter" data-level="5.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#run-some-quick-diagnostics-on-the-files"><i class="fa fa-check"></i><b>5.2</b> Run some quick diagnostics on the files</a></li>
+<li class="chapter" data-level="5.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#use-using-mixed-models-to-compare-studies"><i class="fa fa-check"></i><b>5.3</b> Use using mixed models to compare studies</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#create-an-annotated-data-frame"><i class="fa fa-check"></i><b>5.3.1</b> Create an Annotated Data Frame</a></li>
+<li class="chapter" data-level="5.3.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#obtain-the-genetic-relatedness-matrix"><i class="fa fa-check"></i><b>5.3.2</b> Obtain the genetic relatedness matrix</a></li>
+<li class="chapter" data-level="5.3.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-mixed-model-without-harmonization-unit"><i class="fa fa-check"></i><b>5.3.3</b> Fit a mixed model without harmonization unit</a></li>
+<li class="chapter" data-level="5.3.4" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-model-with-harmonization-unit"><i class="fa fa-check"></i><b>5.3.4</b> Fit a model with harmonization unit</a></li>
 </ul></li>
-<li class="chapter" data-level="5.5" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#final-considerations"><i class="fa fa-check"></i><b>5.5</b> Final considerations</a></li>
+<li class="chapter" data-level="5.4" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#final-considerations"><i class="fa fa-check"></i><b>5.4</b> Final considerations</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><i class="fa fa-check"></i><b>6</b> Finding unharmonized TOPMed study phenotypes on dbGaP</a><ul>
 <li class="chapter" data-level="6.1" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#ways-to-get-topmed-phenotype-data"><i class="fa fa-check"></i><b>6.1</b> Ways to get TOPMed phenotype data</a></li>
@@ -206,11 +206,11 @@ grm &lt;-<span class="st"> </span><span class="kw">snpgdsGRM</span>(gds, <span c
 ## Working space: 1,126 samples, 1,107 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Fri Aug  4 11:43:17 2017    (internal increment: 680)
+## Fri Aug  4 15:17:39 2017    (internal increment: 680)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 1s
-## Fri Aug  4 11:43:18 2017    Done.</code></pre>
+## Fri Aug  4 15:17:40 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(grm)</code></pre></div>
 <pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;grm&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(grm<span class="op">$</span>grm)</code></pre></div>
