@@ -101,7 +101,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>2</b> GDS format</a><ul>
 <li class="chapter" data-level="2.1" data-path="gds-format.html"><a href="gds-format.html#exploring-a-gds-file"><i class="fa fa-check"></i><b>2.1</b> Exploring a GDS file</a></li>
-<li class="chapter" data-level="2.2" data-path="gds-format.html"><a href="gds-format.html#exercise-hwe"><i class="fa fa-check"></i><b>2.2</b> Exercise: HWE</a></li>
+<li class="chapter" data-level="2.2" data-path="gds-format.html"><a href="gds-format.html#exercises"><i class="fa fa-check"></i><b>2.2</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="computing-a-grm.html"><a href="computing-a-grm.html"><i class="fa fa-check"></i><b>3</b> Computing a GRM</a></li>
 <li class="chapter" data-level="4" data-path="pc-relate.html"><a href="pc-relate.html"><i class="fa fa-check"></i><b>4</b> PC-Relate</a><ul>
@@ -133,8 +133,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>7.1</b> Null model</a></li>
 <li class="chapter" data-level="7.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>7.2</b> Single-variant tests</a></li>
 <li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.3</b> Sliding window tests</a></li>
-<li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#exercise-logistic-regression"><i class="fa fa-check"></i><b>7.4</b> Exercise: logistic regression</a></li>
-<li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Aggregate tests</a><ul>
+<li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.4</b> Exercises</a></li>
+<li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Annotation-based aggregate tests</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Variant annotation</a></li>
 <li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-aggregate-units"><i class="fa fa-check"></i><b>7.5.2</b> Defining aggregate units</a></li>
 <li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.3</b> Association testing with aggregate units</a></li>
@@ -202,7 +202,7 @@ gdsfile &lt;-<span class="st"> &quot;1KG_phase3_subset_chr1.gds&quot;</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gds &lt;-<span class="st"> </span><span class="kw">seqOpen</span>(gdsfile)
 gds</code></pre></div>
 <pre><code>## Object of class &quot;SeqVarGDSClass&quot;
-## File: /projects/topmed/analysts/amstilp/topmed_analysis_workshop_2017/topmed_workshop_2017/1KG_phase3_subset_chr1.gds (70.3K)
+## File: /projects/users/stephanie/Code/TOPMed/topmed_workshop_2017/1KG_phase3_subset_chr1.gds (70.3K)
 ## +    [  ] *
 ## |--+ description   [  ] *
 ## |--+ sample.id   { Str8 1126 LZMA_ra(9.66%), 877B } *
@@ -241,12 +241,12 @@ variant.id &lt;-<span class="st"> </span><span class="kw">seqGetData</span>(gds,
 afreq &lt;-<span class="st"> </span><span class="kw">seqAlleleFreq</span>(gds)
 <span class="kw">hist</span>(afreq, <span class="dt">breaks=</span><span class="dv">50</span>)</code></pre></div>
 <p><img src="_main_files/figure-html/seqarray-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># define a filter to read a subset of data</span>
-<span class="kw">seqSetFilter</span>(gds, <span class="dt">variant.id=</span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">sample.id=</span>sample.id[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>])</code></pre></div>
+<p>We can define a filter on the <code>gds</code> object. After using the <code>seqSetFilter</code> command, all subsequent reads from the <code>gds</code> object are restricted to the selected subset of data, until a new filter is defined or <code>seqResetFilter</code> is called.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqSetFilter</span>(gds, <span class="dt">variant.id=</span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">sample.id=</span>sample.id[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>])</code></pre></div>
 <pre><code>## # of selected samples: 5
 ## # of selected variants: 10</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># genotype data is stored as number of copies of each allele</span>
-geno &lt;-<span class="st"> </span><span class="kw">seqGetData</span>(gds, <span class="st">&quot;genotype&quot;</span>)
+<p>Genotype data is stored in a 3-dimensional array, where the first dimension is always 2 for diploid genotypes. The second and third dimensions are samples and variants, respectively. The values of the array denote alleles: <code>0</code> is the reference allele and <code>1</code> is the alternate allele. For multiallelic variants, other alternate alleles are represented as integers <code>&gt; 1</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geno &lt;-<span class="st"> </span><span class="kw">seqGetData</span>(gds, <span class="st">&quot;genotype&quot;</span>)
 <span class="kw">dim</span>(geno)</code></pre></div>
 <pre><code>## [1]  2  5 10</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geno[,,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</code></pre></div>
@@ -314,7 +314,7 @@ n &lt;-<span class="st"> </span><span class="kw">seqNumAllele</span>(gds)
 <pre><code>## n
 ##    2    3    4 
 ## 1099   20    1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># some variants have multiple alleles</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># some variants have more than one alternate allele</span>
 multi.allelic &lt;-<span class="st"> </span><span class="kw">which</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>)
 <span class="kw">altChar</span>(gds)[multi.allelic]</code></pre></div>
 <pre><code>##  [1] &quot;GT,G&quot;            &quot;G,T&quot;             &quot;A,T&quot;            
@@ -325,11 +325,13 @@ multi.allelic &lt;-<span class="st"> </span><span class="kw">which</span>(n <spa
 ## [16] &quot;CAAGCAT,CGAGCAT&quot; &quot;CATTATT,C&quot;       &quot;AT,C&quot;           
 ## [19] &quot;TGTGA,C&quot;         &quot;CCATT,CCATTCATT&quot; &quot;C,G&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># extract a particular alternate allele</span>
+<span class="co"># first alternate</span>
 <span class="kw">altChar</span>(gds, <span class="dt">n=</span><span class="dv">1</span>)[multi.allelic]</code></pre></div>
 <pre><code>##  [1] &quot;GT&quot;      &quot;G&quot;       &quot;A&quot;       &quot;A&quot;       &quot;ATG&quot;     &quot;C&quot;       &quot;A&quot;      
 ##  [8] &quot;C&quot;       &quot;A&quot;       &quot;TAA&quot;     &quot;GTTA&quot;    &quot;GCC&quot;     &quot;A&quot;       &quot;A&quot;      
 ## [15] &quot;A&quot;       &quot;CAAGCAT&quot; &quot;CATTATT&quot; &quot;AT&quot;      &quot;TGTGA&quot;   &quot;CCATT&quot;   &quot;C&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">altChar</span>(gds, <span class="dt">n=</span><span class="dv">2</span>)[multi.allelic]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># second alternate</span>
+<span class="kw">altChar</span>(gds, <span class="dt">n=</span><span class="dv">2</span>)[multi.allelic]</code></pre></div>
 <pre><code>##  [1] &quot;G&quot;         &quot;T&quot;         &quot;T&quot;         &quot;T&quot;         &quot;ATGTG&quot;    
 ##  [6] &quot;G&quot;         &quot;T&quot;         &quot;T&quot;         &quot;C&quot;         &quot;T&quot;        
 ## [11] &quot;GTTT&quot;      &quot;GCCC&quot;      &quot;C&quot;         &quot;C&quot;         &quot;C&quot;        
@@ -344,11 +346,16 @@ multi.allelic &lt;-<span class="st"> </span><span class="kw">which</span>(n <spa
 <pre><code>## 
 ## FALSE  TRUE 
 ##    99  1021</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqClose</span>(gds)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 11 SNVs are multi-allelic</span>
+
+<span class="kw">seqClose</span>(gds)</code></pre></div>
 </div>
-<div id="exercise-hwe" class="section level2">
-<h2><span class="header-section-number">2.2</span> Exercise: HWE</h2>
-<p>Use the <code>hwe</code> function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes.</p>
+<div id="exercises" class="section level2">
+<h2><span class="header-section-number">2.2</span> Exercises</h2>
+<ol style="list-style-type: decimal">
+<li><p>Set a filter selecting only multi-allelic variants. Inspect their genotypes using the different methods you learned above. Use the <code>alleleDosage</code> method to find dosage for the second (and third, etc.) alternate allele.</p></li>
+<li><p>Use the <code>hwe</code> function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes. (Note that the HWE test is only valid for biallelic variants.)</p></li>
+</ol>
 
 </div>
 </div>

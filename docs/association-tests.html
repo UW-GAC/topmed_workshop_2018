@@ -101,7 +101,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>2</b> GDS format</a><ul>
 <li class="chapter" data-level="2.1" data-path="gds-format.html"><a href="gds-format.html#exploring-a-gds-file"><i class="fa fa-check"></i><b>2.1</b> Exploring a GDS file</a></li>
-<li class="chapter" data-level="2.2" data-path="gds-format.html"><a href="gds-format.html#exercise-hwe"><i class="fa fa-check"></i><b>2.2</b> Exercise: HWE</a></li>
+<li class="chapter" data-level="2.2" data-path="gds-format.html"><a href="gds-format.html#exercises"><i class="fa fa-check"></i><b>2.2</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="computing-a-grm.html"><a href="computing-a-grm.html"><i class="fa fa-check"></i><b>3</b> Computing a GRM</a></li>
 <li class="chapter" data-level="4" data-path="pc-relate.html"><a href="pc-relate.html"><i class="fa fa-check"></i><b>4</b> PC-Relate</a><ul>
@@ -133,8 +133,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>7.1</b> Null model</a></li>
 <li class="chapter" data-level="7.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>7.2</b> Single-variant tests</a></li>
 <li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.3</b> Sliding window tests</a></li>
-<li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#exercise-logistic-regression"><i class="fa fa-check"></i><b>7.4</b> Exercise: logistic regression</a></li>
-<li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Aggregate tests</a><ul>
+<li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.4</b> Exercises</a></li>
+<li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Annotation-based aggregate tests</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Variant annotation</a></li>
 <li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-aggregate-units"><i class="fa fa-check"></i><b>7.5.2</b> Defining aggregate units</a></li>
 <li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.3</b> Association testing with aggregate units</a></li>
@@ -191,20 +191,64 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Since TOPMed has many studies with related participants, we focus on linear mixed models. Logistic mixed models are also possible using GENESIS, see the <a href="https://www.ncbi.nlm.nih.gov/pubmed/27018471">GMMAT paper</a>.</p>
 <div id="null-model" class="section level2">
 <h2><span class="header-section-number">7.1</span> Null model</h2>
-<p>The first step in an association test is to fit the null model. We use the <code>AnnotatedDataFrame</code> with phenotypes, and a GRM. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data.path &lt;-<span class="st"> &quot;https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata&quot;</span>
-sampfile &lt;-<span class="st"> &quot;1KG_phase3_subset_annot.RData&quot;</span>
-<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(sampfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, sampfile), sampfile)
+<p>The first step in an association test is to fit the null model. We will need an <code>AnnotatedDataFrame</code> with phenotypes, and a GRM. We have a sample annotation with a <code>sample.id</code> column matched to the GDS file, and a phenotype file with <code>subject_id</code>. (In this example, we use the 1000 Genomes IDs for both sample and subject ID.) For TOPMed data, it is also important to match by study, as subject IDs are not unique across studies.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sample annotation</span>
+workshop.path &lt;-<span class="st"> &quot;https://github.com/UW-GAC/topmed_workshop_2017/raw/master&quot;</span>
+sampfile &lt;-<span class="st"> &quot;sample_annotation.RData&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(sampfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(workshop.path, sampfile), sampfile)
 annot &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(sampfile)
+<span class="kw">library</span>(Biobase)
+<span class="kw">head</span>(<span class="kw">pData</span>(annot))</code></pre></div>
+<pre><code>##   sample.id subject.id Population          Population.Description sex
+## 1   HG00096    HG00096        GBR British in England and Scotland   M
+## 2   HG00097    HG00097        GBR British in England and Scotland   F
+## 3   HG00099    HG00099        GBR British in England and Scotland   F
+## 4   HG00100    HG00100        GBR British in England and Scotland   F
+## 5   HG00101    HG00101        GBR British in England and Scotland   M
+## 6   HG00102    HG00102        GBR British in England and Scotland   F
+##   status
+## 1      0
+## 2      1
+## 3      0
+## 4      1
+## 5      0
+## 6      0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># phenotypes by subject ID</span>
+phenfile &lt;-<span class="st"> &quot;phenotype_annotation.RData&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(phenfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, phenfile), phenfile)
+phen &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(phenfile)
+<span class="kw">head</span>(<span class="kw">pData</span>(phen))</code></pre></div>
+<pre><code>##   subject_id sex age height   study
+## 1    HG00096   M  47  165.3 study_1
+## 2    HG00102   F  49  169.1 study_1
+## 3    HG00112   M  46  167.9 study_1
+## 4    HG00114   M  49  169.5 study_1
+## 5    HG00115   M  35  161.1 study_1
+## 6    HG00116   M  37  182.2 study_1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">varMetadata</span>(phen)</code></pre></div>
+<pre><code>##                        labelDescription
+## subject_id           subject identifier
+## sex                       subject&#39;s sex
+## age        age at measurement of height
+## height           subject&#39;s height in cm
+## study                  study identifier</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># merge sample annotation with phenotypes</span>
+dat &lt;-<span class="st"> </span><span class="kw">pData</span>(annot) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">left_join</span>(<span class="kw">pData</span>(phen), <span class="dt">by=</span><span class="kw">c</span>(<span class="st">&quot;subject.id&quot;</span>=<span class="st">&quot;subject_id&quot;</span>, <span class="st">&quot;sex&quot;</span>=<span class="st">&quot;sex&quot;</span>))
+meta &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<span class="kw">varMetadata</span>(annot), <span class="kw">varMetadata</span>(phen)[<span class="dv">3</span><span class="op">:</span><span class="dv">5</span>,,<span class="dt">drop=</span><span class="ot">FALSE</span>])
+annot &lt;-<span class="st"> </span><span class="kw">AnnotatedDataFrame</span>(dat, meta)
 
+<span class="co"># load the GRM</span>
+data.path &lt;-<span class="st"> &quot;https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata&quot;</span>
 grmfile &lt;-<span class="st"> &quot;grm.RData&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(grmfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, grmfile), grmfile)
 grm &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(grmfile)
-<span class="kw">rownames</span>(grm<span class="op">$</span>grm) &lt;-<span class="st"> </span><span class="kw">colnames</span>(grm<span class="op">$</span>grm) &lt;-<span class="st"> </span>grm<span class="op">$</span>sample.id
-
-<span class="kw">library</span>(GENESIS)
-nullmod &lt;-<span class="st"> </span><span class="kw">fitNullMM</span>(annot, <span class="dt">outcome=</span><span class="st">&quot;outcome&quot;</span>, <span class="dt">covars=</span><span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;Population&quot;</span>), 
-                     <span class="dt">covMatList=</span>grm<span class="op">$</span>grm, <span class="dt">group.var=</span><span class="st">&quot;Population&quot;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)</code></pre></div>
+<span class="co"># the row and column names of the covariance matrix must be set to sample.id</span>
+<span class="kw">rownames</span>(grm<span class="op">$</span>grm) &lt;-<span class="st"> </span><span class="kw">colnames</span>(grm<span class="op">$</span>grm) &lt;-<span class="st"> </span>grm<span class="op">$</span>sample.id</code></pre></div>
+<p>We will test for an association between genotype and height, adjusting for sex, age, and study as covariates. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups with the parameter <code>group.var</code>. We saw in a previous exercise that the variance differs by study.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GENESIS)
+nullmod &lt;-<span class="st"> </span><span class="kw">fitNullMM</span>(annot, <span class="dt">outcome=</span><span class="st">&quot;height&quot;</span>, <span class="dt">covars=</span><span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="st">&quot;study&quot;</span>), 
+                     <span class="dt">covMatList=</span>grm<span class="op">$</span>grm, <span class="dt">group.var=</span><span class="st">&quot;study&quot;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p>We also recommend taking an inverse normal transform of the residuals and refitting the model. This is done separately for each group, and the transformed residuals are rescaled. See the full procedure in the<br />
 <a href="https://github.com/smgogarten/analysis_pipeline#association-testing">pipeline documenation</a>.</p>
 </div>
@@ -218,20 +262,20 @@ gds &lt;-<span class="st"> </span><span class="kw">seqOpen</span>(gdsfile)
 seqData &lt;-<span class="st"> </span><span class="kw">SeqVarData</span>(gds, <span class="dt">sampleData=</span>annot)
 assoc &lt;-<span class="st"> </span><span class="kw">assocTestMM</span>(seqData, nullmod)
 <span class="kw">head</span>(assoc)</code></pre></div>
-<pre><code>##   snpID chr    n          MAF minor.allele          Est        SE
-## 1     1   1 1126 0.0039964476          alt  0.037896432 0.3547545
-## 2     2   1 1126 0.0492895204          alt  0.173271721 0.1038710
-## 3     3   1 1126 0.0004440497          alt  0.034881381 1.0211652
-## 4     4   1 1126 0.0008880995          alt  0.003698581 0.6811618
-## 5     5   1 1126 0.0071047957          alt -0.062695115 0.2685319
-## 6     6   1 1126 0.0022202487          alt  0.574104228 0.4504458
-##      Wald.Stat  Wald.pval
-## 1 1.141145e-02 0.91492830
-## 2 2.782705e+00 0.09528713
-## 3 1.166797e-03 0.97275083
-## 4 2.948287e-05 0.99566766
-## 5 5.450992e-02 0.81539366
-## 6 1.624413e+00 0.20247756</code></pre>
+<pre><code>##   snpID chr    n          MAF minor.allele        Est        SE Wald.Stat
+## 1     1   1 1126 0.0039964476          alt  -1.541280  3.733069 0.1704634
+## 2     2   1 1126 0.0492895204          alt  -2.252667  1.347029 2.7966615
+## 3     3   1 1126 0.0004440497          alt -25.572126 11.039358 5.3659428
+## 4     4   1 1126 0.0008880995          alt -10.378157 10.233569 1.0284573
+## 5     5   1 1126 0.0071047957          alt   1.754369  2.635165 0.4432267
+## 6     6   1 1126 0.0022202487          alt  -3.400914  5.669262 0.3598639
+##    Wald.pval
+## 1 0.67970027
+## 2 0.09446081
+## 3 0.02053369
+## 4 0.31052127
+## 5 0.50556915
+## 6 0.54858185</code></pre>
 <p>We make a QQ plot to examine the results.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 qqPlot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
@@ -264,20 +308,20 @@ qqPlot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 <span class="kw">names</span>(assoc)</code></pre></div>
 <pre><code>## [1] &quot;param&quot;       &quot;window&quot;      &quot;nsample&quot;     &quot;results&quot;     &quot;variantInfo&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>results)</code></pre></div>
-<pre><code>##   chr window.start window.stop n.site dup burden.skew       Score
-## 1   1       966001      971000      1   0   11.036036  0.30138968
-## 2   1       968001      973000      1   1   11.036036  0.30138968
-## 3   1       970001      975000      1   1   11.036036  0.30138968
-## 4   1       982001      987000      1   0    3.041979 16.03409196
-## 5   1       984001      989000      1   1    3.041979 16.03409196
-## 6   1      1022001     1027000      1   0   33.466573  0.03348047
-##          Var  Score.stat Score.pval
-## 1  7.9529830 0.011421594 0.91489064
-## 2  7.9529830 0.011421594 0.91489064
-## 3  7.9529830 0.011421594 0.91489064
-## 4 92.5372698 2.778254702 0.09555224
-## 5 92.5372698 2.778254702 0.09555224
-## 6  0.9598379 0.001167845 0.97273860</code></pre>
+<pre><code>##   chr window.start window.stop n.site dup burden.skew      Score
+## 1   1       966001      971000      1   0   11.036036 -0.1106805
+## 2   1       968001      973000      1   1   11.036036 -0.1106805
+## 3   1       970001      975000      1   1   11.036036 -0.1106805
+## 4   1       982001      987000      1   0    3.041979 -1.2395028
+## 5   1       984001      989000      1   1    3.041979 -1.2395028
+## 6   1      1022001     1027000      1   0   33.466573 -0.2090215
+##           Var Score.stat Score.pval
+## 1 0.071810741  0.1705897 0.67958828
+## 2 0.071810741  0.1705897 0.67958828
+## 3 0.071810741  0.1705897 0.67958828
+## 4 0.550238011  2.7921864 0.09472490
+## 5 0.550238011  2.7921864 0.09472490
+## 6 0.008173804  5.3451252 0.02078029</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>variantInfo)</code></pre></div>
 <pre><code>##   variantID allele chr     pos n.obs         freq weight
 ## 1         1      1   1  970546  1126 0.0039964476      1
@@ -292,13 +336,13 @@ qqPlot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">assoc &lt;-<span class="st"> </span><span class="kw">assocTestSeqWindow</span>(seqData, nullmod, <span class="dt">test=</span><span class="st">&quot;SKAT&quot;</span>, <span class="dt">AF.range=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>),
                             <span class="dt">weight.beta=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">25</span>), <span class="dt">window.size=</span><span class="dv">5</span>, <span class="dt">window.shift=</span><span class="dv">2</span>)
 <span class="kw">head</span>(assoc<span class="op">$</span>results)</code></pre></div>
-<pre><code>##   chr window.start window.stop n.site dup          Q_0     pval_0 err_0
-## 1   1       966001      971000      1   0 4.684458e+01 0.91489064     0
-## 2   1       968001      973000      1   1 4.684458e+01 0.91489064     0
-## 3   1       970001      975000      1   1 4.684458e+01 0.91489064     0
-## 4   1       982001      987000      1   0 1.419993e+04 0.09555224     0
-## 5   1       984001      989000      1   1 1.419993e+04 0.09555224     0
-## 6   1      1022001     1027000      1   0 6.858109e-01 0.97273860     0</code></pre>
+<pre><code>##   chr window.start window.stop n.site dup       Q_0     pval_0 err_0
+## 1   1       966001      971000      1   0  6.317493 0.67958828     0
+## 2   1       968001      973000      1   1  6.317493 0.67958828     0
+## 3   1       970001      975000      1   1  6.317493 0.67958828     0
+## 4   1       982001      987000      1   0 84.857944 0.09472490     0
+## 5   1       984001      989000      1   1 84.857944 0.09472490     0
+## 6   1      1022001     1027000      1   0 26.730269 0.02078029     0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>variantInfo)</code></pre></div>
 <pre><code>##   variantID allele chr     pos n.obs         freq    weight
 ## 1         1      1   1  970546  1126 0.0039964476 22.709172
@@ -310,12 +354,15 @@ qqPlot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqPlot</span>(assoc<span class="op">$</span>results<span class="op">$</span>pval_<span class="dv">0</span>)</code></pre></div>
 <p><img src="_main_files/figure-html/assoc_window_skat-1.png" width="672" /></p>
 </div>
-<div id="exercise-logistic-regression" class="section level2">
-<h2><span class="header-section-number">7.4</span> Exercise: logistic regression</h2>
-<p><code>fitNullMM</code> can use a binary phenotype as the outcome variable by specifying the argument <code>family=binomial</code>. Use the <code>status</code> column in the sample annotation to fit a null model for simulated case/control status. Then run a single-variant test and a sliding window test using this model.</p>
+<div id="exercises-1" class="section level2">
+<h2><span class="header-section-number">7.4</span> Exercises</h2>
+<ol style="list-style-type: decimal">
+<li><p>Logistic regression: <code>fitNullMM</code> can use a binary phenotype as the outcome variable by specifying the argument <code>family=binomial</code>. Use the <code>status</code> column in the sample annotation to fit a null model for simulated case/control status, with <code>sex</code> and <code>Population</code> as covariates. Refer to the documentation for <code>fitNulMM</code> to see what other parameters need to be changed for a binary outcome. Then run a single-variant test and a sliding window test using this model.</p></li>
+<li><p>Inverse normal transform: use the TopmedPipeline function <code>addInvNorm</code> to perform an inverse normal transform on the <code>height</code> variable. (You will need to load the TopmedPipeline library.) Inspect the code for this function by typing <code>addInvNorm</code> at the R prompt, so you understand what it is doing. Then for each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.</p></li>
+</ol>
 </div>
-<div id="aggregate-tests" class="section level2">
-<h2><span class="header-section-number">7.5</span> Aggregate tests</h2>
+<div id="annotation-based-aggregate-tests" class="section level2">
+<h2><span class="header-section-number">7.5</span> Annotation-based aggregate tests</h2>
 <div id="variant-annotation" class="section level3">
 <h3><span class="header-section-number">7.5.1</span> Variant annotation</h3>
 <p>Rare variants are generally aggregated into some meaningful units for association testing to decrease multiple testing burden and increase statistical power. Various genomic and epigenomic annotations can be used to define aggregation units and filter them. A large number of annotations are available through the Whole Genome Sequence Annotator (WGSA) to the TOPMed users.</p>
@@ -374,20 +421,20 @@ aggVarList &lt;-<span class="st"> </span><span class="kw">aggregateListByAllele<
 <span class="kw">names</span>(assoc)</code></pre></div>
 <pre><code>## [1] &quot;param&quot;       &quot;nsample&quot;     &quot;results&quot;     &quot;variantInfo&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>results)</code></pre></div>
-<pre><code>##                    n.site n.sample.alt burden.skew       Score        Var
-## ENSG00000188157.9       2          116    2.867095 16.33548164 99.2100284
-## ENSG00000242590.1       2          116    2.867095 16.33548164 99.2100284
-## ENSG00000217801.5       1          107    3.041979 16.03409196 92.5372698
-## ENSG00000273443.1       1          107    3.041979 16.03409196 92.5372698
-## ENSG00000131591.13      1            1   33.466573  0.03348047  0.9598379
-## ENSG00000237330.2       1            1   33.466573  0.03348047  0.9598379
-##                     Score.stat Score.pval
-## ENSG00000188157.9  2.689727688 0.10099707
-## ENSG00000242590.1  2.689727688 0.10099707
-## ENSG00000217801.5  2.778254702 0.09555224
-## ENSG00000273443.1  2.778254702 0.09555224
-## ENSG00000131591.13 0.001167845 0.97273860
-## ENSG00000237330.2  0.001167845 0.97273860</code></pre>
+<pre><code>##                    n.site n.sample.alt burden.skew      Score         Var
+## ENSG00000188157.9       2          116    2.867095 -1.3501832 0.616143773
+## ENSG00000242590.1       2          116    2.867095 -1.3501832 0.616143773
+## ENSG00000217801.5       1          107    3.041979 -1.2395028 0.550238011
+## ENSG00000273443.1       1          107    3.041979 -1.2395028 0.550238011
+## ENSG00000131591.13      1            1   33.466573 -0.2090215 0.008173804
+## ENSG00000237330.2       1            1   33.466573 -0.2090215 0.008173804
+##                    Score.stat Score.pval
+## ENSG00000188157.9    2.958717 0.08541571
+## ENSG00000242590.1    2.958717 0.08541571
+## ENSG00000217801.5    2.792186 0.09472490
+## ENSG00000273443.1    2.792186 0.09472490
+## ENSG00000131591.13   5.345125 0.02078029
+## ENSG00000237330.2    5.345125 0.02078029</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">names</span>(assoc<span class="op">$</span>variantInfo))</code></pre></div>
 <pre><code>## [1] &quot;ENSG00000188157.9&quot;  &quot;ENSG00000242590.1&quot;  &quot;ENSG00000217801.5&quot; 
 ## [4] &quot;ENSG00000273443.1&quot;  &quot;ENSG00000131591.13&quot; &quot;ENSG00000237330.2&quot;</code></pre>
@@ -401,7 +448,7 @@ aggVarList &lt;-<span class="st"> </span><span class="kw">aggregateListByAllele<
 </div>
 <div id="exercise-1" class="section level3">
 <h3><span class="header-section-number">7.5.4</span> Exercise</h3>
-<p>Since we are working with a subset of the data, many of the genes listed in <code>group_id</code> have a very small number of variants. Create a new set of units combining adjacent genes, and run SKAT using those units.</p>
+<p>Since we are working with a subset of the data, many of the genes listed in <code>group_id</code> have a very small number of variants. Create a new set of units based on position rather than gene name, using the TopmedPipeline function <code>aggregateListByPosition</code>. Then run SKAT using those units.</p>
 
 </div>
 </div>
