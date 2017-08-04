@@ -246,7 +246,6 @@ The small p-value indicates that the null hypothesis is rejected; the height mea
 
 
 Finally, we want to check if the height distributes from the different studies have the same variance.
-
 Start by looking at the variance components `varComp` element of the model.
 ```{r}
 mod$varComp
@@ -262,7 +261,7 @@ ggplot(pData(annot), aes(x = study, y = residuals)) +
   geom_boxplot()
 ```
 
-Both methods of looking at the variance components indicate that study 1 has a much lower residual variance than the others.
+Both methods of looking at the variance components indicate that study 1 has a much smaller residual variance than the others.
 It is more complicated to perform a test to see if the difference is statistically significant.
 The distribution of the null hypothesis is not a simple chi-square distribution due to the fact that variance components cannot be negative.
 Therefore, we will only discuss the qualitative differences in variance between the studies at this point.
