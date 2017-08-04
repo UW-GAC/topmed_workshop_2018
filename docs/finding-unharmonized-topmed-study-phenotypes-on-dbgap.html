@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-
-<link rel="next" href="gds-format.html">
+<link rel="prev" href="phenotype-harmonization.html">
+<link rel="next" href="association-tests.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -186,33 +186,68 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">TOPMed Analysis Workshop</h1>
-<h4 class="date"><em>2017-08-04</em></h4>
+<div id="finding-unharmonized-topmed-study-phenotypes-on-dbgap" class="section level1">
+<h1><span class="header-section-number">6</span> Finding unharmonized TOPMed study phenotypes on dbGaP</h1>
+<div id="ways-to-get-topmed-phenotype-data" class="section level2">
+<h2><span class="header-section-number">6.1</span> Ways to get TOPMed phenotype data</h2>
+<ol style="list-style-type: decimal">
+<li>Get DCC harmonized phenotypes from the Exchange Area</li>
+<li>Get (harmonized or unharmonized) phenotypes directly from the studies (transfer via the Exchange Area)</li>
+<li><strong>Get unharmonized phenotypes from dbGaP</strong></li>
+</ol>
 </div>
-<div id="introduction" class="section level1">
-<h1><span class="header-section-number">1</span> Introduction</h1>
-<p>This site contains course materials for the TOPMed Analysis Workshop, August 7-9 2017.</p>
-<p>To work through the exercises, log into RStudio Server at <a href="http://52.25.72.68:8787" class="uri">http://52.25.72.68:8787</a> with your username and password.</p>
-<p>Slides for lectures will be posted here:<br />
-<a href="https://www.nhlbiwgs.org/topmed-analysis-workshop-2017-materials" class="uri">https://www.nhlbiwgs.org/topmed-analysis-workshop-2017-materials</a></p>
-<p>Join the Slack channel here:<br />
-<a href="https://join.slack.com/t/topmed-analysis-2017/signup" class="uri">https://join.slack.com/t/topmed-analysis-2017/signup</a></p>
-<p>If you are new to R, you might find the following material helpful:</p>
+<div id="dbgap-accession-lingo" class="section level2">
+<h2><span class="header-section-number">6.2</span> dbGaP accession lingo</h2>
 <ul>
-<li><a href="http://faculty.washington.edu/kenrice/rintro/indexSEA15.shtml">Introduction to R</a> class from the Summer Institute in Statistical Genetics</li>
-<li><a href="http://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html">Graphics with ggplot2</a> tutorial</li>
-<li>Data manipulation with <a href="http://dplyr.tidyverse.org/">dplyr</a></li>
+<li><strong>study accession</strong>: A unique identifier, phs, that specifies a study on dbGaP</li>
+<li><strong>parent accession</strong>: The phs that holds the subject, sample, and phenotype data for a study</li>
+<li><strong>child accession</strong>: The phs that holds the genotype or other omics data for a project within a parent study</li>
+<li><strong>TOPMed accession</strong>: The phs that will hold TOPMed sequence data
+<ul>
+<li>Currently a separate parent phs</li>
+<li>Will eventually be made into a child phs connected to the original parent phs</li>
+</ul></li>
+<li><strong>dataset accession</strong>: A unique identifier, pht, that specifies a dataset within a study</li>
+<li><strong>variable accession</strong>: A unique identifier, phv, that specifies a variable</li>
+</ul>
+</div>
+<div id="dbgap-advanced-search-tools" class="section level2">
+<h2><span class="header-section-number">6.3</span> dbGaP advanced search tools</h2>
+<div id="entrez-advanced-search" class="section level3">
+<h3><span class="header-section-number">6.3.1</span> <a href="https://www.ncbi.nlm.nih.gov/gap/advanced">Entrez advanced search</a></h3>
+<p>Search strings for Entrez</p>
+<pre><code># All variables within four studies
+(phs000007[Belongs To] OR phs000286[Belongs To] OR phs000284[Belongs To] OR phs000462[Belongs To])
+
+# All variables with &quot;bmi&quot; in the variable name within four studies
+(phs000007[Belongs To] OR phs000286[Belongs To] OR phs000284[Belongs To] OR phs000462[Belongs To]) AND bmi[Variable Name]
+
+# All variables with &quot;bmi&quot; in the variable description within four studies
+(phs000007[Belongs To] OR phs000286[Belongs To] OR phs000284[Belongs To] OR phs000462[Belongs To]) AND bmi[Variable Description]
+
+# All variables with &quot;bmi&quot; in the variable name or description within four studies
+(phs000007[Belongs To] OR phs000286[Belongs To] OR phs000284[Belongs To] OR phs000462[Belongs To]) AND (bmi[Variable Description] OR bmi[Variable Name])</code></pre>
+</div>
+<div id="faceted-advanced-search" class="section level3">
+<h3><span class="header-section-number">6.3.2</span> <a href="https://www.ncbi.nlm.nih.gov/projects/gapsolr/facets.html">Faceted advanced search</a></h3>
+<p>Saved URLs for Faceted search examples</p>
+<ul>
+<li><a href="https://www.ncbi.nlm.nih.gov/projects/gapsolr/facets.html?TERM=bmi&amp;COND=%7B%22study_name_accession_combo%22:%5B%22Framingham%20Cohort%20%20(phs000007.v29.p10)%22,%22Jackson%20Heart%20Study%20(JHS)%20Cohort%20%20(phs000286.v5.p1)%22,%22NHLBI%20Cleveland%20Family%20Study%20(CFS)%20Candidate%20Gene%20Association%20Resource%20%20%20%20(CARe)%20%20(phs000284.v1.p1)%22,%22T2D-GENES%20Project%202:%20San%20Antonio%20Mexican%20American%20Family%20Studies%20%20%20%20(SAMAFS),%20Substudy%202:%20Whole%20genome%20sequencing%20in%20pedigrees%20%20(phs000462.v2.p1)%22%5D%7D">‘bmi’ in variable name or description within four studies</a></li>
+<li><a href="https://www.ncbi.nlm.nih.gov/projects/gapsolr/facets.html?TERM=weight%20AND%20bmi&amp;COND=%7B%22study_name_accession_combo%22:%5B%22Framingham%20Cohort%20%20(phs000007.v29.p10)%22,%22Jackson%20Heart%20Study%20(JHS)%20Cohort%20%20(phs000286.v5.p1)%22,%22NHLBI%20Cleveland%20Family%20Study%20(CFS)%20Candidate%20Gene%20Association%20Resource%20%20%20%20(CARe)%20%20(phs000284.v1.p1)%22,%22T2D-GENES%20Project%202:%20San%20Antonio%20Mexican%20American%20Family%20Studies%20%20%20%20(SAMAFS),%20Substudy%202:%20Whole%20genome%20sequencing%20in%20pedigrees%20%20(phs000462.v2.p1)%22%5D%7D">‘bmi’ and ‘weight’ in variable name or description within four studies</a></li>
+<li><a href="https://www.ncbi.nlm.nih.gov/projects/gapsolr/facets.html?TERM=race%20OR%20ethnicity&amp;COND=%7B%22study_name_accession_combo%22:%5B%22Framingham%20Cohort%20%20(phs000007.v29.p10)%22,%22Jackson%20Heart%20Study%20(JHS)%20Cohort%20%20(phs000286.v5.p1)%22,%22NHLBI%20Cleveland%20Family%20Study%20(CFS)%20Candidate%20Gene%20Association%20Resource%20%20%20%20(CARe)%20%20(phs000284.v1.p1)%22,%22T2D-GENES%20Project%202:%20San%20Antonio%20Mexican%20American%20Family%20Studies%20%20%20%20(SAMAFS),%20Substudy%202:%20Whole%20genome%20sequencing%20in%20pedigrees%20%20(phs000462.v2.p1)%22%5D%7D">‘race’ or ‘ethnicity’ in variable name or description within four studies</a></li>
+<li><a href="https://www.ncbi.nlm.nih.gov/projects/gapsolr/facets.html?TERM=(race%20OR%20ethnicity)%20AND%20self&amp;COND=%7B%22study_name_accession_combo%22:%5B%22Framingham%20Cohort%20%20(phs000007.v29.p10)%22,%22Jackson%20Heart%20Study%20(JHS)%20Cohort%20%20(phs000286.v5.p1)%22,%22NHLBI%20Cleveland%20Family%20Study%20(CFS)%20Candidate%20Gene%20Association%20Resource%20%20%20%20(CARe)%20%20(phs000284.v1.p1)%22,%22T2D-GENES%20Project%202:%20San%20Antonio%20Mexican%20American%20Family%20Studies%20%20%20%20(SAMAFS),%20Substudy%202:%20Whole%20genome%20sequencing%20in%20pedigrees%20%20(phs000462.v2.p1)%22%5D%7D">‘race’ or ‘ethnicity’, and ‘self’ in variable name or description within four studies</a></li>
 </ul>
 
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="gds-format.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="phenotype-harmonization.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="association-tests.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
