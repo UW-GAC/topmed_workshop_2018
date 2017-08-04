@@ -124,12 +124,12 @@ You should include a description of each variable in the metadata.
 library(Biobase)
 
 metadata <- data.frame(labelDescription = c(
-  "scan identifier",
   "subject identifier",
   "subject's sex",
   "study identifier",
   "age at measurement of height",
-  "subject's height in cm"
+  "subject's height in cm",
+  "scan identifier"
 ))
 
 annot <- AnnotatedDataFrame(phen, metadata)
