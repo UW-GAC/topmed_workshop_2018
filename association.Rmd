@@ -162,7 +162,7 @@ dat %>%
 
 ## Annotation-based aggregate tests
 
-**Note:** the code and libraries in this section are under active development, and are not production-level code. This code is provided to give workshop participants an example of some of the kinds of analysis tasks that might be performed with TOPMed annotation data. Use the code at your own risk, and be warned that it may break in unexpected ways. Github issues and contributions are welcome!
+**Note:** the code and libraries in this section are under active development, and are not production-level. It is provided to give workshop participants an example of some of the kinds of analysis tasks that might be performed with TOPMed annotation data. Use the code at your own risk, and be warned that it may break in unexpected ways. Github issues and contributions are welcome!
 
 Analysts generally aggregate rare variants for association testing to decrease multiple testing burden and increase statistical power. They can group variants that fall within arbitrary ranges (such as sliding-windows), or they can group variants with intent. For example, an analyst could aggregate variants that that fall between transcription start sites and stop sites, within coding regions, within regulatory regions, or other genomic features selected from sources like published gene models or position- or transcript-based variant annotation. An analyst could also choose to filter the variants prior or subsequent to aggregation using annotation-based criteria such as functional impact or quality scores.
 
@@ -181,7 +181,7 @@ indelfile <- "indel.tsv.gz"
 if (!file.exists(indelfile)) download.file(file.path(ben.workshop.path, indelfile), indelfile)
 ```
 
-The WGSA output files are tab-separated text files, with one line per annotated variant. Since there are many annotation fields, these files can be unweildy to work with directly. As an example, the first two lines of teh SNP variant annotation file can be previewed within R:
+The WGSA output files are tab-separated text files, with one line per annotated variant. Since there are many annotation fields, these files can be unweildy to work with directly. As an example, the first two lines of the SNP variant annotation file can be previewed within R:
 
 ```{r}
 readLines("snp.tsv.gz", n=2)
