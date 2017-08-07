@@ -253,6 +253,7 @@ File inputs:
 * gds_file -> genotypes/1KG_phase3_subset_chr22.gds
 
 Parameter inputs:  
+
 * lead_snp -> 22:17105517
 * start_pos -> 1
 * stop_pos -> 51237069 
