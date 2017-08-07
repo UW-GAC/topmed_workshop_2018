@@ -181,7 +181,7 @@ indelfile <- "indel.tsv.gz"
 if (!file.exists(indelfile)) download.file(file.path(ben.workshop.path, indelfile), indelfile)
 ```
 
-The WGSA output files are tab-separated text files, with one line per annotated variant. Since there are many annotation fields, these files can be unweildy to work with directly. As an example, the first two lines of the SNP variant annotation file can be previewed within R:
+The WGSA output files are tab-separated text files, with one line per annotated variant. Since there are many annotation fields, these files can be unwieldy to work with directly. As an example, the first two lines of the SNP variant annotation file can be previewed within R:
 
 ```{r}
 readLines("snp.tsv.gz", n=2)
@@ -190,11 +190,14 @@ readLines("snp.tsv.gz", n=2)
 The DCC has begun an R package, *wgsaparsr*, to begin working with WGSA output files. This package is under development, and is available on github at [https://github.com/UW-GAC/wgsaparsr](https://github.com/UW-GAC/wgsaparsr). For now, the package can be installed from github using the *devtools* package:
 
 ```{r message=FALSE}
-install.packages("devtools")
 library(devtools)
 devtools::install_github("UW-GAC/wgsaparsr@1.0.0.9003")
 library(wgsaparsr)
-library(tidyverse) # just in case it's not loaded yet
+#library(tidyverse) # just in case it's not loaded yet
+library(tibble)
+library(dplyr)
+library(tidyr)
+library(readr)
 ```
 
 *wgsaparsr* includes a *get_fields()* function to list the annotation fields available in a WGSA output file:
@@ -234,7 +237,7 @@ desired_columns <-
     # "1000Gp3_AF" #skipped for the workshop because code doesn't work with this variable name
     )
     
-    to_split <-
+to_split <-
     c(
     "VEP_ensembl_Consequence",
     "VEP_ensembl_Transcript_ID",
@@ -452,7 +455,7 @@ for (rowIndex in 1:nrow(unit_defs)) {
     mutate(group_id = unit_defs[rowIndex, ]$gene_id)
   
   if (rowIndex %% 10 == 0){
-    print(
+    message(
       paste0("row: ", rowIndex, 
              " snps to add: ", nrow(snpsToAdd), 
              " indels to add: ", nrow(toAdd)))
