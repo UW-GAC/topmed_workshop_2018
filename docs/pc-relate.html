@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-04">
+<meta name="date" content="2017-08-06">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -108,7 +108,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.1" data-path="pc-relate.html"><a href="pc-relate.html#king"><i class="fa fa-check"></i><b>4.1</b> KING</a></li>
 <li class="chapter" data-level="4.2" data-path="pc-relate.html"><a href="pc-relate.html#pc-air"><i class="fa fa-check"></i><b>4.2</b> PC-AiR</a></li>
 <li class="chapter" data-level="4.3" data-path="pc-relate.html"><a href="pc-relate.html#pc-relate-1"><i class="fa fa-check"></i><b>4.3</b> PC-Relate</a></li>
-<li class="chapter" data-level="4.4" data-path="pc-relate.html"><a href="pc-relate.html#exercise"><i class="fa fa-check"></i><b>4.4</b> Exercise</a></li>
+<li class="chapter" data-level="4.4" data-path="pc-relate.html"><a href="pc-relate.html#comparison-with-pedigree"><i class="fa fa-check"></i><b>4.4</b> Comparison with pedigree</a></li>
+<li class="chapter" data-level="4.5" data-path="pc-relate.html"><a href="pc-relate.html#exercise"><i class="fa fa-check"></i><b>4.5</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html"><i class="fa fa-check"></i><b>5</b> Phenotype Harmonization</a><ul>
 <li class="chapter" data-level="5.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#import-phentoype-files-into-r"><i class="fa fa-check"></i><b>5.1</b> Import phentoype files into R</a></li>
@@ -263,11 +264,11 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 ## No family is specified, and all individuals are treated as singletons.
 ## Relationship inference in the presence of population stratification.
 ## CPU capabilities: Double-Precision SSE2
-## Fri Aug  4 16:54:08 2017    (internal increment: 65536)
+## Sun Aug  6 20:51:59 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Fri Aug  4 16:54:08 2017    Done.</code></pre>
+## Sun Aug  6 20:51:59 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(king)</code></pre></div>
 <pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;afreq&quot;     &quot;IBS0&quot;      &quot;kinship&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(king<span class="op">$</span>kinship)</code></pre></div>
@@ -316,33 +317,33 @@ pca.unrel &lt;-<span class="st"> </span><span class="kw">snpgdsPCA</span>(gds, <
 ## Working space: 86 samples, 6,169 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Fri Aug  4 16:54:11 2017    (internal increment: 8952)
+## Sun Aug  6 20:52:02 2017    (internal increment: 8952)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Fri Aug  4 16:54:11 2017    Begin (eigenvalues and eigenvectors)
-## Fri Aug  4 16:54:11 2017    Done.</code></pre>
+## Sun Aug  6 20:52:02 2017    Begin (eigenvalues and eigenvectors)
+## Sun Aug  6 20:52:02 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project values for relatives</span>
 snp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASNPLoading</span>(pca.unrel, <span class="dt">gdsobj=</span>gds)</code></pre></div>
 <pre><code>## SNP loading:
 ## Working space: 86 samples, 6169 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Fri Aug  4 16:54:11 2017    (internal increment: 65536)
+## Sun Aug  6 20:52:02 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Fri Aug  4 16:54:11 2017    Done.</code></pre>
+## Sun Aug  6 20:52:02 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASampLoading</span>(snp.load, <span class="dt">gdsobj=</span>gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>rels)</code></pre></div>
 <pre><code>## Sample loading:
 ## Working space: 14 samples, 6169 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Fri Aug  4 16:54:11 2017    (internal increment: 65536)
+## Sun Aug  6 20:52:02 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 0s
-## Fri Aug  4 16:54:11 2017    Done.</code></pre>
+[==================================================] 100%, completed in 1s
+## Sun Aug  6 20:52:03 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># combine unrelated and related PCs and order as in GDS file</span>
 pcs &lt;-<span class="st"> </span><span class="kw">rbind</span>(pca.unrel<span class="op">$</span>eigenvect, samp.load<span class="op">$</span>eigenvect)
 <span class="kw">rownames</span>(pcs) &lt;-<span class="st"> </span><span class="kw">c</span>(pca.unrel<span class="op">$</span>sample.id, samp.load<span class="op">$</span>sample.id)
@@ -446,8 +447,86 @@ pc.df &lt;-<span class="st"> </span><span class="kw">left_join</span>(pc.df, ann
 <p><img src="_main_files/figure-html/pcrelate_plot-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqClose</span>(gds)</code></pre></div>
 </div>
+<div id="comparison-with-pedigree" class="section level2">
+<h2><span class="header-section-number">4.4</span> Comparison with pedigree</h2>
+<p>We can detect pedigree errors and sample identity problems by comparing the pedigree with empirical kinship estimates. We use a function from the GWASTools package, <code>pedigreePairwiseRelatedness</code>, to get expected pairwise relationships based on the pedigree.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pedfile &lt;-<span class="st"> &quot;sample_annotation.RData&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(pedfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(workshop.path, pedfile), pedfile)
+ped &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(<span class="st">&quot;pedigree.RData&quot;</span>)
+<span class="kw">head</span>(ped)</code></pre></div>
+<pre><code>##   family individ  father  mother sex
+## 1   BB01 HG01879       0       0   M
+## 2   BB01 HG01880       0       0   F
+## 3   BB01 HG01881 HG01879 HG01880   F
+## 4   BB02 HG01882       0       0   M
+## 5   BB02 HG01883       0       0   F
+## 6   BB02 HG01888 HG01882 HG01883   M</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pw &lt;-<span class="st"> </span>GWASTools<span class="op">::</span><span class="kw">pedigreePairwiseRelatedness</span>(ped)
+<span class="kw">names</span>(pw)</code></pre></div>
+<pre><code>## [1] &quot;inbred.fam&quot;  &quot;inbred.KC&quot;   &quot;relativeprs&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rel &lt;-<span class="st"> </span>pw<span class="op">$</span>relativeprs
+<span class="kw">head</span>(rel)</code></pre></div>
+<pre><code>##   Individ1 Individ2 relation kinship family
+## 1  HG01879  HG01880        U    0.00   BB01
+## 2  HG01879  HG01881       PO    0.25   BB01
+## 3  HG01880  HG01881       PO    0.25   BB01
+## 4  HG01882  HG01883        U    0.00   BB02
+## 5  HG01882  HG01888       PO    0.25   BB02
+## 6  HG01883  HG01888       PO    0.25   BB02</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(rel<span class="op">$</span>relation)</code></pre></div>
+<pre><code>## 
+##   Av   FS GpGc  HAv   HS   PO    U 
+##    2    6   16    1    3  616  330</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">distinct</span>(rel, relation, kinship) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">arrange</span>(<span class="op">-</span>kinship)</code></pre></div>
+<pre><code>##   relation kinship
+## 1       PO  0.2500
+## 2       FS  0.2500
+## 3       HS  0.1250
+## 4     GpGc  0.1250
+## 5       Av  0.1250
+## 6      HAv  0.0625
+## 7        U  0.0000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## assign degrees to expected relationship pairs
+rel &lt;-<span class="st"> </span>rel <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">exp.rel=</span><span class="kw">ifelse</span>(kinship <span class="op">==</span><span class="st"> </span><span class="fl">0.125</span>, <span class="st">&quot;Deg2&quot;</span>, <span class="kw">ifelse</span>(kinship <span class="op">==</span><span class="st"> </span><span class="fl">0.0625</span>, <span class="st">&quot;Deg3&quot;</span>, relation)),
+           <span class="dt">pair=</span>GWASTools<span class="op">::</span><span class="kw">pasteSorted</span>(Individ1, Individ2)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">select</span>(pair, family, relation, exp.rel)
+
+## assign degrees to observed relationship pairs
+cut.dup &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>(<span class="dv">2</span><span class="op">^</span>(<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>))
+cut.deg1 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>(<span class="dv">2</span><span class="op">^</span>(<span class="dv">5</span><span class="op">/</span><span class="dv">2</span>))
+cut.deg2 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>(<span class="dv">2</span><span class="op">^</span>(<span class="dv">7</span><span class="op">/</span><span class="dv">2</span>))
+cut.deg3 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>(<span class="dv">2</span><span class="op">^</span>(<span class="dv">9</span><span class="op">/</span><span class="dv">2</span>))
+cut.k0 &lt;-<span class="st"> </span><span class="fl">0.1</span>
+kinship &lt;-<span class="st"> </span>kinship <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">obs.rel=</span><span class="kw">ifelse</span>(kin <span class="op">&gt;</span><span class="st"> </span>cut.dup, <span class="st">&quot;Dup&quot;</span>,
+                   <span class="kw">ifelse</span>(kin <span class="op">&gt;</span><span class="st"> </span>cut.deg1 <span class="op">&amp;</span><span class="st"> </span>k0 <span class="op">&lt;</span><span class="st"> </span>cut.k0, <span class="st">&quot;PO&quot;</span>,
+                   <span class="kw">ifelse</span>(kin <span class="op">&gt;</span><span class="st"> </span>cut.deg1, <span class="st">&quot;FS&quot;</span>,
+                   <span class="kw">ifelse</span>(kin <span class="op">&gt;</span><span class="st"> </span>cut.deg2, <span class="st">&quot;Deg2&quot;</span>,
+                   <span class="kw">ifelse</span>(kin <span class="op">&gt;</span><span class="st"> </span>cut.deg3, <span class="st">&quot;Deg3&quot;</span>, <span class="st">&quot;U&quot;</span>))))))
+<span class="kw">table</span>(kinship<span class="op">$</span>obs.rel)</code></pre></div>
+<pre><code>## 
+## Deg2 Deg3   FS   PO    U 
+##    4   10    2    7 4927</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># merge observed and expected relationships</span>
+kin.obs &lt;-<span class="st"> </span>kinship <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">select</span>(ID1, ID2, kin, k0, obs.rel) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pair=</span>GWASTools<span class="op">::</span><span class="kw">pasteSorted</span>(ID1, ID2)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">left_join</span>(rel, <span class="dt">by=</span><span class="st">&quot;pair&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>pair) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">exp.rel=</span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(exp.rel), <span class="st">&quot;U&quot;</span>, exp.rel)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">filter</span>(<span class="op">!</span>(exp.rel <span class="op">==</span><span class="st"> &quot;U&quot;</span> <span class="op">&amp;</span><span class="st"> </span>obs.rel <span class="op">==</span><span class="st"> &quot;U&quot;</span>))
+<span class="kw">table</span>(kin.obs<span class="op">$</span>exp.rel, kin.obs<span class="op">$</span>obs.rel)</code></pre></div>
+<pre><code>##    
+##     Deg2 Deg3 FS PO
+##   U    4   10  2  7</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(kin.obs, <span class="kw">aes</span>(k0, kin, <span class="dt">color=</span>obs.rel)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="_main_files/figure-html/pedigree-1.png" width="672" /></p>
+<p>All the observed relationships were unexpected. These samples are from 1000 Genomes sequencing, and known relatives were excluded from the released data. Here we have detected some cryptic relatives that were not annotated in the pedigree.</p>
+</div>
 <div id="exercise" class="section level2">
-<h2><span class="header-section-number">4.4</span> Exercise</h2>
+<h2><span class="header-section-number">4.5</span> Exercise</h2>
 <p>Complete one round of iteration using all samples from the test dataset and plot the results. Be sure to examine the parallel coordinates plot to determine the appropriate number of PCs to give as an argument to <code>pcrelate</code>.</p>
 
 </div>
