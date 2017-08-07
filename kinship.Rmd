@@ -203,9 +203,9 @@ seqClose(gds)
 We can detect pedigree errors and sample identity problems by comparing the pedigree with empirical kinship estimates. We use a function from the GWASTools package, `pedigreePairwiseRelatedness`, to get expected pairwise relationships based on the pedigree.
 
 ```{r pedigree}
-pedfile <- "sample_annotation.RData"
+pedfile <- "pedigree.RData"
 if (!file.exists(pedfile)) download.file(file.path(workshop.path, pedfile), pedfile)
-ped <- TopmedPipeline::getobj("pedigree.RData")
+ped <- TopmedPipeline::getobj(pedfile)
 head(ped)
 pw <- GWASTools::pedigreePairwiseRelatedness(ped)
 names(pw)
