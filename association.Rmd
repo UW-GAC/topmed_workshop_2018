@@ -190,8 +190,8 @@ readLines("snp.tsv.gz", n=2)
 The DCC has begun an R package, *wgsaparsr*, to begin working with WGSA output files. This package is under development, and is available on github at [https://github.com/UW-GAC/wgsaparsr](https://github.com/UW-GAC/wgsaparsr). For now, the package can be installed from github using the *devtools* package:
 
 ```{r message=FALSE}
-library(devtools)
-devtools::install_github("UW-GAC/wgsaparsr@1.0.0.9003")
+#library(devtools)
+#devtools::install_github("UW-GAC/wgsaparsr@1.0.0.9003")
 library(wgsaparsr)
 #library(tidyverse) # just in case it's not loaded yet
 library(tibble)
@@ -329,7 +329,7 @@ The DCC has begun an R package, *genetable*, to parse and work with .gtf files. 
 
 ```{r message=FALSE}
 #library(devtools)
-devtools::install_github("UW-GAC/genetable")
+#devtools::install_github("UW-GAC/genetable")
 
 library(genetable)
 ```
