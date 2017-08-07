@@ -198,6 +198,59 @@ seqClose(gds)
 ```
 
 
+## Comparison with pedigree
+
+We can detect pedigree errors and sample identity problems by comparing the pedigree with empirical kinship estimates. We use a function from the GWASTools package, `pedigreePairwiseRelatedness`, to get expected pairwise relationships based on the pedigree.
+
+```{r pedigree}
+pedfile <- "sample_annotation.RData"
+if (!file.exists(pedfile)) download.file(file.path(workshop.path, pedfile), pedfile)
+ped <- TopmedPipeline::getobj("pedigree.RData")
+head(ped)
+pw <- GWASTools::pedigreePairwiseRelatedness(ped)
+names(pw)
+rel <- pw$relativeprs
+head(rel)
+table(rel$relation)
+distinct(rel, relation, kinship) %>%
+    arrange(-kinship)
+
+## assign degrees to expected relationship pairs
+rel <- rel %>%
+    mutate(exp.rel=ifelse(kinship == 0.125, "Deg2", ifelse(kinship == 0.0625, "Deg3", relation)),
+           pair=GWASTools::pasteSorted(Individ1, Individ2)) %>%
+    select(pair, family, relation, exp.rel)
+
+## assign degrees to observed relationship pairs
+cut.dup <- 1/(2^(3/2))
+cut.deg1 <- 1/(2^(5/2))
+cut.deg2 <- 1/(2^(7/2))
+cut.deg3 <- 1/(2^(9/2))
+cut.k0 <- 0.1
+kinship <- kinship %>%
+    mutate(obs.rel=ifelse(kin > cut.dup, "Dup",
+                   ifelse(kin > cut.deg1 & k0 < cut.k0, "PO",
+                   ifelse(kin > cut.deg1, "FS",
+                   ifelse(kin > cut.deg2, "Deg2",
+                   ifelse(kin > cut.deg3, "Deg3", "U"))))))
+table(kinship$obs.rel)
+
+# merge observed and expected relationships
+kin.obs <- kinship %>%
+    select(ID1, ID2, kin, k0, obs.rel) %>%
+    mutate(pair=GWASTools::pasteSorted(ID1, ID2)) %>%
+    left_join(rel, by="pair") %>%
+    select(-pair) %>%
+    mutate(exp.rel=ifelse(is.na(exp.rel), "U", exp.rel)) %>%
+    filter(!(exp.rel == "U" & obs.rel == "U"))
+table(kin.obs$exp.rel, kin.obs$obs.rel)
+
+ggplot(kin.obs, aes(k0, kin, color=obs.rel)) + geom_point()
+```
+
+All the observed relationships were unexpected. These samples are from 1000 Genomes sequencing, and known relatives were excluded from the released data. Here we have detected some cryptic relatives that were not annotated in the pedigree.
+
+
 ## Exercise
 
 Complete one round of iteration using all samples from the test dataset and plot the results. Be sure to examine the parallel coordinates plot to determine the appropriate number of PCs to give as an argument to `pcrelate`.

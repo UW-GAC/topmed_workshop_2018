@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-04">
+<meta name="date" content="2017-08-06">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -108,7 +108,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.1" data-path="pc-relate.html"><a href="pc-relate.html#king"><i class="fa fa-check"></i><b>4.1</b> KING</a></li>
 <li class="chapter" data-level="4.2" data-path="pc-relate.html"><a href="pc-relate.html#pc-air"><i class="fa fa-check"></i><b>4.2</b> PC-AiR</a></li>
 <li class="chapter" data-level="4.3" data-path="pc-relate.html"><a href="pc-relate.html#pc-relate-1"><i class="fa fa-check"></i><b>4.3</b> PC-Relate</a></li>
-<li class="chapter" data-level="4.4" data-path="pc-relate.html"><a href="pc-relate.html#exercise"><i class="fa fa-check"></i><b>4.4</b> Exercise</a></li>
+<li class="chapter" data-level="4.4" data-path="pc-relate.html"><a href="pc-relate.html#comparison-with-pedigree"><i class="fa fa-check"></i><b>4.4</b> Comparison with pedigree</a></li>
+<li class="chapter" data-level="4.5" data-path="pc-relate.html"><a href="pc-relate.html#exercise"><i class="fa fa-check"></i><b>4.5</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html"><i class="fa fa-check"></i><b>5</b> Phenotype Harmonization</a><ul>
 <li class="chapter" data-level="5.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#import-phentoype-files-into-r"><i class="fa fa-check"></i><b>5.1</b> Import phentoype files into R</a></li>
@@ -135,10 +136,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.3</b> Sliding window tests</a></li>
 <li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.4</b> Exercises</a></li>
 <li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Annotation-based aggregate tests</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Variant annotation</a></li>
-<li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-aggregate-units"><i class="fa fa-check"></i><b>7.5.2</b> Defining aggregate units</a></li>
-<li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.3</b> Association testing with aggregate units</a></li>
-<li class="chapter" data-level="7.5.4" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.5.4</b> Exercise</a></li>
+<li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#working-with-variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Working with variant annotation</a></li>
+<li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-gene-ranges-for-aggregation"><i class="fa fa-check"></i><b>7.5.2</b> Defining “gene” ranges for aggregation</a></li>
+<li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#aggregating-topmed-variants-into-genic-units"><i class="fa fa-check"></i><b>7.5.3</b> Aggregating TOPMed variants into genic units</a></li>
+<li class="chapter" data-level="7.5.4" data-path="association-tests.html"><a href="association-tests.html#aggregate-unit-for-association-testing-exercise"><i class="fa fa-check"></i><b>7.5.4</b> Aggregate unit for association testing exercise</a></li>
+<li class="chapter" data-level="7.5.5" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.5</b> Association testing with aggregate units</a></li>
+<li class="chapter" data-level="7.5.6" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.5.6</b> Exercise</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>8</b> Analysis Pipeline</a><ul>
@@ -387,8 +390,14 @@ Select results from the multiple chromosome run (chr21 and chr22).</p>
 <p>This process requires two steps, one to extract the LD for all variants in the region and one to create the plot. Sequencing data sets often contain variants not in external refernce panels, so it is helpful to create your own LD reference.</p>
 <p>Step 1: Run GILD (<strong>G</strong>DS <strong>I</strong>nto <strong>LD</strong>) App (tools/gild_v1)</p>
 <p>File inputs: * gds_file -&gt; genotypes/1KG_phase3_subset_chr22.gds</p>
-<p>Parameter inputs:<br />
-* lead_snp -&gt; 22:17105517 * start_pos -&gt; 1 * stop_pos -&gt; 51237069 * label for results file -&gt; “LD_chr22” <em>output_LD_filename</em> * output/YOURNAME</p>
+<p>Parameter inputs:</p>
+<ul>
+<li>lead_snp -&gt; 22:17105517</li>
+<li>start_pos -&gt; 1</li>
+<li>stop_pos -&gt; 51237069</li>
+<li>label for results file -&gt; “LD_chr22” <em>output_LD_filename</em></li>
+<li>output/YOURNAME</li>
+</ul>
 <p><em>Note: this can take 10-15 mins to complete</em></p>
 <p>Step 2: Run AssocPlot (tools/assocplot)</p>
 <p>File inputs:</p>
