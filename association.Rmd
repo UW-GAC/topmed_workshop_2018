@@ -162,13 +162,349 @@ dat %>%
 
 ## Annotation-based aggregate tests
 
-### Variant annotation
-Rare variants are generally aggregated into some meaningful units for association testing to decrease multiple testing burden and increase statistical power. Various genomic and epigenomic annotations can be used to define aggregation units and filter them. A large number of annotations are available through the Whole Genome Sequence Annotator (WGSA) to the TOPMed users. 
+**Note:** the code and libraries in this section are under active development, and are not production-level. It is provided to give workshop participants an example of some of the kinds of analysis tasks that might be performed with TOPMed annotation data. Use the code at your own risk, and be warned that it may break in unexpected ways. Github issues and contributions are welcome!
 
-### Defining aggregate units
-We will be using a gene-based aggregation unit, where each unit is a GENCODE gene and 20 kb flanking region upstream and downstream of it. For real data, one will likely filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).
+Analysts generally aggregate rare variants for association testing to decrease multiple testing burden and increase statistical power. They can group variants that fall within arbitrary ranges (such as sliding-windows), or they can group variants with intent. For example, an analyst could aggregate variants that that fall between transcription start sites and stop sites, within coding regions, within regulatory regions, or other genomic features selected from sources like published gene models or position- or transcript-based variant annotation. An analyst could also choose to filter the variants prior or subsequent to aggregation using annotation-based criteria such as functional impact or quality scores.
 
-The aggregation units are defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (for example a variant can be assigned to mutiple genes).
+To demonstrate, we will aggregate a subset of TOPMed variants from chromosome 22. The subset is a portion of TOPMed SNP and indel variants that are also in the 1000 Genomes Project. We will parse an example variant annotation file to select fields of interest, parse a GENCODE .gtf file to define our genic units, and then aggregate the selected variants into the defined genic units.
+
+### Working with variant annotation
+ 
+Variants called from the TOPMed data set are annotated using the [Whole Genome Sequence Annotator (WGSA)](https://sites.google.com/site/jpopgen/wgsa). WGSA output files include 359 annotation fields, some of which are themselves lists of annotation values. Thus, individual variants may be annotated with more than 1000 individual fields. WGSA produces different output files for different featues. TOPMed variant annotation includes separate files for SNPs and for indels. The subsetted variant annotation files we will use for this example are available via github:
+
+```{r}
+ben.workshop.path <- "https://github.com/bheavner/topmed_workshop_2017_bh/raw/master"
+snpfile <- "snp.tsv.gz"
+if (!file.exists(snpfile)) download.file(file.path(ben.workshop.path, snpfile), snpfile)
+
+indelfile <- "indel.tsv.gz"
+if (!file.exists(indelfile)) download.file(file.path(ben.workshop.path, indelfile), indelfile)
+```
+
+The WGSA output files are tab-separated text files, with one line per annotated variant. Since there are many annotation fields, these files can be unwieldy to work with directly. As an example, the first two lines of the SNP variant annotation file can be previewed within R:
+
+```{r}
+readLines("snp.tsv.gz", n=2)
+```
+
+The DCC has begun an R package, *wgsaparsr*, to begin working with WGSA output files. This package is under development, and is available on github at [https://github.com/UW-GAC/wgsaparsr](https://github.com/UW-GAC/wgsaparsr). For now, the package can be installed from github using the *devtools* package:
+
+```{r message=FALSE}
+library(devtools)
+devtools::install_github("UW-GAC/wgsaparsr@1.0.0.9003")
+library(wgsaparsr)
+#library(tidyverse) # just in case it's not loaded yet
+library(tibble)
+library(dplyr)
+library(tidyr)
+library(readr)
+```
+
+*wgsaparsr* includes a *get_fields()* function to list the annotation fields available in a WGSA output file:
+
+```{r}
+# list all fields in an annotation file: 
+get_fields("snp.tsv.gz")
+```
+
+Only a subset of these annotations may be necessary for a particular association test, and it is unweildy to work with all of them, so it is useful to process the WGSA output file to select fields of interest. The *wgsaparsr* function *parse_to_file()* allows field selection by name.
+
+An additional complication in working with the WGSA output files is that some of the annotation fields are transcript-based, rather than position-based. Thus, if a variant locus is within multiple transcripts, those fields will have multiple entries (often separated by a | character). For example, annotation fields such as `VEP_ensembl_Transcript_ID` may have many values within a single tab-separated field.
+
+*wgsaparsr::parse_to_file()* addresses this by splitting such list-fields into multiple rows. Other annotation fields for that variant are duplicated, and associated columns are filled with the same value for each transcript that a particular variant falls within. A consequence of this approach is that the processed annotation file has more lines than the WGSA output file. In freeze 4, processing expanded the annotation by a factor of about 5 - the 220 million annotations result in a 1-billion row database for subsequent aggregation.
+
+*wgsaparsr::parse_to_file()* reads a snp annotation file, selects specified fields, and expands user-defined transcript-level annotation fields. It produces a tab-separated output file for subsequent analysis.
+
+```{r}
+desired_columns <- 
+  c(
+    "`#chr`", #NOTE: backtics on #chr because it starts with special character!
+    "pos",
+    "ref",
+    "alt",
+    "rs_dbSNP147",
+    # "CADDphred",
+    "CADD_phred", #NOTE: different than the indel annotation file.
+    "VEP_ensembl_Transcript_ID",
+    "VEP_ensembl_Gene_Name",
+    "VEP_ensembl_Gene_ID",
+    "VEP_ensembl_Consequence",
+    "VEP_ensembl_Amino_Acid_Change",
+    "VEP_ensembl_LoF",
+    "VEP_ensembl_LoF_filter",
+    "VEP_ensembl_LoF_flags",
+    "VEP_ensembl_LoF_info"
+    # "1000Gp3_AF" #skipped for the workshop because code doesn't work with this variable name
+    )
+    
+to_split <-
+    c(
+    "VEP_ensembl_Consequence",
+    "VEP_ensembl_Transcript_ID",
+    "VEP_ensembl_Gene_Name",
+    "VEP_ensembl_Gene_ID",
+    "VEP_ensembl_Amino_Acid_Change",
+    "VEP_ensembl_LoF",
+    "VEP_ensembl_LoF_filter",
+    "VEP_ensembl_LoF_flags",
+    "VEP_ensembl_LoF_info"
+    )
+  
+parse_to_file("snp.tsv.gz", "parsed_snp.tsv", desired_columns, to_split, verbose = TRUE)
+```
+
+Although the output file has fewer columns than the the raw WGSA output file, this .tsv file is not particularly nice to work with in R:
+
+```{r}
+readLines("parsed_snp.tsv", n=2)
+```
+
+However, *get_fields()* does work on the parsed file to view available fields:
+
+```{r}
+# list all fields in an annotation file: 
+get_fields("parsed_snp.tsv")
+```
+
+The WGSA output files for indel variants differs from the output for SNPs. Some of the field names differ slightly (e.g. "CADDphred" instead of "CADD_phred"), and there are some fields of interest that include feature counts in brackets (e.g. ENCODE_Dnase_cells includes fields like 125\{23\}). Thus, (for now) *wgsaparsr* includes *parse_indel_to_file()*. *parse_indel_to_file()* is very similar to *parse_to_file()*, and will likely be incorporated to that function in the near future. The syntax for *parse_indel_to_file()* is the same as *parse_to_file()*:
+
+```{r}
+desired_columns_indel <- 
+  c(
+    "`#chr`", #NOTE: backtics on #chr because it starts with special character!
+    "pos",
+    "ref",
+    "alt",
+    "rs_dbSNP147",
+    "CADDphred",
+    #  "CADD_phred", #NOTE: different than the general annotation file.
+    "VEP_ensembl_Transcript_ID",
+    "VEP_ensembl_Gene_Name",
+    "VEP_ensembl_Gene_ID",
+    "VEP_ensembl_Consequence",
+    "VEP_ensembl_Amino_Acid_Change",
+    "VEP_ensembl_LoF",
+    "VEP_ensembl_LoF_filter",
+    "VEP_ensembl_LoF_flags",
+    "VEP_ensembl_LoF_info"
+    # "1000Gp3_AF"#skipped for the workshop because code doesn't work with this variable name
+    )
+  
+parse_indel_to_file("indel.tsv.gz", "parsed_indel.tsv", desired_columns_indel, to_split, verbose = TRUE)
+```
+
+Inspection shows that the output format is the same for this function:
+
+```{r}
+readLines("parsed_indel.tsv", n=2)
+```
+
+Or as a list,
+
+```{r}
+# list all fields in an annotation file: 
+get_fields("parsed_indel.tsv")
+```
+
+If an analyst wished to filter the list of variants prior to aggregation, the processing code could be modified to apply filters during parsing, or the annotation file could be reprocessed to apply filters at this point. Alternatively, filters can also be applied subsequent to aggregation.
+
+As insurance for this exercise, the parsed files are also available on github:
+
+```{r}
+ben.workshop.path <- "https://github.com/bheavner/topmed_workshop_2017_bh/raw/master"
+parsedsnpfile <- "parsed_snp.tsv"
+if (!file.exists(parsedsnpfile)) download.file(file.path(ben.workshop.path, parsedsnpfile), parsedsnpfile)
+
+parsedindelfile <- "parsed_indel.tsv"
+if (!file.exists(parsedindelfile)) download.file(file.path(ben.workshop.path, parsedindelfile), parsedindelfile)
+```
+
+### Defining "gene" ranges for aggregation
+
+Aggregation requires definition of the desired aggregation units. As a relatively simple example, we will build a list of genomic ranges corresponding to genes as defined by the [GENCODE Project](https://www.gencodegenes.org/about.html).
+
+The GENCODE Project's Genomic ENCylopedia Of DNA Elements is available in the well-documented [.gtf file format](https://www.gencodegenes.org/data_format.html). Generally, .gtf files consist of 9 tab-separated fields, some of which may consist of various numbers of key:value pairs.
+
+The DCC has begun an R package, *genetable*, to parse and work with .gtf files. This package is under development, and is available on github at [https://github.com/UW-GAC/genetable](https://github.com/UW-GAC/genetable). For now, the package can be installed from github using the *devtools* package:
+
+```{r message=FALSE}
+#library(devtools)
+devtools::install_github("UW-GAC/genetable")
+
+library(genetable)
+```
+
+I'll be working with the gencode release 19 because it's the last one on GRCh37. The [file](ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_human/release_19/gencode.v19.annotation.gtf.gz) can be downloaded via [https://www.gencodegenes.org/releases/19.html](https://www.gencodegenes.org/releases/19.html).
+
+In this case, I've trimmed the gencode file to include only chromosome 22 feature definitions (since that's the variant annotation set I'm using for the demo).
+
+```{r}
+gtffile <- "chr22.gtf.gz"
+if (!file.exists(gtffile)) download.file(file.path(ben.workshop.path, gtffile), gtffile)
+
+gtf_source <- "chr22.gtf.gz"
+```
+
+The details of the *genetable* package are of less interest for this workshop, so we'll just use it - we can import and tidy the .gtf file:
+```{r}
+# import the gtf file to a tidy data frame (a tibble)
+gtf <- import_gencode(gtf_source)
+
+# look at the tibble
+glimpse(gtf)
+```
+
+We can see that genomic features are tagged by feature type:
+```{r}
+# summarize the number of features by tag.
+summarize_tag(gtf, tag = "basic")
+```
+
+And we can use these feature type tags to filter the .gtf annotation to extract the starting and ending genomic positions for features of interest, such as features tagged "gene":
+```{r}
+# filter gtf file to return transcript features tagged basic
+basic_transcripts <- filter_gencode(gtf, featurearg = "transcript", tagarg = "basic")
+
+# or filter for features == "gene"
+genes <- filter_gencode(gtf, featurearg = "gene")
+
+# define the boundaries of the feature of interest
+# this can be slow for complicated features
+#gene_bounds <- define_boundaries(basic_transcripts, "gene_id")
+gene_bounds <- define_boundaries(genes, "gene_id")
+
+# can check the resulting tibble for sanity
+glimpse(gene_bounds)
+```
+
+Finally, *genetable* includes a function to save a self-documented tab separated file containing the filtered .gtf results:
+```{r}
+# save to file
+note <- 'This file includes starting and ending ranges for feature = "gene" in the gtf file.'
+save_to_file(gene_bounds, notes = note) # will automatically make file called feature_bounds_DATE.tsv
+```
+
+As insurance for this exercise, the genic range definitions that I made last week are also available on github:
+
+```{r}
+ben.workshop.path <- "https://github.com/bheavner/topmed_workshop_2017_bh/raw/master"
+boundsfile <- "feature_bounds_20170804.tsv"
+if (!file.exists(boundsfile)) download.file(file.path(ben.workshop.path, boundsfile), boundsfile)
+```
+
+### Aggregating TOPMed variants into genic units
+
+Now we've generated a set of variants with a manaageable number of annotation fields, and defined the desired aggregation units as sets of genomic ranges. The set of variants may be filtered using the annotation fields we've chosen (our list is unfiltered in this example).
+
+We're ready to aggregate the variants by genic units. As insurance, we can start with the same set of inputs by downloading what I generated last week:
+
+```{r}
+ben.workshop.path <- "https://github.com/bheavner/topmed_workshop_2017_bh/raw/master"
+
+parsed_snp_file <- "parsed_snp.tsv"
+parsed_indel_file <- "parsed_indel.tsv"
+unit_defs_file <- "feature_bounds_20170804.tsv"
+
+if (!file.exists(parsed_snp_file)) download.file(file.path(ben.workshop.path, parsed_snp_file), parsed_snp_file)
+
+if (!file.exists(parsed_indel_file)) download.file(file.path(ben.workshop.path, parsed_indel_file), parsed_indel_file)
+
+if (!file.exists(unit_defs_file)) download.file(file.path(ben.workshop.path, unit_defs_file), unit_defs_file)
+```
+
+Load the tab-separated files to tibbles (data frames) to work with:
+
+```{R}
+snps <- read_tsv(parsed_snp_file, comment = "#")
+indels <- read_tsv(parsed_indel_file, comment = "#")
+unit_defs <- read_tsv(unit_defs_file, comment = "#", skip = 1)
+unit_defs <- select(unit_defs, c(gene_id, agg_start, agg_end))
+```
+
+There's probably a nice, fast, vectorized to accomplish this task, but for demonstration purposes, we'll just loop over the unit_defs and select indels and snps within the genomic ranges of interest:
+
+```{r}
+# make an empty tibble
+foo <- tibble(group_id="", chromosome="", position="", ref="", alt="") %>%
+  filter(length(group_id)>1)
+
+# loop over unit defs
+for (rowIndex in 1:nrow(unit_defs)) {
+
+  # select snps and insert to foo ## SNPs could be filtered here
+  snpsToAdd <- select(snps, c(chr, pos, ref, alt)) %>%
+    dplyr::filter(between(pos, unit_defs[rowIndex,]$agg_start, unit_defs[rowIndex,]$agg_end)) %>% # This is the line to vectorize
+    distinct() %>%
+    mutate(group_id = unit_defs[rowIndex,]$gene_id)
+  
+  if (nrow(snpsToAdd) > 0) {
+    foo <- add_row(
+      foo,
+      group_id = snpsToAdd$group_id,
+      chromosome = snpsToAdd$chr,
+      position = snpsToAdd$pos,
+      ref = snpsToAdd$ref,
+      alt = snpsToAdd$alt
+    )
+  }
+  
+  # select indels and insert to foo ## Indels could be filtered here, too
+  toAdd <- select(indels, c(chr, pos, ref, alt)) %>%
+    dplyr::filter(between(pos, unit_defs[rowIndex, ]$agg_start, unit_defs[rowIndex, ]$agg_end)) %>% # to vectorize
+    distinct() %>%
+    mutate(group_id = unit_defs[rowIndex, ]$gene_id)
+  
+  if (rowIndex %% 10 == 0){
+    message(
+      paste0("row: ", rowIndex, 
+             " snps to add: ", nrow(snpsToAdd), 
+             " indels to add: ", nrow(toAdd)))
+  }
+  
+  if (nrow(toAdd) > 0) {
+    foo <- add_row(
+      foo,
+      group_id = toAdd$group_id,
+      chromosome = toAdd$chr,
+      position = toAdd$pos,
+      ref = toAdd$ref,
+      alt = toAdd$alt
+    )
+  }
+}
+
+aggregated_variants <- distinct(foo)
+```
+
+That may not be fast or pretty, but we've now got a set of variants aggregated into genic units using the GENCODE gene model! This set can be saved and used with the analysis pipeline for association testing.
+
+We can inspect the tibble with glimpse:
+```{r}
+glimpse(aggregated_variants)
+```
+
+We can do things like counting how many genic units we're using:
+```{r}
+distinct(as.tibble(aggregated_variants$group_id))
+```
+
+We can look at number of variants per aggregation unit:
+```{r}
+counts <- aggregated_variants %>% group_by(group_id) %>% summarize(n())
+```
+
+Feel free to look at other summary statistics and do other exploratory data analysis as you'd like, but don't forget to save it if you'd like to use it for the analysis pipeline!
+
+```{r}
+save(aggregated_variants, file = "chr22_gene_aggregates.RDA")
+```
+
+### Aggregate unit for association testing exercise
+We will be using a slightly different gene-based aggregation unit for the assocation testing exercise. As before, this analysis uses a subset of the TOPMed SNP variants that are present in the 1000 Genomes Project. However, in this exercise, the genic units include TOPMed SNP variants from all chromosomes (no indels, and not just chromosome 22 as before). Further, each genic unit is expanded to include the set of TOPMed SNP variants falling within a GENCODE-defined gene along with 20 kb flanking regions upstream and downstream of that range.
+
+In a larger-scale analysis of TOPMed data, aggregation units could include both TOPMed SNP and indel variants falling within defined aggregation units, and would not be restricted to the variants also present in this chosen subset of the 1000 Genomes Project. An analyst might also choose to filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).
+
+As before, the aggregation units are defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (for example a variant can be assigned to mutiple genes).
 
 ```{r agg_unit}
 aggfile <- "variants_by_gene.RData"

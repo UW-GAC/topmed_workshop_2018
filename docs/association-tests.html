@@ -136,10 +136,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.3</b> Sliding window tests</a></li>
 <li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.4</b> Exercises</a></li>
 <li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Annotation-based aggregate tests</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Variant annotation</a></li>
-<li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-aggregate-units"><i class="fa fa-check"></i><b>7.5.2</b> Defining aggregate units</a></li>
-<li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.3</b> Association testing with aggregate units</a></li>
-<li class="chapter" data-level="7.5.4" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.5.4</b> Exercise</a></li>
+<li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#working-with-variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Working with variant annotation</a></li>
+<li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-gene-ranges-for-aggregation"><i class="fa fa-check"></i><b>7.5.2</b> Defining “gene” ranges for aggregation</a></li>
+<li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#aggregating-topmed-variants-into-genic-units"><i class="fa fa-check"></i><b>7.5.3</b> Aggregating TOPMed variants into genic units</a></li>
+<li class="chapter" data-level="7.5.4" data-path="association-tests.html"><a href="association-tests.html#aggregate-unit-for-association-testing-exercise"><i class="fa fa-check"></i><b>7.5.4</b> Aggregate unit for association testing exercise</a></li>
+<li class="chapter" data-level="7.5.5" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.5</b> Association testing with aggregate units</a></li>
+<li class="chapter" data-level="7.5.6" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.5.6</b> Exercise</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>8</b> Analysis Pipeline</a><ul>
@@ -364,14 +366,704 @@ qqPlot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 </div>
 <div id="annotation-based-aggregate-tests" class="section level2">
 <h2><span class="header-section-number">7.5</span> Annotation-based aggregate tests</h2>
-<div id="variant-annotation" class="section level3">
-<h3><span class="header-section-number">7.5.1</span> Variant annotation</h3>
-<p>Rare variants are generally aggregated into some meaningful units for association testing to decrease multiple testing burden and increase statistical power. Various genomic and epigenomic annotations can be used to define aggregation units and filter them. A large number of annotations are available through the Whole Genome Sequence Annotator (WGSA) to the TOPMed users.</p>
+<p><strong>Note:</strong> the code and libraries in this section are under active development, and are not production-level. It is provided to give workshop participants an example of some of the kinds of analysis tasks that might be performed with TOPMed annotation data. Use the code at your own risk, and be warned that it may break in unexpected ways. Github issues and contributions are welcome!</p>
+<p>Analysts generally aggregate rare variants for association testing to decrease multiple testing burden and increase statistical power. They can group variants that fall within arbitrary ranges (such as sliding-windows), or they can group variants with intent. For example, an analyst could aggregate variants that that fall between transcription start sites and stop sites, within coding regions, within regulatory regions, or other genomic features selected from sources like published gene models or position- or transcript-based variant annotation. An analyst could also choose to filter the variants prior or subsequent to aggregation using annotation-based criteria such as functional impact or quality scores.</p>
+<p>To demonstrate, we will aggregate a subset of TOPMed variants from chromosome 22. The subset is a portion of TOPMed SNP and indel variants that are also in the 1000 Genomes Project. We will parse an example variant annotation file to select fields of interest, parse a GENCODE .gtf file to define our genic units, and then aggregate the selected variants into the defined genic units.</p>
+<div id="working-with-variant-annotation" class="section level3">
+<h3><span class="header-section-number">7.5.1</span> Working with variant annotation</h3>
+<p>Variants called from the TOPMed data set are annotated using the <a href="https://sites.google.com/site/jpopgen/wgsa">Whole Genome Sequence Annotator (WGSA)</a>. WGSA output files include 359 annotation fields, some of which are themselves lists of annotation values. Thus, individual variants may be annotated with more than 1000 individual fields. WGSA produces different output files for different featues. TOPMed variant annotation includes separate files for SNPs and for indels. The subsetted variant annotation files we will use for this example are available via github:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ben.workshop.path &lt;-<span class="st"> &quot;https://github.com/bheavner/topmed_workshop_2017_bh/raw/master&quot;</span>
+snpfile &lt;-<span class="st"> &quot;snp.tsv.gz&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(snpfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(ben.workshop.path, snpfile), snpfile)
+
+indelfile &lt;-<span class="st"> &quot;indel.tsv.gz&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(indelfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(ben.workshop.path, indelfile), indelfile)</code></pre></div>
+<p>The WGSA output files are tab-separated text files, with one line per annotated variant. Since there are many annotation fields, these files can be unwieldy to work with directly. As an example, the first two lines of the SNP variant annotation file can be previewed within R:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">readLines</span>(<span class="st">&quot;snp.tsv.gz&quot;</span>, <span class="dt">n=</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] &quot;#chr\tpos\tref\talt\tANNOVAR_ensembl_Effect\tANNOVAR_ensembl_Transcript_ID\tANNOVAR_ensembl_Gene_ID\tANNOVAR_ensembl_Closest_gene(intergenic_only)\tANNOVAR_ensembl_HGVSc\tANNOVAR_ensembl_HGVSp\tANNOVAR_ensembl_Exon_Rank\tANNOVAR_ensembl_summary\tSnpEff_ensembl_Effect\tSnpEff_ensembl_Effect_impact\tSnpEff_ensembl_Sequence_feature\tSnpEff_ensembl_Sequence_feature_impact\tSnpEff_ensembl_Transcript_ID\tSnpEff_ensembl_Transcript_biotype\tSnpEff_ensembl_Gene_name\tSnpEff_ensembl_Gene_ID\tSnpEff_ensembl_HGVSc\tSnpEff_ensembl_HGVSp\tSnpEff_ensembl_Protein_position/Protein_len\tSnpEff_ensembl_CDS_position/CDS_len\tSnpEff_ensembl_cDNA_position/cDNA_len\tSnpEff_ensembl_Exon_or_intron_rank/total\tSnpEff_ensembl_Distance_to_feature\tSnpEff_ensembl_Warnings\tSnpEff_ensembl_LOF/NMD\tSnpEff_ensembl_LOF/NMD_gene_name\tSnpEff_ensembl_LOF/NMD_gene_ID\tSnpEff_ensembl_LOF/NMD_num_transcripts_affected\tSnpEff_ensembl_LOF/NMD_percent_transcripts_affected\tSnpEff_ensembl_TF_binding_effect\tSnpEff_ensembl_TF_name\tSnpEff_ensembl_TF_ID\tSnpEff_ensembl_summary\tVEP_ensembl_Consequence\tVEP_ensembl_Transcript_ID\tVEP_ensembl_Gene_Name\tVEP_ensembl_Gene_ID\tVEP_ensembl_Protein_ID\tVEP_ensembl_CCDS\tVEP_ensembl_SWISSPROT\tVEP_ensembl_Codon_Change_or_Distance\tVEP_ensembl_Amino_Acid_Change\tVEP_ensembl_HGVSc\tVEP_ensembl_HGVSp\tVEP_ensembl_cDNA_position\tVEP_ensembl_CDS_position\tVEP_ensembl_Protein_position\tVEP_ensembl_Exon_or_Intron_Rank\tVEP_ensembl_STRAND\tVEP_ensembl_CANONICAL\tVEP_ensembl_LoF\tVEP_ensembl_LoF_filter\tVEP_ensembl_LoF_flags\tVEP_ensembl_LoF_info\tVEP_ensembl_summary\tANNOVAR_refseq_Effect\tANNOVAR_refseq_Transcript_ID\tANNOVAR_refseq_Gene_ID\tANNOVAR_refseq_Closest_gene(intergenic_only)\tANNOVAR_refseq_HGVSc\tANNOVAR_refseq_HGVSp\tANNOVAR_refseq_Exon_Rank\tANNOVAR_refseq_summary\tSnpEff_refseq_Effect\tSnpEff_refseq_Effect_impact\tSnpEff_refseq_Sequence_feature\tSnpEff_refseq_Sequence_feature_impact\tSnpEff_refseq_Transcript_ID\tSnpEff_refseq_Transcript_biotype\tSnpEff_refseq_Gene_name\tSnpEff_refseq_Gene_ID\tSnpEff_refseq_HGVSc\tSnpEff_refseq_HGVSp\tSnpEff_refseq_Protein_position/Protein_len\tSnpEff_refseq_CDS_position/CDS_len\tSnpEff_refseq_cDNA_position/cDNA_len\tSnpEff_refseq_Exon_or_intron_rank/total\tSnpEff_refseq_Distance_to_feature\tSnpEff_refseq_Warnings\tSnpEff_refseq_LOF/NMD\tSnpEff_refseq_LOF/NMD_gene_name\tSnpEff_refseq_LOF/NMD_gene_ID\tSnpEff_refseq_LOF/NMD_num_transcripts_affected\tSnpEff_refseq_LOF/NMD_percent_transcripts_affected\tSnpEff_refseq_TF_binding_effect\tSnpEff_refseq_TF_name\tSnpEff_refseq_TF_ID\tSnpEff_refseq_summary\tVEP_refseq_Consequence\tVEP_refseq_Transcript_ID\tVEP_refseq_Gene_Name\tVEP_refseq_Gene_ID\tVEP_refseq_Protein_ID\tVEP_refseq_Codon_Change_or_Distance\tVEP_refseq_Amino_Acid_Change\tVEP_refseq_HGVSc\tVEP_refseq_HGVSp\tVEP_refseq_cDNA_position\tVEP_refseq_CDS_position\tVEP_refseq_Protein_position\tVEP_refseq_Exon_or_Intron_Rank\tVEP_refseq_STRAND\tVEP_refseq_CANONICAL\tVEP_refseq_LoF\tVEP_refseq_LoF_filter\tVEP_refseq_LoF_flags\tVEP_refseq_LoF_info\tVEP_refseq_summary\tANNOVAR_ucsc_Effect\tANNOVAR_ucsc_Transcript_ID\tANNOVAR_ucsc_Gene_ID\tANNOVAR_ucsc_Closest_gene(intergenic_only)\tANNOVAR_ucsc_HGVSc\tANNOVAR_ucsc_HGVSp\tANNOVAR_ucsc_Exon_Rank\tANNOVAR_ucsc_summary\trs_dbSNP147\tsno_miRNA_name\tsno_miRNA_type\tUTR3_miRNA_target\tTargetScan_context++_score_percentile\tsplicing_consensus_ada_score\tsplicing_consensus_rf_score\tGWAS_catalog_rs\tGWAS_catalog_trait\tGWAS_catalog_pubmedid\tGRASP_rs\tGRASP_PMID\tGRASP_p-value\tGRASP_phenotype\tGRASP_ancestry\tGRASP_platform\tclinvar_rs\tclinvar_clnsig\tclinvar_trait\tclinvar_golden_stars\tGTEx_V6_gene\tGTEx_V6_tissue\tMAP20\tMAP35\tMAP20(+-149bp)\tMAP35(+-149bp)\tGMS_single-end\tGMS_paired-end\t1000G_strict_masked\tRepeatMasker_masked\tAncestral_allele\tAltaiNeandertal\tDenisova\tphyloP46way_primate\tphyloP46way_primate_rankscore\tphyloP46way_placental\tphyloP46way_placental_rankscore\tphyloP100way_vertebrate\tphyloP100way_vertebrate_rankscore\tphastCons46way_primate\tphastCons46way_primate_rankscore\tphastCons46way_placental\tphastCons46way_placental_rankscore\tphastCons100way_vertebrate\tphastCons100way_vertebrate_rankscore\tGERP_NR\tGERP_RS\tGERP_RS_rankscore\tSiPhy_29way_logOdds\tSiPhy_29way_logOdds_rankscore\tintegrated_fitCons_score\tintegrated_fitCons_rankscore\tintegrated_confidence_value\tGM12878_fitCons_score\tGM12878_fitCons_rankscore\tGM12878_confidence_value\tH1-hESC_fitCons_score\tH1-hESC_fitCons_rankscore\tH1-hESC_confidence_value\tHUVEC_fitCons_score\tHUVEC_fitCons_rankscore\tHUVEC_confidence_value\tGenoCanyon_score\tGenoCanyon_rankscore\t1000Gp3_AC\t1000Gp3_AF\t1000Gp3_AFR_AC\t1000Gp3_AFR_AF\t1000Gp3_EUR_AC\t1000Gp3_EUR_AF\t1000Gp3_AMR_AC\t1000Gp3_AMR_AF\t1000Gp3_EAS_AC\t1000Gp3_EAS_AF\t1000Gp3_SAS_AC\t1000Gp3_SAS_AF\tTWINSUK_AC\tTWINSUK_AF\tALSPAC_AC\tALSPAC_AF\tESP6500_AA_AC\tESP6500_AA_AF\tESP6500_EA_AC\tESP6500_EA_AF\tExAC_AC\tExAC_AF\tExAC_Adj_AC\tExAC_Adj_AF\tExAC_AFR_AC\tExAC_AFR_AF\tExAC_AMR_AC\tExAC_AMR_AF\tExAC_EAS_AC\tExAC_EAS_AF\tExAC_FIN_AC\tExAC_FIN_AF\tExAC_NFE_AC\tExAC_NFE_AF\tExAC_SAS_AC\tExAC_SAS_AF\tExAC_nonTCGA_AC\tExAC_nonTCGA_AF\tExAC_nonTCGA_Adj_AC\tExAC_nonTCGA_Adj_AF\tExAC_nonTCGA_AFR_AC\tExAC_nonTCGA_AFR_AF\tExAC_nonTCGA_AMR_AC\tExAC_nonTCGA_AMR_AF\tExAC_nonTCGA_EAS_AC\tExAC_nonTCGA_EAS_AF\tExAC_nonTCGA_FIN_AC\tExAC_nonTCGA_FIN_AF\tExAC_nonTCGA_NFE_AC\tExAC_nonTCGA_NFE_AF\tExAC_nonTCGA_SAS_AC\tExAC_nonTCGA_SAS_AF\tExAC_nonpsych_AC\tExAC_nonpsych_AF\tExAC_nonpsych_Adj_AC\tExAC_nonpsych_Adj_AF\tExAC_nonpsych_AFR_AC\tExAC_nonpsych_AFR_AF\tExAC_nonpsych_AMR_AC\tExAC_nonpsych_AMR_AF\tExAC_nonpsych_EAS_AC\tExAC_nonpsych_EAS_AF\tExAC_nonpsych_FIN_AC\tExAC_nonpsych_FIN_AF\tExAC_nonpsych_NFE_AC\tExAC_nonpsych_NFE_AF\tExAC_nonpsych_SAS_AC\tExAC_nonpsych_SAS_AF\tRegulomeDB_motif\tRegulomeDB_score\tMotif_breaking\tnetwork_hub\tENCODE_annotated\tsensitive\tultra_sensitive\ttarget_gene\tfunseq_noncoding_score\tfunseq2_noncoding_score\tfunseq2_noncoding_rankscore\tCADD_raw\tCADD_phred\tCADD_raw_rankscore\tDANN_score\tDANN_rank_score\tfathmm-MKL_non-coding_score\tfathmm-MKL_non-coding_rankscore\tfathmm-MKL_non-coding_pred\tfathmm-MKL_non-coding_group\tfathmm-MKL_coding_score\tfathmm-MKL_coding_rankscore\tfathmm-MKL_coding_pred\tfathmm-MKL_coding_group\tEigen-raw\tEigen-phred\tEigen_coding_or_noncoding\tEigen-raw_rankscore\tEigen-PC-raw\tEigen-PC-raw_rankscore\tORegAnno_type\tORegAnno_PMID\tENCODE_TFBS\tENCODE_TFBS_score\tENCODE_TFBS_cells\tENCODE_Dnase_score\tENCODE_Dnase_cells\tEnhancerFinder_general_developmental_enhancer\tEnhancerFinder_brain_enhancer\tEnhancerFinder_heart_enhancer\tEnhancerFinder_limb_enhancer\tSuperEnhancer_tissue_cell\tSuperEnhancer_RefSeq_id\tSuperEnhancer_Gene_symbol\tFANTOM5_enhancer_permissive\tFANTOM5_enhancer_robust\tFANTOM5_enhancer_target\tFANTOM5_enhancer_expressed_tissue_cell\tFANTOM5_enhancer_differentially_expressed_tissue_cell\tFANTOM5_CAGE_peak_permissive\tFANTOM5_CAGE_peak_robust\tEnsembl_Regulatory_Build_Overviews\tEnsembl_Regulatory_Build_TFBS\tEnsembl_Regulatory_Build_TFBS_prob\taaref\taaalt\tgenename\tUniprot_acc\tUniprot_id\tUniprot_aapos\tInterpro_domain\tcds_strand\trefcodon\tSLR_test_statistic \tcodonpos\tfold-degenerate\tEnsembl_geneid\tEnsembl_transcriptid\taapos\taapos_SIFT\taapos_FATHMM\tSIFT_score\tSIFT_converted_rankscore\tSIFT_pred\tPolyphen2_HDIV_score\tPolyphen2_HDIV_rankscore\tPolyphen2_HDIV_pred\tPolyphen2_HVAR_score\tPolyphen2_HVAR_rankscore\tPolyphen2_HVAR_pred\tLRT_score\tLRT_converted_rankscore\tLRT_pred\tMutationTaster_score\tMutationTaster_converted_rankscore\tMutationTaster_pred\tMutationAssessor_score\tMutationAssessor_rankscore\tMutationAssessor_pred\tFATHMM_score\tFATHMM_rankscore\tFATHMM_pred\tMetaSVM_score\tMetaSVM_rankscore\tMetaSVM_pred\tMetaLR_score\tMetaLR_rankscore\tMetaLR_pred\tReliability_index\tVEST3_score\tVEST3_rankscore\tPROVEAN_score\tPROVEAN_converted_rankscore\tPROVEAN_pred\tANNOVAR_ensembl_precedent_consequence\tANNOVAR_ensembl_precedent_gene\tunique_variant&quot;
+## [2] &quot;22\t19055814\tC\tT\tintronic|intronic|intronic|intronic\tENST00000263196|ENST00000389262|ENST00000537045|ENST00000545799\tENSG00000070413|ENSG00000070413|ENSG00000070413|ENSG00000070413\t.|.|.|.\t.|.|.|.\t.|.|.|.\t.|.|.|.\tENSG00000070413(4):intronic(4)\tintron_variant|intron_variant|upstream_gene_variant|intron_variant|intron_variant\tMODIFIER|MODIFIER|MODIFIER|MODIFIER|MODIFIER\tdomain:LDL-receptor_class_A|.|.|.|.\tLOW|.|.|.|.\tENST00000263196|ENST00000389262|ENST00000473832|ENST00000537045|ENST00000545799\tprotein_coding|nonsense_mediated_decay|processed_transcript|protein_coding|protein_coding\tDGCR2|DGCR2|DGCR2|DGCR2|DGCR2\tENSG00000070413|ENSG00000070413|ENSG00000070413|ENSG00000070413|ENSG00000070413\tc.203-76G&gt;A|c.-851-76G&gt;A|n.-2397G&gt;A|c.80-76G&gt;A|c.203-76G&gt;A\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\t2/9|2/10|.|1/8|2/10\t.|.|2397|.|.\t.|.|.|.|.\t.\t.\t.\t.\t.\t.\t.\t.\tDGCR2(7):intron_variant(4)upstream_gene_variant(1)\tintron_variant|upstream_gene_variant|intron_variant|intron_variant,NMD_transcript_variant|intron_variant\tENST00000537045|ENST00000473832|ENST00000263196|ENST00000389262|ENST00000545799\tDGCR2|DGCR2|DGCR2|DGCR2|DGCR2\tENSG00000070413|ENSG00000070413|ENSG00000070413|ENSG00000070413|ENSG00000070413\tENSP00000440062|.|ENSP00000263196|ENSP00000373914|ENSP00000445069\tCCDS54496.1|.|CCDS33598.1|.|.\tIDD_HUMAN|.|IDD_HUMAN|.|.\t.|2397|.|.|.\t.|.|.|.|.\tENST00000537045.1:c.80-76G&gt;A|.|ENST00000263196.7:c.203-76G&gt;A|ENST00000389262.4:c.-851-76G&gt;A|ENST00000545799.1:c.203-76G&gt;A\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\t1/8|.|2/9|2/10|2/10\t-|-|-|-|-\t.|.|YES|.|.\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\tDGCR2(7):intron_variant(3)intron_variant,NMD_transcript_variant(1)upstream_gene_variant(1)\tintronic|intronic|intronic|intronic\tNM_001173533|NM_001173534|NM_001184781|NM_005137\tDGCR2|DGCR2|DGCR2|DGCR2\t.|.|.|.\t.|.|.|.\t.|.|.|.\t.|.|.|.\tDGCR2(4):intronic(4)\tintron_variant|intron_variant|intron_variant|intron_variant|intron_variant\tMODIFIER|MODIFIER|MODIFIER|MODIFIER|MODIFIER\t.|.|.|.|.\t.|.|.|.|.\tNM_001173533.1|NM_001173534.1|NM_001184781.1|NM_005137.2|NR_033674.1\tprotein_coding|protein_coding|protein_coding|protein_coding|pseudogene\tDGCR2|DGCR2|DGCR2|DGCR2|DGCR2\tDGCR2|DGCR2|DGCR2|DGCR2|DGCR2\tc.80-76G&gt;A|c.80-76G&gt;A|c.203-76G&gt;A|c.203-76G&gt;A|n.328-76G&gt;A\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\t1/8|1/8|2/9|2/9|1/8\t.|.|.|.|.\t.|.|.|.|.\t.\t.\t.\t.\t.\t.\t.\t.\tDGCR2(5):intron_variant(5)\tintron_variant|intron_variant|intron_variant|intron_variant|intron_variant,non_coding_transcript_variant\tNM_001173534.1|NM_001184781.1|NM_001173533.1|NM_005137.2|NR_033674.1\tDGCR2|DGCR2|DGCR2|DGCR2|DGCR2\t9993|9993|9993|9993|9993\tNP_001167005.1|NP_001171710.1|NP_001167004.1|NP_005128.1|.\t.|.|.|.|.\t.|.|.|.|.\tNM_001173534.1:c.80-76G&gt;A|NM_001184781.1:c.203-76G&gt;A|NM_001173533.1:c.80-76G&gt;A|NM_005137.2:c.203-76G&gt;A|NR_033674.1:n.328-76G&gt;A\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\t1/8|2/9|1/8|2/9|1/8\t-|-|-|-|-\t.|.|.|YES|.\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\t.|.|.|.|.\tDGCR2(5):intron_variant(4)intron_variant,non_coding_transcript_variant(1)\tintronic|intronic|intronic|intronic|intronic|intronic\tuc002zoq.1|uc002zor.1|uc011agr.1|uc021wkx.1|uc021wky.1|uc021wkz.1\tDGCR2|DGCR2|DGCR2|DGCR2|DGCR2|DGCR2\t.|.|.|.|.|.\t.|.|.|.|.|.\t.|.|.|.|.|.\t.|.|.|.|.|.\tDGCR2(6):intronic(6)\trs546724885\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t1.0\t1.0\t0.99285716\t1.0\t98.9773\t98.9998\tY\tN\tC\tC/C\tC/C\t-1.193\t0.05127\t-0.915\t0.09469\t-0.133\t0.32678\t0.001\t0.05886\t0.000\t0.14292\t0.000\t0.16763\t3.71\t-3.62\t0.06162\t7.0802\t0.86688\t0.084033\t0.81986\t0\t0.047999\t0.00538\t0\t0.081037\t0.85223\t0\t0.089874\t0.86623\t0\t0.998263009421969\t0.82144\t1\t1.9968051118210862E-4\t1\t7.564296520423601E-4\t0\t0.0\t0\t0.0\t0\t0.0\t0\t0.0\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\tChromatin_Structure|DNase-seq\t5\t.\t.\tDHS(MCV-5|chr22:19055665-19055815)\t.\t.\t.\t1\t1.47702766604517\t0.97241\t-0.086269\t1.834\t0.34517\t0.47717823829120337\t0.25900\t0.06740\t0.15147\tN\tADB\t0.00030\t0.00848\tN\tAEFDBI\t-0.118960630637635\t3.27754\tn\t0.52812\t0.302794242594935\t0.92771\t.\t.\t.\t.\t.\t.\t.\tN\tN\tN\tN\t.\t.\t.\tN\tN\t.\t.\t.\tN\tN\topen\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\tintronic\tDGCR2\tY&quot;</code></pre>
+<p>The DCC has begun an R package, <em>wgsaparsr</em>, to begin working with WGSA output files. This package is under development, and is available on github at <a href="https://github.com/UW-GAC/wgsaparsr" class="uri">https://github.com/UW-GAC/wgsaparsr</a>. For now, the package can be installed from github using the <em>devtools</em> package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;UW-GAC/wgsaparsr@1.0.0.9003&quot;</span>)
+<span class="kw">library</span>(wgsaparsr)
+<span class="co">#library(tidyverse) # just in case it&#39;s not loaded yet</span>
+<span class="kw">library</span>(tibble)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(readr)</code></pre></div>
+<p><em>wgsaparsr</em> includes a <em>get_fields()</em> function to list the annotation fields available in a WGSA output file:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># list all fields in an annotation file: </span>
+<span class="kw">get_fields</span>(<span class="st">&quot;snp.tsv.gz&quot;</span>)</code></pre></div>
+<pre><code>##   [1] &quot;#chr&quot;                                                 
+##   [2] &quot;pos&quot;                                                  
+##   [3] &quot;ref&quot;                                                  
+##   [4] &quot;alt&quot;                                                  
+##   [5] &quot;ANNOVAR_ensembl_Effect&quot;                               
+##   [6] &quot;ANNOVAR_ensembl_Transcript_ID&quot;                        
+##   [7] &quot;ANNOVAR_ensembl_Gene_ID&quot;                              
+##   [8] &quot;ANNOVAR_ensembl_Closest_gene(intergenic_only)&quot;        
+##   [9] &quot;ANNOVAR_ensembl_HGVSc&quot;                                
+##  [10] &quot;ANNOVAR_ensembl_HGVSp&quot;                                
+##  [11] &quot;ANNOVAR_ensembl_Exon_Rank&quot;                            
+##  [12] &quot;ANNOVAR_ensembl_summary&quot;                              
+##  [13] &quot;SnpEff_ensembl_Effect&quot;                                
+##  [14] &quot;SnpEff_ensembl_Effect_impact&quot;                         
+##  [15] &quot;SnpEff_ensembl_Sequence_feature&quot;                      
+##  [16] &quot;SnpEff_ensembl_Sequence_feature_impact&quot;               
+##  [17] &quot;SnpEff_ensembl_Transcript_ID&quot;                         
+##  [18] &quot;SnpEff_ensembl_Transcript_biotype&quot;                    
+##  [19] &quot;SnpEff_ensembl_Gene_name&quot;                             
+##  [20] &quot;SnpEff_ensembl_Gene_ID&quot;                               
+##  [21] &quot;SnpEff_ensembl_HGVSc&quot;                                 
+##  [22] &quot;SnpEff_ensembl_HGVSp&quot;                                 
+##  [23] &quot;SnpEff_ensembl_Protein_position/Protein_len&quot;          
+##  [24] &quot;SnpEff_ensembl_CDS_position/CDS_len&quot;                  
+##  [25] &quot;SnpEff_ensembl_cDNA_position/cDNA_len&quot;                
+##  [26] &quot;SnpEff_ensembl_Exon_or_intron_rank/total&quot;             
+##  [27] &quot;SnpEff_ensembl_Distance_to_feature&quot;                   
+##  [28] &quot;SnpEff_ensembl_Warnings&quot;                              
+##  [29] &quot;SnpEff_ensembl_LOF/NMD&quot;                               
+##  [30] &quot;SnpEff_ensembl_LOF/NMD_gene_name&quot;                     
+##  [31] &quot;SnpEff_ensembl_LOF/NMD_gene_ID&quot;                       
+##  [32] &quot;SnpEff_ensembl_LOF/NMD_num_transcripts_affected&quot;      
+##  [33] &quot;SnpEff_ensembl_LOF/NMD_percent_transcripts_affected&quot;  
+##  [34] &quot;SnpEff_ensembl_TF_binding_effect&quot;                     
+##  [35] &quot;SnpEff_ensembl_TF_name&quot;                               
+##  [36] &quot;SnpEff_ensembl_TF_ID&quot;                                 
+##  [37] &quot;SnpEff_ensembl_summary&quot;                               
+##  [38] &quot;VEP_ensembl_Consequence&quot;                              
+##  [39] &quot;VEP_ensembl_Transcript_ID&quot;                            
+##  [40] &quot;VEP_ensembl_Gene_Name&quot;                                
+##  [41] &quot;VEP_ensembl_Gene_ID&quot;                                  
+##  [42] &quot;VEP_ensembl_Protein_ID&quot;                               
+##  [43] &quot;VEP_ensembl_CCDS&quot;                                     
+##  [44] &quot;VEP_ensembl_SWISSPROT&quot;                                
+##  [45] &quot;VEP_ensembl_Codon_Change_or_Distance&quot;                 
+##  [46] &quot;VEP_ensembl_Amino_Acid_Change&quot;                        
+##  [47] &quot;VEP_ensembl_HGVSc&quot;                                    
+##  [48] &quot;VEP_ensembl_HGVSp&quot;                                    
+##  [49] &quot;VEP_ensembl_cDNA_position&quot;                            
+##  [50] &quot;VEP_ensembl_CDS_position&quot;                             
+##  [51] &quot;VEP_ensembl_Protein_position&quot;                         
+##  [52] &quot;VEP_ensembl_Exon_or_Intron_Rank&quot;                      
+##  [53] &quot;VEP_ensembl_STRAND&quot;                                   
+##  [54] &quot;VEP_ensembl_CANONICAL&quot;                                
+##  [55] &quot;VEP_ensembl_LoF&quot;                                      
+##  [56] &quot;VEP_ensembl_LoF_filter&quot;                               
+##  [57] &quot;VEP_ensembl_LoF_flags&quot;                                
+##  [58] &quot;VEP_ensembl_LoF_info&quot;                                 
+##  [59] &quot;VEP_ensembl_summary&quot;                                  
+##  [60] &quot;ANNOVAR_refseq_Effect&quot;                                
+##  [61] &quot;ANNOVAR_refseq_Transcript_ID&quot;                         
+##  [62] &quot;ANNOVAR_refseq_Gene_ID&quot;                               
+##  [63] &quot;ANNOVAR_refseq_Closest_gene(intergenic_only)&quot;         
+##  [64] &quot;ANNOVAR_refseq_HGVSc&quot;                                 
+##  [65] &quot;ANNOVAR_refseq_HGVSp&quot;                                 
+##  [66] &quot;ANNOVAR_refseq_Exon_Rank&quot;                             
+##  [67] &quot;ANNOVAR_refseq_summary&quot;                               
+##  [68] &quot;SnpEff_refseq_Effect&quot;                                 
+##  [69] &quot;SnpEff_refseq_Effect_impact&quot;                          
+##  [70] &quot;SnpEff_refseq_Sequence_feature&quot;                       
+##  [71] &quot;SnpEff_refseq_Sequence_feature_impact&quot;                
+##  [72] &quot;SnpEff_refseq_Transcript_ID&quot;                          
+##  [73] &quot;SnpEff_refseq_Transcript_biotype&quot;                     
+##  [74] &quot;SnpEff_refseq_Gene_name&quot;                              
+##  [75] &quot;SnpEff_refseq_Gene_ID&quot;                                
+##  [76] &quot;SnpEff_refseq_HGVSc&quot;                                  
+##  [77] &quot;SnpEff_refseq_HGVSp&quot;                                  
+##  [78] &quot;SnpEff_refseq_Protein_position/Protein_len&quot;           
+##  [79] &quot;SnpEff_refseq_CDS_position/CDS_len&quot;                   
+##  [80] &quot;SnpEff_refseq_cDNA_position/cDNA_len&quot;                 
+##  [81] &quot;SnpEff_refseq_Exon_or_intron_rank/total&quot;              
+##  [82] &quot;SnpEff_refseq_Distance_to_feature&quot;                    
+##  [83] &quot;SnpEff_refseq_Warnings&quot;                               
+##  [84] &quot;SnpEff_refseq_LOF/NMD&quot;                                
+##  [85] &quot;SnpEff_refseq_LOF/NMD_gene_name&quot;                      
+##  [86] &quot;SnpEff_refseq_LOF/NMD_gene_ID&quot;                        
+##  [87] &quot;SnpEff_refseq_LOF/NMD_num_transcripts_affected&quot;       
+##  [88] &quot;SnpEff_refseq_LOF/NMD_percent_transcripts_affected&quot;   
+##  [89] &quot;SnpEff_refseq_TF_binding_effect&quot;                      
+##  [90] &quot;SnpEff_refseq_TF_name&quot;                                
+##  [91] &quot;SnpEff_refseq_TF_ID&quot;                                  
+##  [92] &quot;SnpEff_refseq_summary&quot;                                
+##  [93] &quot;VEP_refseq_Consequence&quot;                               
+##  [94] &quot;VEP_refseq_Transcript_ID&quot;                             
+##  [95] &quot;VEP_refseq_Gene_Name&quot;                                 
+##  [96] &quot;VEP_refseq_Gene_ID&quot;                                   
+##  [97] &quot;VEP_refseq_Protein_ID&quot;                                
+##  [98] &quot;VEP_refseq_Codon_Change_or_Distance&quot;                  
+##  [99] &quot;VEP_refseq_Amino_Acid_Change&quot;                         
+## [100] &quot;VEP_refseq_HGVSc&quot;                                     
+## [101] &quot;VEP_refseq_HGVSp&quot;                                     
+## [102] &quot;VEP_refseq_cDNA_position&quot;                             
+## [103] &quot;VEP_refseq_CDS_position&quot;                              
+## [104] &quot;VEP_refseq_Protein_position&quot;                          
+## [105] &quot;VEP_refseq_Exon_or_Intron_Rank&quot;                       
+## [106] &quot;VEP_refseq_STRAND&quot;                                    
+## [107] &quot;VEP_refseq_CANONICAL&quot;                                 
+## [108] &quot;VEP_refseq_LoF&quot;                                       
+## [109] &quot;VEP_refseq_LoF_filter&quot;                                
+## [110] &quot;VEP_refseq_LoF_flags&quot;                                 
+## [111] &quot;VEP_refseq_LoF_info&quot;                                  
+## [112] &quot;VEP_refseq_summary&quot;                                   
+## [113] &quot;ANNOVAR_ucsc_Effect&quot;                                  
+## [114] &quot;ANNOVAR_ucsc_Transcript_ID&quot;                           
+## [115] &quot;ANNOVAR_ucsc_Gene_ID&quot;                                 
+## [116] &quot;ANNOVAR_ucsc_Closest_gene(intergenic_only)&quot;           
+## [117] &quot;ANNOVAR_ucsc_HGVSc&quot;                                   
+## [118] &quot;ANNOVAR_ucsc_HGVSp&quot;                                   
+## [119] &quot;ANNOVAR_ucsc_Exon_Rank&quot;                               
+## [120] &quot;ANNOVAR_ucsc_summary&quot;                                 
+## [121] &quot;rs_dbSNP147&quot;                                          
+## [122] &quot;sno_miRNA_name&quot;                                       
+## [123] &quot;sno_miRNA_type&quot;                                       
+## [124] &quot;UTR3_miRNA_target&quot;                                    
+## [125] &quot;TargetScan_context++_score_percentile&quot;                
+## [126] &quot;splicing_consensus_ada_score&quot;                         
+## [127] &quot;splicing_consensus_rf_score&quot;                          
+## [128] &quot;GWAS_catalog_rs&quot;                                      
+## [129] &quot;GWAS_catalog_trait&quot;                                   
+## [130] &quot;GWAS_catalog_pubmedid&quot;                                
+## [131] &quot;GRASP_rs&quot;                                             
+## [132] &quot;GRASP_PMID&quot;                                           
+## [133] &quot;GRASP_p-value&quot;                                        
+## [134] &quot;GRASP_phenotype&quot;                                      
+## [135] &quot;GRASP_ancestry&quot;                                       
+## [136] &quot;GRASP_platform&quot;                                       
+## [137] &quot;clinvar_rs&quot;                                           
+## [138] &quot;clinvar_clnsig&quot;                                       
+## [139] &quot;clinvar_trait&quot;                                        
+## [140] &quot;clinvar_golden_stars&quot;                                 
+## [141] &quot;GTEx_V6_gene&quot;                                         
+## [142] &quot;GTEx_V6_tissue&quot;                                       
+## [143] &quot;MAP20&quot;                                                
+## [144] &quot;MAP35&quot;                                                
+## [145] &quot;MAP20(+-149bp)&quot;                                       
+## [146] &quot;MAP35(+-149bp)&quot;                                       
+## [147] &quot;GMS_single-end&quot;                                       
+## [148] &quot;GMS_paired-end&quot;                                       
+## [149] &quot;1000G_strict_masked&quot;                                  
+## [150] &quot;RepeatMasker_masked&quot;                                  
+## [151] &quot;Ancestral_allele&quot;                                     
+## [152] &quot;AltaiNeandertal&quot;                                      
+## [153] &quot;Denisova&quot;                                             
+## [154] &quot;phyloP46way_primate&quot;                                  
+## [155] &quot;phyloP46way_primate_rankscore&quot;                        
+## [156] &quot;phyloP46way_placental&quot;                                
+## [157] &quot;phyloP46way_placental_rankscore&quot;                      
+## [158] &quot;phyloP100way_vertebrate&quot;                              
+## [159] &quot;phyloP100way_vertebrate_rankscore&quot;                    
+## [160] &quot;phastCons46way_primate&quot;                               
+## [161] &quot;phastCons46way_primate_rankscore&quot;                     
+## [162] &quot;phastCons46way_placental&quot;                             
+## [163] &quot;phastCons46way_placental_rankscore&quot;                   
+## [164] &quot;phastCons100way_vertebrate&quot;                           
+## [165] &quot;phastCons100way_vertebrate_rankscore&quot;                 
+## [166] &quot;GERP_NR&quot;                                              
+## [167] &quot;GERP_RS&quot;                                              
+## [168] &quot;GERP_RS_rankscore&quot;                                    
+## [169] &quot;SiPhy_29way_logOdds&quot;                                  
+## [170] &quot;SiPhy_29way_logOdds_rankscore&quot;                        
+## [171] &quot;integrated_fitCons_score&quot;                             
+## [172] &quot;integrated_fitCons_rankscore&quot;                         
+## [173] &quot;integrated_confidence_value&quot;                          
+## [174] &quot;GM12878_fitCons_score&quot;                                
+## [175] &quot;GM12878_fitCons_rankscore&quot;                            
+## [176] &quot;GM12878_confidence_value&quot;                             
+## [177] &quot;H1-hESC_fitCons_score&quot;                                
+## [178] &quot;H1-hESC_fitCons_rankscore&quot;                            
+## [179] &quot;H1-hESC_confidence_value&quot;                             
+## [180] &quot;HUVEC_fitCons_score&quot;                                  
+## [181] &quot;HUVEC_fitCons_rankscore&quot;                              
+## [182] &quot;HUVEC_confidence_value&quot;                               
+## [183] &quot;GenoCanyon_score&quot;                                     
+## [184] &quot;GenoCanyon_rankscore&quot;                                 
+## [185] &quot;1000Gp3_AC&quot;                                           
+## [186] &quot;1000Gp3_AF&quot;                                           
+## [187] &quot;1000Gp3_AFR_AC&quot;                                       
+## [188] &quot;1000Gp3_AFR_AF&quot;                                       
+## [189] &quot;1000Gp3_EUR_AC&quot;                                       
+## [190] &quot;1000Gp3_EUR_AF&quot;                                       
+## [191] &quot;1000Gp3_AMR_AC&quot;                                       
+## [192] &quot;1000Gp3_AMR_AF&quot;                                       
+## [193] &quot;1000Gp3_EAS_AC&quot;                                       
+## [194] &quot;1000Gp3_EAS_AF&quot;                                       
+## [195] &quot;1000Gp3_SAS_AC&quot;                                       
+## [196] &quot;1000Gp3_SAS_AF&quot;                                       
+## [197] &quot;TWINSUK_AC&quot;                                           
+## [198] &quot;TWINSUK_AF&quot;                                           
+## [199] &quot;ALSPAC_AC&quot;                                            
+## [200] &quot;ALSPAC_AF&quot;                                            
+## [201] &quot;ESP6500_AA_AC&quot;                                        
+## [202] &quot;ESP6500_AA_AF&quot;                                        
+## [203] &quot;ESP6500_EA_AC&quot;                                        
+## [204] &quot;ESP6500_EA_AF&quot;                                        
+## [205] &quot;ExAC_AC&quot;                                              
+## [206] &quot;ExAC_AF&quot;                                              
+## [207] &quot;ExAC_Adj_AC&quot;                                          
+## [208] &quot;ExAC_Adj_AF&quot;                                          
+## [209] &quot;ExAC_AFR_AC&quot;                                          
+## [210] &quot;ExAC_AFR_AF&quot;                                          
+## [211] &quot;ExAC_AMR_AC&quot;                                          
+## [212] &quot;ExAC_AMR_AF&quot;                                          
+## [213] &quot;ExAC_EAS_AC&quot;                                          
+## [214] &quot;ExAC_EAS_AF&quot;                                          
+## [215] &quot;ExAC_FIN_AC&quot;                                          
+## [216] &quot;ExAC_FIN_AF&quot;                                          
+## [217] &quot;ExAC_NFE_AC&quot;                                          
+## [218] &quot;ExAC_NFE_AF&quot;                                          
+## [219] &quot;ExAC_SAS_AC&quot;                                          
+## [220] &quot;ExAC_SAS_AF&quot;                                          
+## [221] &quot;ExAC_nonTCGA_AC&quot;                                      
+## [222] &quot;ExAC_nonTCGA_AF&quot;                                      
+## [223] &quot;ExAC_nonTCGA_Adj_AC&quot;                                  
+## [224] &quot;ExAC_nonTCGA_Adj_AF&quot;                                  
+## [225] &quot;ExAC_nonTCGA_AFR_AC&quot;                                  
+## [226] &quot;ExAC_nonTCGA_AFR_AF&quot;                                  
+## [227] &quot;ExAC_nonTCGA_AMR_AC&quot;                                  
+## [228] &quot;ExAC_nonTCGA_AMR_AF&quot;                                  
+## [229] &quot;ExAC_nonTCGA_EAS_AC&quot;                                  
+## [230] &quot;ExAC_nonTCGA_EAS_AF&quot;                                  
+## [231] &quot;ExAC_nonTCGA_FIN_AC&quot;                                  
+## [232] &quot;ExAC_nonTCGA_FIN_AF&quot;                                  
+## [233] &quot;ExAC_nonTCGA_NFE_AC&quot;                                  
+## [234] &quot;ExAC_nonTCGA_NFE_AF&quot;                                  
+## [235] &quot;ExAC_nonTCGA_SAS_AC&quot;                                  
+## [236] &quot;ExAC_nonTCGA_SAS_AF&quot;                                  
+## [237] &quot;ExAC_nonpsych_AC&quot;                                     
+## [238] &quot;ExAC_nonpsych_AF&quot;                                     
+## [239] &quot;ExAC_nonpsych_Adj_AC&quot;                                 
+## [240] &quot;ExAC_nonpsych_Adj_AF&quot;                                 
+## [241] &quot;ExAC_nonpsych_AFR_AC&quot;                                 
+## [242] &quot;ExAC_nonpsych_AFR_AF&quot;                                 
+## [243] &quot;ExAC_nonpsych_AMR_AC&quot;                                 
+## [244] &quot;ExAC_nonpsych_AMR_AF&quot;                                 
+## [245] &quot;ExAC_nonpsych_EAS_AC&quot;                                 
+## [246] &quot;ExAC_nonpsych_EAS_AF&quot;                                 
+## [247] &quot;ExAC_nonpsych_FIN_AC&quot;                                 
+## [248] &quot;ExAC_nonpsych_FIN_AF&quot;                                 
+## [249] &quot;ExAC_nonpsych_NFE_AC&quot;                                 
+## [250] &quot;ExAC_nonpsych_NFE_AF&quot;                                 
+## [251] &quot;ExAC_nonpsych_SAS_AC&quot;                                 
+## [252] &quot;ExAC_nonpsych_SAS_AF&quot;                                 
+## [253] &quot;RegulomeDB_motif&quot;                                     
+## [254] &quot;RegulomeDB_score&quot;                                     
+## [255] &quot;Motif_breaking&quot;                                       
+## [256] &quot;network_hub&quot;                                          
+## [257] &quot;ENCODE_annotated&quot;                                     
+## [258] &quot;sensitive&quot;                                            
+## [259] &quot;ultra_sensitive&quot;                                      
+## [260] &quot;target_gene&quot;                                          
+## [261] &quot;funseq_noncoding_score&quot;                               
+## [262] &quot;funseq2_noncoding_score&quot;                              
+## [263] &quot;funseq2_noncoding_rankscore&quot;                          
+## [264] &quot;CADD_raw&quot;                                             
+## [265] &quot;CADD_phred&quot;                                           
+## [266] &quot;CADD_raw_rankscore&quot;                                   
+## [267] &quot;DANN_score&quot;                                           
+## [268] &quot;DANN_rank_score&quot;                                      
+## [269] &quot;fathmm-MKL_non-coding_score&quot;                          
+## [270] &quot;fathmm-MKL_non-coding_rankscore&quot;                      
+## [271] &quot;fathmm-MKL_non-coding_pred&quot;                           
+## [272] &quot;fathmm-MKL_non-coding_group&quot;                          
+## [273] &quot;fathmm-MKL_coding_score&quot;                              
+## [274] &quot;fathmm-MKL_coding_rankscore&quot;                          
+## [275] &quot;fathmm-MKL_coding_pred&quot;                               
+## [276] &quot;fathmm-MKL_coding_group&quot;                              
+## [277] &quot;Eigen-raw&quot;                                            
+## [278] &quot;Eigen-phred&quot;                                          
+## [279] &quot;Eigen_coding_or_noncoding&quot;                            
+## [280] &quot;Eigen-raw_rankscore&quot;                                  
+## [281] &quot;Eigen-PC-raw&quot;                                         
+## [282] &quot;Eigen-PC-raw_rankscore&quot;                               
+## [283] &quot;ORegAnno_type&quot;                                        
+## [284] &quot;ORegAnno_PMID&quot;                                        
+## [285] &quot;ENCODE_TFBS&quot;                                          
+## [286] &quot;ENCODE_TFBS_score&quot;                                    
+## [287] &quot;ENCODE_TFBS_cells&quot;                                    
+## [288] &quot;ENCODE_Dnase_score&quot;                                   
+## [289] &quot;ENCODE_Dnase_cells&quot;                                   
+## [290] &quot;EnhancerFinder_general_developmental_enhancer&quot;        
+## [291] &quot;EnhancerFinder_brain_enhancer&quot;                        
+## [292] &quot;EnhancerFinder_heart_enhancer&quot;                        
+## [293] &quot;EnhancerFinder_limb_enhancer&quot;                         
+## [294] &quot;SuperEnhancer_tissue_cell&quot;                            
+## [295] &quot;SuperEnhancer_RefSeq_id&quot;                              
+## [296] &quot;SuperEnhancer_Gene_symbol&quot;                            
+## [297] &quot;FANTOM5_enhancer_permissive&quot;                          
+## [298] &quot;FANTOM5_enhancer_robust&quot;                              
+## [299] &quot;FANTOM5_enhancer_target&quot;                              
+## [300] &quot;FANTOM5_enhancer_expressed_tissue_cell&quot;               
+## [301] &quot;FANTOM5_enhancer_differentially_expressed_tissue_cell&quot;
+## [302] &quot;FANTOM5_CAGE_peak_permissive&quot;                         
+## [303] &quot;FANTOM5_CAGE_peak_robust&quot;                             
+## [304] &quot;Ensembl_Regulatory_Build_Overviews&quot;                   
+## [305] &quot;Ensembl_Regulatory_Build_TFBS&quot;                        
+## [306] &quot;Ensembl_Regulatory_Build_TFBS_prob&quot;                   
+## [307] &quot;aaref&quot;                                                
+## [308] &quot;aaalt&quot;                                                
+## [309] &quot;genename&quot;                                             
+## [310] &quot;Uniprot_acc&quot;                                          
+## [311] &quot;Uniprot_id&quot;                                           
+## [312] &quot;Uniprot_aapos&quot;                                        
+## [313] &quot;Interpro_domain&quot;                                      
+## [314] &quot;cds_strand&quot;                                           
+## [315] &quot;refcodon&quot;                                             
+## [316] &quot;SLR_test_statistic &quot;                                  
+## [317] &quot;codonpos&quot;                                             
+## [318] &quot;fold-degenerate&quot;                                      
+## [319] &quot;Ensembl_geneid&quot;                                       
+## [320] &quot;Ensembl_transcriptid&quot;                                 
+## [321] &quot;aapos&quot;                                                
+## [322] &quot;aapos_SIFT&quot;                                           
+## [323] &quot;aapos_FATHMM&quot;                                         
+## [324] &quot;SIFT_score&quot;                                           
+## [325] &quot;SIFT_converted_rankscore&quot;                             
+## [326] &quot;SIFT_pred&quot;                                            
+## [327] &quot;Polyphen2_HDIV_score&quot;                                 
+## [328] &quot;Polyphen2_HDIV_rankscore&quot;                             
+## [329] &quot;Polyphen2_HDIV_pred&quot;                                  
+## [330] &quot;Polyphen2_HVAR_score&quot;                                 
+## [331] &quot;Polyphen2_HVAR_rankscore&quot;                             
+## [332] &quot;Polyphen2_HVAR_pred&quot;                                  
+## [333] &quot;LRT_score&quot;                                            
+## [334] &quot;LRT_converted_rankscore&quot;                              
+## [335] &quot;LRT_pred&quot;                                             
+## [336] &quot;MutationTaster_score&quot;                                 
+## [337] &quot;MutationTaster_converted_rankscore&quot;                   
+## [338] &quot;MutationTaster_pred&quot;                                  
+## [339] &quot;MutationAssessor_score&quot;                               
+## [340] &quot;MutationAssessor_rankscore&quot;                           
+## [341] &quot;MutationAssessor_pred&quot;                                
+## [342] &quot;FATHMM_score&quot;                                         
+## [343] &quot;FATHMM_rankscore&quot;                                     
+## [344] &quot;FATHMM_pred&quot;                                          
+## [345] &quot;MetaSVM_score&quot;                                        
+## [346] &quot;MetaSVM_rankscore&quot;                                    
+## [347] &quot;MetaSVM_pred&quot;                                         
+## [348] &quot;MetaLR_score&quot;                                         
+## [349] &quot;MetaLR_rankscore&quot;                                     
+## [350] &quot;MetaLR_pred&quot;                                          
+## [351] &quot;Reliability_index&quot;                                    
+## [352] &quot;VEST3_score&quot;                                          
+## [353] &quot;VEST3_rankscore&quot;                                      
+## [354] &quot;PROVEAN_score&quot;                                        
+## [355] &quot;PROVEAN_converted_rankscore&quot;                          
+## [356] &quot;PROVEAN_pred&quot;                                         
+## [357] &quot;ANNOVAR_ensembl_precedent_consequence&quot;                
+## [358] &quot;ANNOVAR_ensembl_precedent_gene&quot;                       
+## [359] &quot;unique_variant&quot;</code></pre>
+<p>Only a subset of these annotations may be necessary for a particular association test, and it is unweildy to work with all of them, so it is useful to process the WGSA output file to select fields of interest. The <em>wgsaparsr</em> function <em>parse_to_file()</em> allows field selection by name.</p>
+<p>An additional complication in working with the WGSA output files is that some of the annotation fields are transcript-based, rather than position-based. Thus, if a variant locus is within multiple transcripts, those fields will have multiple entries (often separated by a | character). For example, annotation fields such as <code>VEP_ensembl_Transcript_ID</code> may have many values within a single tab-separated field.</p>
+<p><em>wgsaparsr::parse_to_file()</em> addresses this by splitting such list-fields into multiple rows. Other annotation fields for that variant are duplicated, and associated columns are filled with the same value for each transcript that a particular variant falls within. A consequence of this approach is that the processed annotation file has more lines than the WGSA output file. In freeze 4, processing expanded the annotation by a factor of about 5 - the 220 million annotations result in a 1-billion row database for subsequent aggregation.</p>
+<p><em>wgsaparsr::parse_to_file()</em> reads a snp annotation file, selects specified fields, and expands user-defined transcript-level annotation fields. It produces a tab-separated output file for subsequent analysis.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">desired_columns &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">c</span>(
+    <span class="st">&quot;`#chr`&quot;</span>, <span class="co">#NOTE: backtics on #chr because it starts with special character!</span>
+    <span class="st">&quot;pos&quot;</span>,
+    <span class="st">&quot;ref&quot;</span>,
+    <span class="st">&quot;alt&quot;</span>,
+    <span class="st">&quot;rs_dbSNP147&quot;</span>,
+    <span class="co"># &quot;CADDphred&quot;,</span>
+    <span class="st">&quot;CADD_phred&quot;</span>, <span class="co">#NOTE: different than the indel annotation file.</span>
+    <span class="st">&quot;VEP_ensembl_Transcript_ID&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Gene_Name&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Gene_ID&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Consequence&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Amino_Acid_Change&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF_filter&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF_flags&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF_info&quot;</span>
+    <span class="co"># &quot;1000Gp3_AF&quot; #skipped for the workshop because code doesn&#39;t work with this variable name</span>
+    )
+    
+to_split &lt;-
+<span class="st">    </span><span class="kw">c</span>(
+    <span class="st">&quot;VEP_ensembl_Consequence&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Transcript_ID&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Gene_Name&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Gene_ID&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Amino_Acid_Change&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF_filter&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF_flags&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF_info&quot;</span>
+    )
+  
+<span class="kw">parse_to_file</span>(<span class="st">&quot;snp.tsv.gz&quot;</span>, <span class="st">&quot;parsed_snp.tsv&quot;</span>, desired_columns, to_split, <span class="dt">verbose =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## [1] &quot;Chunks: 1 Lines: &lt;= 10000 Records in current import: 4134&quot;</code></pre>
+<p>Although the output file has fewer columns than the the raw WGSA output file, this .tsv file is not particularly nice to work with in R:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">readLines</span>(<span class="st">&quot;parsed_snp.tsv&quot;</span>, <span class="dt">n=</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] &quot;chr\tpos\tref\talt\trs_dbSNP147\tCADD_phred\tVEP_ensembl_Consequence\tVEP_ensembl_Transcript_ID\tVEP_ensembl_Gene_Name\tVEP_ensembl_Gene_ID\tVEP_ensembl_Amino_Acid_Change\tVEP_ensembl_LoF\tVEP_ensembl_LoF_filter\tVEP_ensembl_LoF_flags\tVEP_ensembl_LoF_info&quot;
+## [2] &quot;22\t19055814\tC\tT\trs546724885\t1.834\tintron_variant\tENST00000537045\tDGCR2\tENSG00000070413\t.\t.\t.\t.\t.&quot;</code></pre>
+<p>However, <em>get_fields()</em> does work on the parsed file to view available fields:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># list all fields in an annotation file: </span>
+<span class="kw">get_fields</span>(<span class="st">&quot;parsed_snp.tsv&quot;</span>)</code></pre></div>
+<pre><code>##  [1] &quot;chr&quot;                           &quot;pos&quot;                          
+##  [3] &quot;ref&quot;                           &quot;alt&quot;                          
+##  [5] &quot;rs_dbSNP147&quot;                   &quot;CADD_phred&quot;                   
+##  [7] &quot;VEP_ensembl_Consequence&quot;       &quot;VEP_ensembl_Transcript_ID&quot;    
+##  [9] &quot;VEP_ensembl_Gene_Name&quot;         &quot;VEP_ensembl_Gene_ID&quot;          
+## [11] &quot;VEP_ensembl_Amino_Acid_Change&quot; &quot;VEP_ensembl_LoF&quot;              
+## [13] &quot;VEP_ensembl_LoF_filter&quot;        &quot;VEP_ensembl_LoF_flags&quot;        
+## [15] &quot;VEP_ensembl_LoF_info&quot;</code></pre>
+<p>The WGSA output files for indel variants differs from the output for SNPs. Some of the field names differ slightly (e.g. “CADDphred” instead of “CADD_phred”), and there are some fields of interest that include feature counts in brackets (e.g. ENCODE_Dnase_cells includes fields like 125{23}). Thus, (for now) <em>wgsaparsr</em> includes <em>parse_indel_to_file()</em>. <em>parse_indel_to_file()</em> is very similar to <em>parse_to_file()</em>, and will likely be incorporated to that function in the near future. The syntax for <em>parse_indel_to_file()</em> is the same as <em>parse_to_file()</em>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">desired_columns_indel &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">c</span>(
+    <span class="st">&quot;`#chr`&quot;</span>, <span class="co">#NOTE: backtics on #chr because it starts with special character!</span>
+    <span class="st">&quot;pos&quot;</span>,
+    <span class="st">&quot;ref&quot;</span>,
+    <span class="st">&quot;alt&quot;</span>,
+    <span class="st">&quot;rs_dbSNP147&quot;</span>,
+    <span class="st">&quot;CADDphred&quot;</span>,
+    <span class="co">#  &quot;CADD_phred&quot;, #NOTE: different than the general annotation file.</span>
+    <span class="st">&quot;VEP_ensembl_Transcript_ID&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Gene_Name&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Gene_ID&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Consequence&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_Amino_Acid_Change&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF_filter&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF_flags&quot;</span>,
+    <span class="st">&quot;VEP_ensembl_LoF_info&quot;</span>
+    <span class="co"># &quot;1000Gp3_AF&quot;#skipped for the workshop because code doesn&#39;t work with this variable name</span>
+    )
+  
+<span class="kw">parse_indel_to_file</span>(<span class="st">&quot;indel.tsv.gz&quot;</span>, <span class="st">&quot;parsed_indel.tsv&quot;</span>, desired_columns_indel, to_split, <span class="dt">verbose =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## [1] &quot;Chunks: 1 Lines: &lt;= 10000 Records in current import: 1024&quot;</code></pre>
+<p>Inspection shows that the output format is the same for this function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">readLines</span>(<span class="st">&quot;parsed_indel.tsv&quot;</span>, <span class="dt">n=</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] &quot;chr\tpos\tref\talt\trs_dbSNP147\tCADDphred\tVEP_ensembl_Consequence\tVEP_ensembl_Transcript_ID\tVEP_ensembl_Gene_Name\tVEP_ensembl_Gene_ID\tVEP_ensembl_Amino_Acid_Change\tVEP_ensembl_LoF\tVEP_ensembl_LoF_filter\tVEP_ensembl_LoF_flags\tVEP_ensembl_LoF_info&quot;
+## [2] &quot;22\t24215519\tC\tCGCGTGTGT\t.\t0.977\tintron_variant,non_coding_transcript_variant\tENST00000405286\tSLC2A11\tENSG00000133460\t.\t.\t.\t.\t.&quot;</code></pre>
+<p>Or as a list,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># list all fields in an annotation file: </span>
+<span class="kw">get_fields</span>(<span class="st">&quot;parsed_indel.tsv&quot;</span>)</code></pre></div>
+<pre><code>##  [1] &quot;chr&quot;                           &quot;pos&quot;                          
+##  [3] &quot;ref&quot;                           &quot;alt&quot;                          
+##  [5] &quot;rs_dbSNP147&quot;                   &quot;CADDphred&quot;                    
+##  [7] &quot;VEP_ensembl_Consequence&quot;       &quot;VEP_ensembl_Transcript_ID&quot;    
+##  [9] &quot;VEP_ensembl_Gene_Name&quot;         &quot;VEP_ensembl_Gene_ID&quot;          
+## [11] &quot;VEP_ensembl_Amino_Acid_Change&quot; &quot;VEP_ensembl_LoF&quot;              
+## [13] &quot;VEP_ensembl_LoF_filter&quot;        &quot;VEP_ensembl_LoF_flags&quot;        
+## [15] &quot;VEP_ensembl_LoF_info&quot;</code></pre>
+<p>If an analyst wished to filter the list of variants prior to aggregation, the processing code could be modified to apply filters during parsing, or the annotation file could be reprocessed to apply filters at this point. Alternatively, filters can also be applied subsequent to aggregation.</p>
+<p>As insurance for this exercise, the parsed files are also available on github:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ben.workshop.path &lt;-<span class="st"> &quot;https://github.com/bheavner/topmed_workshop_2017_bh/raw/master&quot;</span>
+parsedsnpfile &lt;-<span class="st"> &quot;parsed_snp.tsv&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(parsedsnpfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(ben.workshop.path, parsedsnpfile), parsedsnpfile)
+
+parsedindelfile &lt;-<span class="st"> &quot;parsed_indel.tsv&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(parsedindelfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(ben.workshop.path, parsedindelfile), parsedindelfile)</code></pre></div>
 </div>
-<div id="defining-aggregate-units" class="section level3">
-<h3><span class="header-section-number">7.5.2</span> Defining aggregate units</h3>
-<p>We will be using a gene-based aggregation unit, where each unit is a GENCODE gene and 20 kb flanking region upstream and downstream of it. For real data, one will likely filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).</p>
-<p>The aggregation units are defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (for example a variant can be assigned to mutiple genes).</p>
+<div id="defining-gene-ranges-for-aggregation" class="section level3">
+<h3><span class="header-section-number">7.5.2</span> Defining “gene” ranges for aggregation</h3>
+<p>Aggregation requires definition of the desired aggregation units. As a relatively simple example, we will build a list of genomic ranges corresponding to genes as defined by the <a href="https://www.gencodegenes.org/about.html">GENCODE Project</a>.</p>
+<p>The GENCODE Project’s Genomic ENCylopedia Of DNA Elements is available in the well-documented <a href="https://www.gencodegenes.org/data_format.html">.gtf file format</a>. Generally, .gtf files consist of 9 tab-separated fields, some of which may consist of various numbers of key:value pairs.</p>
+<p>The DCC has begun an R package, <em>genetable</em>, to parse and work with .gtf files. This package is under development, and is available on github at <a href="https://github.com/UW-GAC/genetable" class="uri">https://github.com/UW-GAC/genetable</a>. For now, the package can be installed from github using the <em>devtools</em> package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#library(devtools)</span>
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;UW-GAC/genetable&quot;</span>)
+
+<span class="kw">library</span>(genetable)</code></pre></div>
+<p>I’ll be working with the gencode release 19 because it’s the last one on GRCh37. The <a href="ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_human/release_19/gencode.v19.annotation.gtf.gz">file</a> can be downloaded via <a href="https://www.gencodegenes.org/releases/19.html" class="uri">https://www.gencodegenes.org/releases/19.html</a>.</p>
+<p>In this case, I’ve trimmed the gencode file to include only chromosome 22 feature definitions (since that’s the variant annotation set I’m using for the demo).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gtffile &lt;-<span class="st"> &quot;chr22.gtf.gz&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(gtffile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(ben.workshop.path, gtffile), gtffile)
+
+gtf_source &lt;-<span class="st"> &quot;chr22.gtf.gz&quot;</span></code></pre></div>
+<p>The details of the <em>genetable</em> package are of less interest for this workshop, so we’ll just use it - we can import and tidy the .gtf file:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># import the gtf file to a tidy data frame (a tibble)</span>
+gtf &lt;-<span class="st"> </span><span class="kw">import_gencode</span>(gtf_source)
+
+<span class="co"># look at the tibble</span>
+<span class="kw">glimpse</span>(gtf)</code></pre></div>
+<pre><code>## Observations: 119,455
+## Variables: 30
+## $ seqname                          &lt;chr&gt; &quot;chr22&quot;, &quot;chr22&quot;, &quot;chr22&quot;, &quot;c...
+## $ source                           &lt;chr&gt; &quot;HAVANA&quot;, &quot;HAVANA&quot;, &quot;HAVANA&quot;,...
+## $ feature                          &lt;chr&gt; &quot;gene&quot;, &quot;transcript&quot;, &quot;exon&quot;,...
+## $ start                            &lt;int&gt; 16062157, 16062157, 16062157,...
+## $ end                              &lt;int&gt; 16063236, 16063236, 16062316,...
+## $ score                            &lt;chr&gt; &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;,...
+## $ strand                           &lt;chr&gt; &quot;+&quot;, &quot;+&quot;, &quot;+&quot;, &quot;+&quot;, &quot;-&quot;, &quot;-&quot;,...
+## $ frame                            &lt;chr&gt; &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;,...
+## $ gene_id                          &lt;chr&gt; &quot;ENSG00000233866.1&quot;, &quot;ENSG000...
+## $ transcript_id                    &lt;chr&gt; &quot;ENSG00000233866.1&quot;, &quot;ENST000...
+## $ gene_type                        &lt;chr&gt; &quot;lincRNA&quot;, &quot;lincRNA&quot;, &quot;lincRN...
+## $ gene_name                        &lt;chr&gt; &quot;LA16c-4G1.3&quot;, &quot;LA16c-4G1.3&quot;,...
+## $ transcript_type                  &lt;chr&gt; &quot;lincRNA&quot;, &quot;lincRNA&quot;, &quot;lincRN...
+## $ transcript_name                  &lt;chr&gt; &quot;LA16c-4G1.3&quot;, &quot;LA16c-4G1.3-0...
+## $ exon_number                      &lt;chr&gt; NA, NA, &quot;1&quot;, &quot;2&quot;, NA, NA, &quot;1&quot;...
+## $ exon_id                          &lt;chr&gt; NA, NA, &quot;ENSE00001660730.1&quot;, ...
+## $ level                            &lt;chr&gt; &quot;2&quot;, &quot;2&quot;, &quot;2&quot;, &quot;2&quot;, &quot;2&quot;, &quot;2&quot;,...
+## $ remap_substituted_missing_target &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ remap_target_status              &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ remap_num_mappings               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ remap_original_location          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ remap_original_id                &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ remap_status                     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ transcript_support_level         &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ protein_id                       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ havana_transcript                &lt;chr&gt; NA, &quot;OTTHUMT00000276574.1&quot;, &quot;...
+## $ havana_gene                      &lt;chr&gt; &quot;OTTHUMG00000140195.1&quot;, &quot;OTTH...
+## $ ccdsid                           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ ont                              &lt;chr&gt; NA, NA, NA, NA, NA, &quot;PGO:0000...
+## $ tag                              &lt;chr&gt; NA, &quot;basic&quot;, &quot;basic&quot;, &quot;basic&quot;...</code></pre>
+<p>We can see that genomic features are tagged by feature type:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># summarize the number of features by tag.</span>
+<span class="kw">summarize_tag</span>(gtf, <span class="dt">tag =</span> <span class="st">&quot;basic&quot;</span>)</code></pre></div>
+<pre><code>##                 
+##                  FALSE  TRUE
+##   CDS            23995 12441
+##   exon           28836 16135
+##   gene             184     0
+##   Selenocysteine    19     6
+##   start_codon     2881  1319
+##   stop_codon      2235  1300
+##   transcript      3901  2159
+##   UTR             8512  3672</code></pre>
+<p>And we can use these feature type tags to filter the .gtf annotation to extract the starting and ending genomic positions for features of interest, such as features tagged “gene”:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># filter gtf file to return transcript features tagged basic</span>
+basic_transcripts &lt;-<span class="st"> </span><span class="kw">filter_gencode</span>(gtf, <span class="dt">featurearg =</span> <span class="st">&quot;transcript&quot;</span>, <span class="dt">tagarg =</span> <span class="st">&quot;basic&quot;</span>)
+
+<span class="co"># or filter for features == &quot;gene&quot;</span>
+genes &lt;-<span class="st"> </span><span class="kw">filter_gencode</span>(gtf, <span class="dt">featurearg =</span> <span class="st">&quot;gene&quot;</span>)
+
+<span class="co"># define the boundaries of the feature of interest</span>
+<span class="co"># this can be slow for complicated features</span>
+<span class="co">#gene_bounds &lt;- define_boundaries(basic_transcripts, &quot;gene_id&quot;)</span>
+gene_bounds &lt;-<span class="st"> </span><span class="kw">define_boundaries</span>(genes, <span class="st">&quot;gene_id&quot;</span>)
+
+<span class="co"># can check the resulting tibble for sanity</span>
+<span class="kw">glimpse</span>(gene_bounds)</code></pre></div>
+<pre><code>## Observations: 1,263
+## Variables: 10
+## $ chr             &lt;chr&gt; &quot;chr22&quot;, &quot;chr22&quot;, &quot;chr22&quot;, &quot;chr22&quot;, &quot;chr22&quot;, &quot;...
+## $ strand          &lt;chr&gt; &quot;+&quot;, &quot;-&quot;, &quot;-&quot;, &quot;-&quot;, &quot;+&quot;, &quot;-&quot;, &quot;-&quot;, &quot;-&quot;, &quot;+&quot;, &quot;...
+## $ gene_id         &lt;chr&gt; &quot;ENSG00000233866.1&quot;, &quot;ENSG00000229286.1&quot;, &quot;ENS...
+## $ gene_name       &lt;chr&gt; &quot;LA16c-4G1.3&quot;, &quot;LA16c-4G1.4&quot;, &quot;LA16c-4G1.5&quot;, &quot;...
+## $ agg_start       &lt;dbl&gt; 16062157, 16076052, 16084249, 16100517, 161227...
+## $ agg_end         &lt;dbl&gt; 16063236, 16076172, 16084826, 16124973, 161237...
+## $ source          &lt;chr&gt; &quot;HAVANA&quot;, &quot;HAVANA&quot;, &quot;HAVANA&quot;, &quot;HAVANA&quot;, &quot;HAVAN...
+## $ transcript_type &lt;chr&gt; &quot;lincRNA&quot;, &quot;pseudogene&quot;, &quot;pseudogene&quot;, &quot;pseudo...
+## $ merge_count     &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1...
+## $ agg_size        &lt;dbl&gt; 1079, 120, 577, 24456, 1048, 45025, 621, 693, ...</code></pre>
+<p>Finally, <em>genetable</em> includes a function to save a self-documented tab separated file containing the filtered .gtf results:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># save to file</span>
+note &lt;-<span class="st"> &#39;This file includes starting and ending ranges for feature = &quot;gene&quot; in the gtf file.&#39;</span>
+<span class="kw">save_to_file</span>(gene_bounds, <span class="dt">notes =</span> note) <span class="co"># will automatically make file called feature_bounds_DATE.tsv</span></code></pre></div>
+<p>As insurance for this exercise, the genic range definitions that I made last week are also available on github:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ben.workshop.path &lt;-<span class="st"> &quot;https://github.com/bheavner/topmed_workshop_2017_bh/raw/master&quot;</span>
+boundsfile &lt;-<span class="st"> &quot;feature_bounds_20170804.tsv&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(boundsfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(ben.workshop.path, boundsfile), boundsfile)</code></pre></div>
+</div>
+<div id="aggregating-topmed-variants-into-genic-units" class="section level3">
+<h3><span class="header-section-number">7.5.3</span> Aggregating TOPMed variants into genic units</h3>
+<p>Now we’ve generated a set of variants with a manaageable number of annotation fields, and defined the desired aggregation units as sets of genomic ranges. The set of variants may be filtered using the annotation fields we’ve chosen (our list is unfiltered in this example).</p>
+<p>We’re ready to aggregate the variants by genic units. As insurance, we can start with the same set of inputs by downloading what I generated last week:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ben.workshop.path &lt;-<span class="st"> &quot;https://github.com/bheavner/topmed_workshop_2017_bh/raw/master&quot;</span>
+
+parsed_snp_file &lt;-<span class="st"> &quot;parsed_snp.tsv&quot;</span>
+parsed_indel_file &lt;-<span class="st"> &quot;parsed_indel.tsv&quot;</span>
+unit_defs_file &lt;-<span class="st"> &quot;feature_bounds_20170804.tsv&quot;</span>
+
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(parsed_snp_file)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(ben.workshop.path, parsed_snp_file), parsed_snp_file)
+
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(parsed_indel_file)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(ben.workshop.path, parsed_indel_file), parsed_indel_file)
+
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(unit_defs_file)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(ben.workshop.path, unit_defs_file), unit_defs_file)</code></pre></div>
+<p>Load the tab-separated files to tibbles (data frames) to work with:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">snps &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(parsed_snp_file, <span class="dt">comment =</span> <span class="st">&quot;#&quot;</span>)
+indels &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(parsed_indel_file, <span class="dt">comment =</span> <span class="st">&quot;#&quot;</span>)
+unit_defs &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(unit_defs_file, <span class="dt">comment =</span> <span class="st">&quot;#&quot;</span>, <span class="dt">skip =</span> <span class="dv">1</span>)
+unit_defs &lt;-<span class="st"> </span><span class="kw">select</span>(unit_defs, <span class="kw">c</span>(gene_id, agg_start, agg_end))</code></pre></div>
+<p>There’s probably a nice, fast, vectorized to accomplish this task, but for demonstration purposes, we’ll just loop over the unit_defs and select indels and snps within the genomic ranges of interest:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># make an empty tibble</span>
+foo &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">group_id=</span><span class="st">&quot;&quot;</span>, <span class="dt">chromosome=</span><span class="st">&quot;&quot;</span>, <span class="dt">position=</span><span class="st">&quot;&quot;</span>, <span class="dt">ref=</span><span class="st">&quot;&quot;</span>, <span class="dt">alt=</span><span class="st">&quot;&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">length</span>(group_id)<span class="op">&gt;</span><span class="dv">1</span>)
+
+<span class="co"># loop over unit defs</span>
+<span class="cf">for</span> (rowIndex <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(unit_defs)) {
+
+  <span class="co"># select snps and insert to foo ## SNPs could be filtered here</span>
+  snpsToAdd &lt;-<span class="st"> </span><span class="kw">select</span>(snps, <span class="kw">c</span>(chr, pos, ref, alt)) <span class="op">%&gt;%</span>
+<span class="st">    </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">between</span>(pos, unit_defs[rowIndex,]<span class="op">$</span>agg_start, unit_defs[rowIndex,]<span class="op">$</span>agg_end)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># This is the line to vectorize</span>
+<span class="st">    </span><span class="kw">distinct</span>() <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">group_id =</span> unit_defs[rowIndex,]<span class="op">$</span>gene_id)
+  
+  <span class="cf">if</span> (<span class="kw">nrow</span>(snpsToAdd) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {
+    foo &lt;-<span class="st"> </span><span class="kw">add_row</span>(
+      foo,
+      <span class="dt">group_id =</span> snpsToAdd<span class="op">$</span>group_id,
+      <span class="dt">chromosome =</span> snpsToAdd<span class="op">$</span>chr,
+      <span class="dt">position =</span> snpsToAdd<span class="op">$</span>pos,
+      <span class="dt">ref =</span> snpsToAdd<span class="op">$</span>ref,
+      <span class="dt">alt =</span> snpsToAdd<span class="op">$</span>alt
+    )
+  }
+  
+  <span class="co"># select indels and insert to foo ## Indels could be filtered here, too</span>
+  toAdd &lt;-<span class="st"> </span><span class="kw">select</span>(indels, <span class="kw">c</span>(chr, pos, ref, alt)) <span class="op">%&gt;%</span>
+<span class="st">    </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">between</span>(pos, unit_defs[rowIndex, ]<span class="op">$</span>agg_start, unit_defs[rowIndex, ]<span class="op">$</span>agg_end)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># to vectorize</span>
+<span class="st">    </span><span class="kw">distinct</span>() <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">group_id =</span> unit_defs[rowIndex, ]<span class="op">$</span>gene_id)
+  
+  <span class="cf">if</span> (rowIndex <span class="op">%%</span><span class="st"> </span><span class="dv">10</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>){
+    <span class="kw">message</span>(
+      <span class="kw">paste0</span>(<span class="st">&quot;row: &quot;</span>, rowIndex, 
+             <span class="st">&quot; snps to add: &quot;</span>, <span class="kw">nrow</span>(snpsToAdd), 
+             <span class="st">&quot; indels to add: &quot;</span>, <span class="kw">nrow</span>(toAdd)))
+  }
+  
+  <span class="cf">if</span> (<span class="kw">nrow</span>(toAdd) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {
+    foo &lt;-<span class="st"> </span><span class="kw">add_row</span>(
+      foo,
+      <span class="dt">group_id =</span> toAdd<span class="op">$</span>group_id,
+      <span class="dt">chromosome =</span> toAdd<span class="op">$</span>chr,
+      <span class="dt">position =</span> toAdd<span class="op">$</span>pos,
+      <span class="dt">ref =</span> toAdd<span class="op">$</span>ref,
+      <span class="dt">alt =</span> toAdd<span class="op">$</span>alt
+    )
+  }
+}
+
+aggregated_variants &lt;-<span class="st"> </span><span class="kw">distinct</span>(foo)</code></pre></div>
+<p>That may not be fast or pretty, but we’ve now got a set of variants aggregated into genic units using the GENCODE gene model! This set can be saved and used with the analysis pipeline for association testing.</p>
+<p>We can inspect the tibble with glimpse:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(aggregated_variants)</code></pre></div>
+<pre><code>## Observations: 794
+## Variables: 5
+## $ group_id   &lt;chr&gt; &quot;ENSG00000231565.1&quot;, &quot;ENSG00000237299.1&quot;, &quot;ENSG0000...
+## $ chromosome &lt;chr&gt; &quot;22&quot;, &quot;22&quot;, &quot;22&quot;, &quot;22&quot;, &quot;22&quot;, &quot;22&quot;, &quot;22&quot;, &quot;22&quot;, &quot;22...
+## $ position   &lt;chr&gt; &quot;16365024&quot;, &quot;16425814&quot;, &quot;16425814&quot;, &quot;16926604&quot;, &quot;16...
+## $ ref        &lt;chr&gt; &quot;A&quot;, &quot;C&quot;, &quot;C&quot;, &quot;C&quot;, &quot;C&quot;, &quot;G&quot;, &quot;G&quot;, &quot;C&quot;, &quot;G&quot;, &quot;A&quot;, &quot;...
+## $ alt        &lt;chr&gt; &quot;C&quot;, &quot;T&quot;, &quot;T&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;, &quot;A&quot;, &quot;T&quot;, &quot;A&quot;, &quot;G&quot;, &quot;...</code></pre>
+<p>We can do things like counting how many genic units we’re using:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">distinct</span>(<span class="kw">as.tibble</span>(aggregated_variants<span class="op">$</span>group_id))</code></pre></div>
+<pre><code>## # A tibble: 270 x 1
+##                 value
+##                 &lt;chr&gt;
+##  1  ENSG00000231565.1
+##  2  ENSG00000237299.1
+##  3  ENSG00000235759.1
+##  4  ENSG00000227367.1
+##  5 ENSG00000100181.17
+##  6  ENSG00000172967.7
+##  7  ENSG00000215568.3
+##  8  ENSG00000237438.2
+##  9 ENSG00000093072.11
+## 10  ENSG00000241832.1
+## # ... with 260 more rows</code></pre>
+<p>We can look at number of variants per aggregation unit:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">counts &lt;-<span class="st"> </span>aggregated_variants <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(group_id) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarize</span>(<span class="kw">n</span>())</code></pre></div>
+<p>Feel free to look at other summary statistics and do other exploratory data analysis as you’d like, but don’t forget to save it if you’d like to use it for the analysis pipeline!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save</span>(aggregated_variants, <span class="dt">file =</span> <span class="st">&quot;chr22_gene_aggregates.RDA&quot;</span>)</code></pre></div>
+</div>
+<div id="aggregate-unit-for-association-testing-exercise" class="section level3">
+<h3><span class="header-section-number">7.5.4</span> Aggregate unit for association testing exercise</h3>
+<p>We will be using a slightly different gene-based aggregation unit for the assocation testing exercise. As before, this analysis uses a subset of the TOPMed SNP variants that are present in the 1000 Genomes Project. However, in this exercise, the genic units include TOPMed SNP variants from all chromosomes (no indels, and not just chromosome 22 as before). Further, each genic unit is expanded to include the set of TOPMed SNP variants falling within a GENCODE-defined gene along with 20 kb flanking regions upstream and downstream of that range.</p>
+<p>In a larger-scale analysis of TOPMed data, aggregation units could include both TOPMed SNP and indel variants falling within defined aggregation units, and would not be restricted to the variants also present in this chosen subset of the 1000 Genomes Project. An analyst might also choose to filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).</p>
+<p>As before, the aggregation units are defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (for example a variant can be assigned to mutiple genes).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aggfile &lt;-<span class="st"> &quot;variants_by_gene.RData&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(aggfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(workshop.path, aggfile), aggfile)
 aggunit &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(aggfile)
@@ -403,7 +1095,7 @@ mult &lt;-<span class="st"> </span>aggunit <span class="op">%&gt;%</span>
 ## 4 ENSG00000273443.1          1   985900     C     T</code></pre>
 </div>
 <div id="association-testing-with-aggregate-units" class="section level3">
-<h3><span class="header-section-number">7.5.3</span> Association testing with aggregate units</h3>
+<h3><span class="header-section-number">7.5.5</span> Association testing with aggregate units</h3>
 <p>We can run a burden test or SKAT on each of these units using the GENESIS function <code>assocTestSeq</code>. This function expects a list, where each element of the list is a dataframe representing a single aggregation unit and containing the unique variant.id assigned to each variant in a GDS file. We use the TopmedPipeline function <code>aggregateListByAllele</code> to quickly convert our single dataframe to the required format. This function can account for multiallelic variants (the same chromosome, position, and ref, but different alt alleles). The first argument is the GDS object returned by <code>seqOpen</code> (see above).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(TopmedPipeline)
 aggVarList &lt;-<span class="st"> </span><span class="kw">aggregateListByAllele</span>(gds, aggunit)
@@ -448,7 +1140,7 @@ aggVarList &lt;-<span class="st"> </span><span class="kw">aggregateListByAllele<
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqClose</span>(gds)</code></pre></div>
 </div>
 <div id="exercise-1" class="section level3">
-<h3><span class="header-section-number">7.5.4</span> Exercise</h3>
+<h3><span class="header-section-number">7.5.6</span> Exercise</h3>
 <p>Since we are working with a subset of the data, many of the genes listed in <code>group_id</code> have a very small number of variants. Create a new set of units based on position rather than gene name, using the TopmedPipeline function <code>aggregateListByPosition</code>. Then run SKAT using those units.</p>
 
 </div>

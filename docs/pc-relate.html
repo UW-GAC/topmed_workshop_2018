@@ -136,10 +136,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.3</b> Sliding window tests</a></li>
 <li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.4</b> Exercises</a></li>
 <li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Annotation-based aggregate tests</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Variant annotation</a></li>
-<li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-aggregate-units"><i class="fa fa-check"></i><b>7.5.2</b> Defining aggregate units</a></li>
-<li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.3</b> Association testing with aggregate units</a></li>
-<li class="chapter" data-level="7.5.4" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.5.4</b> Exercise</a></li>
+<li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#working-with-variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Working with variant annotation</a></li>
+<li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-gene-ranges-for-aggregation"><i class="fa fa-check"></i><b>7.5.2</b> Defining “gene” ranges for aggregation</a></li>
+<li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#aggregating-topmed-variants-into-genic-units"><i class="fa fa-check"></i><b>7.5.3</b> Aggregating TOPMed variants into genic units</a></li>
+<li class="chapter" data-level="7.5.4" data-path="association-tests.html"><a href="association-tests.html#aggregate-unit-for-association-testing-exercise"><i class="fa fa-check"></i><b>7.5.4</b> Aggregate unit for association testing exercise</a></li>
+<li class="chapter" data-level="7.5.5" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.5</b> Association testing with aggregate units</a></li>
+<li class="chapter" data-level="7.5.6" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.5.6</b> Exercise</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>8</b> Analysis Pipeline</a><ul>
@@ -264,11 +266,11 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 ## No family is specified, and all individuals are treated as singletons.
 ## Relationship inference in the presence of population stratification.
 ## CPU capabilities: Double-Precision SSE2
-## Sun Aug  6 20:51:59 2017    (internal increment: 65536)
+## Sun Aug  6 21:54:36 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 0s
-## Sun Aug  6 20:51:59 2017    Done.</code></pre>
+[==================================================] 100%, completed in 1s
+## Sun Aug  6 21:54:37 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(king)</code></pre></div>
 <pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;afreq&quot;     &quot;IBS0&quot;      &quot;kinship&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(king<span class="op">$</span>kinship)</code></pre></div>
@@ -317,33 +319,33 @@ pca.unrel &lt;-<span class="st"> </span><span class="kw">snpgdsPCA</span>(gds, <
 ## Working space: 86 samples, 6,169 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Sun Aug  6 20:52:02 2017    (internal increment: 8952)
+## Sun Aug  6 21:54:39 2017    (internal increment: 8952)
 ## 
 [..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 0s
-## Sun Aug  6 20:52:02 2017    Begin (eigenvalues and eigenvectors)
-## Sun Aug  6 20:52:02 2017    Done.</code></pre>
+[==================================================] 100%, completed in 1s
+## Sun Aug  6 21:54:40 2017    Begin (eigenvalues and eigenvectors)
+## Sun Aug  6 21:54:40 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project values for relatives</span>
 snp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASNPLoading</span>(pca.unrel, <span class="dt">gdsobj=</span>gds)</code></pre></div>
 <pre><code>## SNP loading:
 ## Working space: 86 samples, 6169 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Sun Aug  6 20:52:02 2017    (internal increment: 65536)
+## Sun Aug  6 21:54:40 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 0s
-## Sun Aug  6 20:52:02 2017    Done.</code></pre>
+## Sun Aug  6 21:54:40 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASampLoading</span>(snp.load, <span class="dt">gdsobj=</span>gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>rels)</code></pre></div>
 <pre><code>## Sample loading:
 ## Working space: 14 samples, 6169 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Sun Aug  6 20:52:02 2017    (internal increment: 65536)
+## Sun Aug  6 21:54:40 2017    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 1s
-## Sun Aug  6 20:52:03 2017    Done.</code></pre>
+[==================================================] 100%, completed in 0s
+## Sun Aug  6 21:54:40 2017    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># combine unrelated and related PCs and order as in GDS file</span>
 pcs &lt;-<span class="st"> </span><span class="kw">rbind</span>(pca.unrel<span class="op">$</span>eigenvect, samp.load<span class="op">$</span>eigenvect)
 <span class="kw">rownames</span>(pcs) &lt;-<span class="st"> </span><span class="kw">c</span>(pca.unrel<span class="op">$</span>sample.id, samp.load<span class="op">$</span>sample.id)
