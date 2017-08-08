@@ -11,7 +11,6 @@
 ## Web Interface and Running an Analysis Application 
 
 ### Exercise 1) Run a single variant analysis.  
-Note that the job will finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
 
 Log into http://dnanexus.com using the user name and password listed on the handout.  
@@ -33,8 +32,7 @@ Parameter inputs:
 * test_type: Single  
 * pheno_id: sample.id  
 * Note: Other options can be left as their defaults, some are only used for aggreagate tests
-
-
+* Note: The job may finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
 ### Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score > 2 and MAF <= 5%.
 _Italic_ inputs below are the same as single variant; update the parameters & files to change to a SKAT test.  Go to the monitor tab.  Click on the Name of a job ( or someone’s ) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.   
