@@ -253,7 +253,7 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 <h3><span class="header-section-number">9.3.1</span> Log in to AWI</h3>
 <p><strong>Replace topmed_## with the user ID from your handout</strong></p>
 <pre><code>$ ssh topmed_##@34.212.243.167
-You will be prompted for your password, e.g. Topmed_## (Note capitolization)
+You will be prompted for your password, e.g. Topmed_## (Note capitalization)
 _Please ignore login warnings
 
 $ source /usr/local/dx-toolkit/environment</code></pre>
@@ -372,8 +372,12 @@ write.csv(pheno,file=&quot;output&quot;,row.names=F)</code></pre>
 <h3><span class="header-section-number">9.4.2</span> Optional Exercise 6) Make QQ plot</h3>
 <p>Make QQ plot of your single variant results.<br />
 Select results from the multiple chromosome run (chr21 and chr22).</p>
-<p>You will need to identify the p-value column name. To view the results file try these options: 1) <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download">dx download</a> to download the results for viewing.<br />
-2) View file through web interface using Visualize ( next to Monitor near top of the page ) and select <a href="https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#"><em>Gzipped File Previewer</em></a> 3) Pipe zipped file though regular linux commands <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--">dx cat</a> to view column names</p>
+<p>You will need to identify the p-value column name. To view the results file try these options:</p>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download">dx download</a> to download the results for viewing.</p></li>
+<li><p>View file through web interface using Visualize ( next to Monitor near top of the page ) and select <a href="https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#"><em>Gzipped File Previewer</em></a></p></li>
+<li><p>Pipe zipped file though regular linux commands <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--">dx cat</a> to view column names</p></li>
+</ol>
 <pre><code>$ dx cat output/folder/file | gunzip | head</code></pre>
 <p>Once you know the name of the p-value column, run qqplot first through web interface and then try running interactivly from the web interface then from the command line.</p>
 <pre><code>$ dx run tools/qqplot</code></pre>
