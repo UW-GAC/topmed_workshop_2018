@@ -67,7 +67,7 @@ References:
 ### Log in to AWI
 **Replace topmed_## with the user ID from your handout**
 ```
-$ ssh topmed_##@34.212.243.167 --timeout 2h
+$ ssh topmed_##@34.212.243.167
 You will be prompted for your password, e.g. Topmed_## (Note capitolization)
 _Please ignore login warnings
 
@@ -76,7 +76,7 @@ $ source /usr/local/dx-toolkit/environment
 
 
 ```
-$ dx login 
+$ dx login  --timeout 2h
 	Enter the following at the prompts
 		username: topmed_##
 		password: Topmed_##
