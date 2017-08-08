@@ -66,7 +66,7 @@ References:
 **Replace topmed_## with the user ID from your handout**
 ```
 $ ssh topmed_##@34.212.243.167
-You will be prompted for your password, e.g. Topmed_## (Note capitolization)
+You will be prompted for your password, e.g. Topmed_## (Note capitalization)
 _Please ignore login warnings
 
 $ source /usr/local/dx-toolkit/environment
