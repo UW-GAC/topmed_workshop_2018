@@ -89,41 +89,14 @@ qqPlot <- function(pval) {
 qqPlot(assoc$Wald.pval)
 ```
 
-## Sliding window tests
-
-For rare variants, we can do burden tests or SKAT on sliding windows using the GENESIS function `assocTestSeqWindow`. We restrict the test to variants with alternate allele frequency < 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme.
-
-```{r assoc_window_burden}
-assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
-                            weight.beta=c(1,1), window.size=5, window.shift=2)
-names(assoc)
-head(assoc$results)
-head(assoc$variantInfo)
-
-qqPlot(assoc$results$Score.pval)
-```
-
-For SKAT, we use the Wu weights.
-
-```{r assoc_window_skat}
-assoc <- assocTestSeqWindow(seqData, nullmod, test="SKAT", AF.range=c(0,0.1),
-                            weight.beta=c(1,25), window.size=5, window.shift=2)
-head(assoc$results)
-head(assoc$variantInfo)
-
-qqPlot(assoc$results$pval_0)
-```
-
 ## Exercises
 
-1. Logistic regression: `fitNullMM` can use a binary phenotype as the outcome variable by specifying the argument `family=binomial`. Use the `status` column in the sample annotation to fit a null model for simulated case/control status, with `sex` and `Population` as covariates. Refer to the documentation for `fitNulMM` to see what other parameters need to be changed for a binary outcome. Then run a single-variant test and a sliding window test using this model.
+1. Logistic regression: `fitNullMM` can use a binary phenotype as the outcome variable by specifying the argument `family=binomial`. Use the `status` column in the sample annotation to fit a null model for simulated case/control status, with `sex` and `Population` as covariates. Refer to the documentation for `fitNulMM` to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.
 
 ```{r exercise_logistic, include=FALSE, eval=FALSE}
 nullmod.status <- fitNullMM(annot, outcome="status", covars=c("sex", "Population"), 
                             covMatList=grm$grm, family=binomial)
 assoc <- assocTestMM(seqData, nullmod, test="Score")
-assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
-                            weight.beta=c(1,1), window.size=5, window.shift=2)
 ```
 
 2. Inverse normal transform: use the TopmedPipeline function `addInvNorm` to perform an inverse normal transform on the `height` variable. (You will need to load the TopmedPipeline library.) Inspect the code for this function by typing `addInvNorm` at the R prompt, so you understand what it is doing. Then for each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.
@@ -158,6 +131,42 @@ ggplot(dat, aes(study, resid.norm, fill=run)) + geom_boxplot()
 dat %>% 
     group_by(study, run) %>%
     summarise(mean=mean(resid.norm), var=var(resid.norm))
+```
+
+## Sliding window tests
+
+For rare variants, we can do burden tests or SKAT on sliding windows using the GENESIS function `assocTestSeqWindow`. We restrict the test to variants with alternate allele frequency < 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme.
+
+```{r assoc_window_burden}
+assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
+                            weight.beta=c(1,1), window.size=5, window.shift=2)
+names(assoc)
+head(assoc$results)
+head(assoc$variantInfo)
+
+qqPlot(assoc$results$Score.pval)
+```
+
+For SKAT, we use the Wu weights.
+
+```{r assoc_window_skat}
+assoc <- assocTestSeqWindow(seqData, nullmod, test="SKAT", AF.range=c(0,0.1),
+                            weight.beta=c(1,25), window.size=5, window.shift=2)
+head(assoc$results)
+head(assoc$variantInfo)
+
+qqPlot(assoc$results$pval_0)
+```
+
+### Exercise
+
+Repeat the previous exercise on logistic regression, this time running a sliding-window test.
+
+```{r exercise_sliding, include=FALSE, eval=FALSE}
+nullmod.status <- fitNullMM(annot, outcome="status", covars=c("sex", "Population"), 
+                            covMatList=grm$grm, family=binomial)
+assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
+                            weight.beta=c(1,1), window.size=5, window.shift=2)
 ```
 
 

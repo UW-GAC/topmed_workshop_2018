@@ -133,15 +133,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>7</b> Association tests</a><ul>
 <li class="chapter" data-level="7.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>7.1</b> Null model</a></li>
 <li class="chapter" data-level="7.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>7.2</b> Single-variant tests</a></li>
-<li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.3</b> Sliding window tests</a></li>
-<li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.4</b> Exercises</a></li>
+<li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.3</b> Exercises</a></li>
+<li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.4</b> Sliding window tests</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.4.1</b> Exercise</a></li>
+</ul></li>
 <li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Annotation-based aggregate tests</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#working-with-variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Working with variant annotation</a></li>
 <li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-gene-ranges-for-aggregation"><i class="fa fa-check"></i><b>7.5.2</b> Defining “gene” ranges for aggregation</a></li>
 <li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#aggregating-topmed-variants-into-genic-units"><i class="fa fa-check"></i><b>7.5.3</b> Aggregating TOPMed variants into genic units</a></li>
 <li class="chapter" data-level="7.5.4" data-path="association-tests.html"><a href="association-tests.html#aggregate-unit-for-association-testing-exercise"><i class="fa fa-check"></i><b>7.5.4</b> Aggregate unit for association testing exercise</a></li>
 <li class="chapter" data-level="7.5.5" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.5</b> Association testing with aggregate units</a></li>
-<li class="chapter" data-level="7.5.6" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.5.6</b> Exercise</a></li>
+<li class="chapter" data-level="7.5.6" data-path="association-tests.html"><a href="association-tests.html#exercise-2"><i class="fa fa-check"></i><b>7.5.6</b> Exercise</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>8</b> Analysis Pipeline</a><ul>
@@ -304,8 +306,15 @@ qqPlot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 <span class="kw">qqPlot</span>(assoc<span class="op">$</span>Wald.pval)</code></pre></div>
 <p><img src="_main_files/figure-html/assoc_single_qq-1.png" width="672" /></p>
 </div>
+<div id="exercises-1" class="section level2">
+<h2><span class="header-section-number">7.3</span> Exercises</h2>
+<ol style="list-style-type: decimal">
+<li><p>Logistic regression: <code>fitNullMM</code> can use a binary phenotype as the outcome variable by specifying the argument <code>family=binomial</code>. Use the <code>status</code> column in the sample annotation to fit a null model for simulated case/control status, with <code>sex</code> and <code>Population</code> as covariates. Refer to the documentation for <code>fitNulMM</code> to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.</p></li>
+<li><p>Inverse normal transform: use the TopmedPipeline function <code>addInvNorm</code> to perform an inverse normal transform on the <code>height</code> variable. (You will need to load the TopmedPipeline library.) Inspect the code for this function by typing <code>addInvNorm</code> at the R prompt, so you understand what it is doing. Then for each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.</p></li>
+</ol>
+</div>
 <div id="sliding-window-tests" class="section level2">
-<h2><span class="header-section-number">7.3</span> Sliding window tests</h2>
+<h2><span class="header-section-number">7.4</span> Sliding window tests</h2>
 <p>For rare variants, we can do burden tests or SKAT on sliding windows using the GENESIS function <code>assocTestSeqWindow</code>. We restrict the test to variants with alternate allele frequency &lt; 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">assoc &lt;-<span class="st"> </span><span class="kw">assocTestSeqWindow</span>(seqData, nullmod, <span class="dt">test=</span><span class="st">&quot;Burden&quot;</span>, <span class="dt">AF.range=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>),
                             <span class="dt">weight.beta=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">window.size=</span><span class="dv">5</span>, <span class="dt">window.shift=</span><span class="dv">2</span>)
@@ -357,13 +366,10 @@ qqPlot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 ## 6         6      1   1 1735725  1126 0.0022202487 23.701317</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qqPlot</span>(assoc<span class="op">$</span>results<span class="op">$</span>pval_<span class="dv">0</span>)</code></pre></div>
 <p><img src="_main_files/figure-html/assoc_window_skat-1.png" width="672" /></p>
+<div id="exercise-1" class="section level3">
+<h3><span class="header-section-number">7.4.1</span> Exercise</h3>
+<p>Repeat the previous exercise on logistic regression, this time running a sliding-window test.</p>
 </div>
-<div id="exercises-1" class="section level2">
-<h2><span class="header-section-number">7.4</span> Exercises</h2>
-<ol style="list-style-type: decimal">
-<li><p>Logistic regression: <code>fitNullMM</code> can use a binary phenotype as the outcome variable by specifying the argument <code>family=binomial</code>. Use the <code>status</code> column in the sample annotation to fit a null model for simulated case/control status, with <code>sex</code> and <code>Population</code> as covariates. Refer to the documentation for <code>fitNulMM</code> to see what other parameters need to be changed for a binary outcome. Then run a single-variant test and a sliding window test using this model.</p></li>
-<li><p>Inverse normal transform: use the TopmedPipeline function <code>addInvNorm</code> to perform an inverse normal transform on the <code>height</code> variable. (You will need to load the TopmedPipeline library.) Inspect the code for this function by typing <code>addInvNorm</code> at the R prompt, so you understand what it is doing. Then for each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.</p></li>
-</ol>
 </div>
 <div id="annotation-based-aggregate-tests" class="section level2">
 <h2><span class="header-section-number">7.5</span> Annotation-based aggregate tests</h2>
@@ -1140,7 +1146,7 @@ aggVarList &lt;-<span class="st"> </span><span class="kw">aggregateListByAllele<
 <p><img src="_main_files/figure-html/assoc_aggregate-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqClose</span>(gds)</code></pre></div>
 </div>
-<div id="exercise-1" class="section level3">
+<div id="exercise-2" class="section level3">
 <h3><span class="header-section-number">7.5.6</span> Exercise</h3>
 <p>Since we are working with a subset of the data, many of the genes listed in <code>group_id</code> have a very small number of variants. Create a new set of units based on position rather than gene name, using the TopmedPipeline function <code>aggregateListByPosition</code>. Then run SKAT using those units.</p>
 
