@@ -220,7 +220,7 @@ annot &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><spa
 ## 6      0</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># phenotypes by subject ID</span>
 phenfile &lt;-<span class="st"> &quot;phenotype_annotation.RData&quot;</span>
-<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(phenfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, phenfile), phenfile)
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(phenfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(workshop.path, phenfile), phenfile)
 phen &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(phenfile)
 <span class="kw">head</span>(<span class="kw">pData</span>(phen))</code></pre></div>
 <pre><code>##   subject_id sex age height   study

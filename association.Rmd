@@ -17,7 +17,7 @@ head(pData(annot))
 
 # phenotypes by subject ID
 phenfile <- "phenotype_annotation.RData"
-if (!file.exists(phenfile)) download.file(file.path(data.path, phenfile), phenfile)
+if (!file.exists(phenfile)) download.file(file.path(workshop.path, phenfile), phenfile)
 phen <- TopmedPipeline::getobj(phenfile)
 head(pData(phen))
 varMetadata(phen)
