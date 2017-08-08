@@ -249,7 +249,7 @@ _Note that the output file name cannot contain a colon (e.g. output file name ca
 ### Optional Exercise 8) Create a regional association plot using LD extracted from your data set
 This process requires two steps, one to extract the LD for all variants in the region and one to create the plot.  Sequencing data sets often contain variants not in external refernce panels, so it is helpful to create your own LD reference.
 
-Step 1: Run GILD (**G**DS **I**nto **LD**) App (tools/gild_v1)
+*Step 1*: Run GILD (**G**DS **I**nto **LD**) App (tools/gild_v1)
 
 File inputs:
 * gds_file -> genotypes/1KG_phase3_subset_chr22.gds
@@ -264,7 +264,7 @@ Parameter inputs:
 
 _Note: this can take 10-15 mins to complete_
 
-Step 2: Run AssocPlot (tools/assocplot)
+*Step 2*: Run AssocPlot (tools/assocplot)
 
 File inputs:  
 
