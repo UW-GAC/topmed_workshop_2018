@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-07">
+<meta name="date" content="2017-08-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -206,7 +206,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">9.2</span> Web Interface and Running an Analysis Application</h2>
 <div id="exercise-1-run-a-single-variant-analysis." class="section level3">
 <h3><span class="header-section-number">9.2.1</span> Exercise 1) Run a single variant analysis.</h3>
-<p>Note that the job will finish instantaneously if you don’t change the output file name. It knows that you are running the exact same job and will just reuse results from previous analyses.</p>
 <p>Log into <a href="http://dnanexus.com" class="uri">http://dnanexus.com</a> using the user name and password listed on the handout.<br />
 Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong>Topmed_#</strong>. <em>Ignore warning about default billing account.</em> Navigate to and select <strong>(dcc:tools/genesis_v0.7)</strong></p>
 <p>File inputs:<br />
@@ -221,7 +220,7 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 * prefix for output filename: single_chr1<br />
 * test_type: Single<br />
 * pheno_id: sample.id<br />
-* Note: Other options can be left as their defaults, some are only used for aggreagate tests</p>
+* Note: Other options can be left as their defaults, some are only used for aggreagate tests * Note: The job may finish instantaneously if you don’t change the output file name. It knows that you are running the exact same job and will just reuse results from previous analyses.</p>
 </div>
 <div id="exercise-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5." class="section level3">
 <h3><span class="header-section-number">9.2.2</span> Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</h3>
@@ -253,12 +252,12 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 <div id="log-in-to-awi" class="section level3">
 <h3><span class="header-section-number">9.3.1</span> Log in to AWI</h3>
 <p><strong>Replace topmed_## with the user ID from your handout</strong></p>
-<pre><code>$ ssh topmed_##@34.212.243.167 --timeout 2h
+<pre><code>$ ssh topmed_##@34.212.243.167
 You will be prompted for your password, e.g. Topmed_## (Note capitolization)
 _Please ignore login warnings
 
 $ source /usr/local/dx-toolkit/environment</code></pre>
-<pre><code>$ dx login 
+<pre><code>$ dx login  --timeout 2h
     Enter the following at the prompts
         username: topmed_##
         password: Topmed_##

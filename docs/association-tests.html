@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-07">
+<meta name="date" content="2017-08-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -236,6 +236,7 @@ phen &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span
 ## height           subject&#39;s height in cm
 ## study                  study identifier</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># merge sample annotation with phenotypes</span>
+<span class="kw">library</span>(dplyr)
 dat &lt;-<span class="st"> </span><span class="kw">pData</span>(annot) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">left_join</span>(<span class="kw">pData</span>(phen), <span class="dt">by=</span><span class="kw">c</span>(<span class="st">&quot;subject.id&quot;</span>=<span class="st">&quot;subject_id&quot;</span>, <span class="st">&quot;sex&quot;</span>=<span class="st">&quot;sex&quot;</span>))
 meta &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<span class="kw">varMetadata</span>(annot), <span class="kw">varMetadata</span>(phen)[<span class="dv">3</span><span class="op">:</span><span class="dv">5</span>,,<span class="dt">drop=</span><span class="ot">FALSE</span>])

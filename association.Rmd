@@ -23,6 +23,7 @@ head(pData(phen))
 varMetadata(phen)
 
 # merge sample annotation with phenotypes
+library(dplyr)
 dat <- pData(annot) %>%
     left_join(pData(phen), by=c("subject.id"="subject_id", "sex"="sex"))
 meta <- bind_rows(varMetadata(annot), varMetadata(phen)[3:5,,drop=FALSE])
