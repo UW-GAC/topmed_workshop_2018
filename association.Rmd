@@ -93,15 +93,16 @@ qqPlot(assoc$Wald.pval)
 
 1. Logistic regression: `fitNullMM` can use a binary phenotype as the outcome variable by specifying the argument `family=binomial`. Use the `status` column in the sample annotation to fit a null model for simulated case/control status, with `sex` and `Population` as covariates. Refer to the documentation for `fitNulMM` to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.
 
-```{r exercise_logistic, include=FALSE, eval=FALSE}
+```{r exercise_logistic}
 nullmod.status <- fitNullMM(annot, outcome="status", covars=c("sex", "Population"), 
-                            covMatList=grm$grm, family=binomial)
+                            covMatList=grm$grm, family=binomial, verbose=FALSE)
 assoc <- assocTestMM(seqData, nullmod.status, test="Score")
+head(assoc)
 ```
 
 2. Inverse normal transform: use the TopmedPipeline function `addInvNorm` to perform an inverse normal transform on the `height` variable. (You will need to load the TopmedPipeline library.) Inspect the code for this function by typing `addInvNorm` at the R prompt, so you understand what it is doing. Then for each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.
 
-```{r exercise_invnorm, include=FALSE, eval=FALSE}
+```{r exercise_invnorm}
 library(TopmedPipeline)
 annot.norm <- addInvNorm(annot, nullmod, outcome="height", covars=c("sex", "age", "study"))
 head(pData(annot.norm))
@@ -162,11 +163,12 @@ qqPlot(assoc$results$pval_0)
 
 Repeat the previous exercise on logistic regression, this time running a sliding-window test.
 
-```{r exercise_sliding, include=FALSE, eval=FALSE}
+```{r exercise_sliding}
 nullmod.status <- fitNullMM(annot, outcome="status", covars=c("sex", "Population"), 
-                            covMatList=grm$grm, family=binomial)
-assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
+                            covMatList=grm$grm, family=binomial, verbose=FALSE)
+assoc <- assocTestSeqWindow(seqData, nullmod.status, test="Burden", AF.range=c(0,0.1),
                             weight.beta=c(1,1), window.size=5, window.shift=2)
+head(assoc$results)
 ```
 
 
@@ -557,31 +559,36 @@ head(assoc$variantInfo[[1]])
 qqPlot(assoc$results$Score.pval)
 ```
 
-```{r assoc_close}
-seqClose(gds)
-```
-
 
 ### Exercise
 
 Since we are working with a subset of the data, many of the genes listed in `group_id` have a very small number of variants. Create a new set of units based on position rather than gene name, using the TopmedPipeline function `aggregateListByPosition`. Then run SKAT using those units.
 
-```{r exercise_aggregate, include=FALSE, eval=FALSE}
+```{r exercise_aggregate}
 agg2 <- aggunit %>%
     mutate(chromosome=factor(chromosome, levels=c(1:22, "X"))) %>%
     select(chromosome, position) %>%
     distinct() %>%
     group_by(chromosome) %>%
     summarise(min=min(position), max=max(position))
+head(agg2)
+
 aggByPos <- bind_rows(lapply(1:nrow(agg2), function(i) {
     data.frame(chromosome=agg2$chromosome[i],
                start=seq(agg2$min[i], agg2$max[i]-1e6, length.out=10),
                end=seq(agg2$min[i]+1e6, agg2$max[i], length.out=10))
 })) %>%
     mutate(group_id=1:n())
+head(aggByPos)
 
 aggVarList <- aggregateListByPosition(gds, aggByPos)
+aggVarList[1:2]
+
 assoc <- assocTestSeq(seqData, nullmod, test="SKAT", aggVarList=aggVarList,
                       AF.range=c(0,0.1), weight.beta=c(1,25))
 head(assoc$results)
+```
+
+```{r assoc_close}
+seqClose(gds)
 ```

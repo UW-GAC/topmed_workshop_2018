@@ -16,10 +16,11 @@ knitr::opts_chunk$set(echo=TRUE, message=FALSE)
 # Introduction
 
 This site contains course materials for the TOPMed Analysis Workshop, August 7-9 2017.
+Data used is located in the [github repository](https://github.com/UW-GAC/topmed_workshop_2017) from which the site is built, as well as in the [TOPMed analysis pipeline](https://github.com/smgogarten/analysis_pipeline).
 
 To work through the exercises, log into RStudio Server at [http://52.25.72.68:8787](http://52.25.72.68:8787) with your username and password.
 
-Slides for lectures will be posted here:\
+Slides for lectures are posted here:\
 [https://www.nhlbiwgs.org/topmed-analysis-workshop-2017-materials](https://www.nhlbiwgs.org/topmed-analysis-workshop-2017-materials)
 
 Join the Slack channel here:\
