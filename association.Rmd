@@ -96,7 +96,7 @@ qqPlot(assoc$Wald.pval)
 ```{r exercise_logistic, include=FALSE, eval=FALSE}
 nullmod.status <- fitNullMM(annot, outcome="status", covars=c("sex", "Population"), 
                             covMatList=grm$grm, family=binomial)
-assoc <- assocTestMM(seqData, nullmod, test="Score")
+assoc <- assocTestMM(seqData, nullmod.status, test="Score")
 ```
 
 2. Inverse normal transform: use the TopmedPipeline function `addInvNorm` to perform an inverse normal transform on the `height` variable. (You will need to load the TopmedPipeline library.) Inspect the code for this function by typing `addInvNorm` at the R prompt, so you understand what it is doing. Then for each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.
@@ -573,7 +573,7 @@ agg2 <- aggunit %>%
     distinct() %>%
     group_by(chromosome) %>%
     summarise(min=min(position), max=max(position))
-aggByPos <- bind_rows((lapply(1:nrow(agg2), function(i) {
+aggByPos <- bind_rows(lapply(1:nrow(agg2), function(i) {
     data.frame(chromosome=agg2$chromosome[i],
                start=seq(agg2$min[i], agg2$max[i]-1e6, length.out=10),
                end=seq(agg2$min[i]+1e6, agg2$max[i], length.out=10))
