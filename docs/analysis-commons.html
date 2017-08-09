@@ -393,7 +393,7 @@ Select results from the multiple chromosome run (chr21 and chr22).</p>
 <div id="optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set" class="section level3">
 <h3><span class="header-section-number">9.4.4</span> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</h3>
 <p>This process requires two steps, one to extract the LD for all variants in the region and one to create the plot. Sequencing data sets often contain variants not in external refernce panels, so it is helpful to create your own LD reference.</p>
-<p>Step 1: Run GILD (<strong>G</strong>DS <strong>I</strong>nto <strong>LD</strong>) App (tools/gild_v1)</p>
+<p><strong>Step 1</strong>: Run GILD (<strong>G</strong>DS <strong>I</strong>nto <strong>LD</strong>) App (tools/gild_v1)</p>
 <p>File inputs: * gds_file -&gt; genotypes/1KG_phase3_subset_chr22.gds</p>
 <p>Parameter inputs:</p>
 <ul>
@@ -404,7 +404,7 @@ Select results from the multiple chromosome run (chr21 and chr22).</p>
 <li>output/YOURNAME</li>
 </ul>
 <p><em>Note: this can take 10-15 mins to complete</em></p>
-<p>Step 2: Run AssocPlot (tools/assocplot)</p>
+<p><strong>Step 2</strong>: Run AssocPlot (tools/assocplot)</p>
 <p>File inputs:</p>
 <ul>
 <li>datafile -&gt; single variant association results output for chr22</li>
