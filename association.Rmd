@@ -30,7 +30,7 @@ meta <- bind_rows(varMetadata(annot), varMetadata(phen)[3:5,,drop=FALSE])
 annot <- AnnotatedDataFrame(dat, meta)
 
 # load the GRM
-data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
 grmfile <- "grm.RData"
 if (!file.exists(grmfile)) download.file(file.path(data.path, grmfile), grmfile)
 grm <- TopmedPipeline::getobj(grmfile)
@@ -47,7 +47,7 @@ nullmod <- fitNullMM(annot, outcome="height", covars=c("sex", "age", "study"),
 ```
 
 We also recommend taking an inverse normal transform of the residuals and refitting the model. This is done separately for each group, and the transformed residuals are rescaled. See the full procedure in the  
-[pipeline documenation](https://github.com/smgogarten/analysis_pipeline#association-testing).
+[pipeline documenation](https://github.com/UW-GAC/analysis_pipeline#association-testing).
 
 ## Single-variant tests
 

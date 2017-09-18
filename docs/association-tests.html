@@ -245,7 +245,7 @@ meta &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<span class
 annot &lt;-<span class="st"> </span><span class="kw">AnnotatedDataFrame</span>(dat, meta)
 
 <span class="co"># load the GRM</span>
-data.path &lt;-<span class="st"> &quot;https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata&quot;</span>
+data.path &lt;-<span class="st"> &quot;https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata&quot;</span>
 grmfile &lt;-<span class="st"> &quot;grm.RData&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(grmfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, grmfile), grmfile)
 grm &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(grmfile)
@@ -256,7 +256,7 @@ grm &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span 
 nullmod &lt;-<span class="st"> </span><span class="kw">fitNullMM</span>(annot, <span class="dt">outcome=</span><span class="st">&quot;height&quot;</span>, <span class="dt">covars=</span><span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="st">&quot;study&quot;</span>), 
                      <span class="dt">covMatList=</span>grm<span class="op">$</span>grm, <span class="dt">group.var=</span><span class="st">&quot;study&quot;</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p>We also recommend taking an inverse normal transform of the residuals and refitting the model. This is done separately for each group, and the transformed residuals are rescaled. See the full procedure in the<br />
-<a href="https://github.com/smgogarten/analysis_pipeline#association-testing">pipeline documenation</a>.</p>
+<a href="https://github.com/UW-GAC/analysis_pipeline#association-testing">pipeline documenation</a>.</p>
 </div>
 <div id="single-variant-tests" class="section level2">
 <h2><span class="header-section-number">7.2</span> Single-variant tests</h2>

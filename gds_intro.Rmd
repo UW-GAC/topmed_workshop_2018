@@ -8,7 +8,7 @@ To use the R packages developed at the DCC for sequence data, we first need to c
 
 ```{r vcf2gds}
 library(SeqArray)
-data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
 vcffile <- "1KG_phase3_subset_chr1.vcf.gz"
 if (!file.exists(vcffile)) download.file(file.path(data.path, vcffile), vcffile)
 gdsfile <- "1KG_phase3_subset_chr1.gds"

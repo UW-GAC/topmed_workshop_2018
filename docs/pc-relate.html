@@ -199,7 +199,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Step 1 is to get initial estimates of kinship using <a href="http://www.ncbi.nlm.nih.gov/pubmed/20926424">KING</a>, which is robust to population structure but not admixture. The KING algorithm is available in SNPRelate. Typically we select a subset of variants for this calculation with LD pruning.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># use a GDS file with all chromosomes</span>
 <span class="kw">library</span>(SeqArray)
-data.path &lt;-<span class="st"> &quot;https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata&quot;</span>
+data.path &lt;-<span class="st"> &quot;https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata&quot;</span>
 gdsfile &lt;-<span class="st"> &quot;1KG_phase3_subset.gds&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(gdsfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data.path, gdsfile), gdsfile)
 gds &lt;-<span class="st"> </span><span class="kw">seqOpen</span>(gdsfile)
