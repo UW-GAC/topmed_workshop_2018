@@ -28,6 +28,6 @@ Join the Slack channel here:\
 
 If you are new to R, you might find the following material helpful:
 
-- [Introduction to R](http://faculty.washington.edu/kenrice/rintro/indexSEA15.shtml) matexrials from SISG Module 3
+- [Introduction to R](http://faculty.washington.edu/kenrice/rintro/indexSEA15.shtml) materials from SISG Module 3
 - [Graphics with ggplot2](http://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html) tutorial
 - Data manipulation with [dplyr](http://dplyr.tidyverse.org/)
