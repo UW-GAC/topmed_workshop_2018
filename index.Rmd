@@ -5,7 +5,7 @@ site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
 link-citations: yes
-github-repo: UW-GAC/topmed_workshop_2017
+github-repo: UW-GAC/topmed_workshop_2018
 description: "Course materials for the TOPMed analysis workshop"
 ---
 
@@ -15,8 +15,8 @@ knitr::opts_chunk$set(echo=TRUE, message=FALSE)
 
 # Introduction
 
-This site contains course materials for the TOPMed Analysis Workshop, August 7-9 2017.
-Data used is located in the [github repository](https://github.com/UW-GAC/topmed_workshop_2017) from which the site is built, as well as in the [TOPMed analysis pipeline](https://github.com/UW-GAC/analysis_pipeline).
+This site contains course materials for SISG Module 12: Computational Pipeline for WGS Data, July 18-20, 2018.
+Data used is located in the [github repository](https://github.com/UW-GAC/topmed_workshop_2018) from which the site is built, as well as in the [TOPMed analysis pipeline](https://github.com/UW-GAC/analysis_pipeline).
 
 To work through the exercises, log into RStudio Server at [http://52.25.72.68:8787](http://52.25.72.68:8787) with your username and password.
 
@@ -28,6 +28,6 @@ Join the Slack channel here:\
 
 If you are new to R, you might find the following material helpful:
 
-- [Introduction to R](http://faculty.washington.edu/kenrice/rintro/indexSEA15.shtml) class from the Summer Institute in Statistical Genetics
+- [Introduction to R](http://faculty.washington.edu/kenrice/rintro/indexSEA15.shtml) matexrials from SISG Module 3
 - [Graphics with ggplot2](http://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html) tutorial
 - Data manipulation with [dplyr](http://dplyr.tidyverse.org/)
