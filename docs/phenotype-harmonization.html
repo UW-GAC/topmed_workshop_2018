@@ -7,14 +7,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>TOPMed Analysis Workshop</title>
   <meta name="description" content="Course materials for the TOPMed analysis workshop">
-  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="TOPMed Analysis Workshop" />
   <meta property="og:type" content="book" />
   
   
   <meta property="og:description" content="Course materials for the TOPMed analysis workshop" />
-  <meta name="github-repo" content="UW-GAC/topmed_workshop_2017" />
+  <meta name="github-repo" content="UW-GAC/topmed_workshop_2018" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="TOPMed Analysis Workshop" />
@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-09">
+<meta name="date" content="2018-05-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -310,7 +310,7 @@ annot &lt;-<span class="st"> </span><span class="kw">AnnotatedDataFrame</span>(p
 <div id="obtain-the-genetic-relatedness-matrix" class="section level3">
 <h3><span class="header-section-number">5.3.2</span> Obtain the genetic relatedness matrix</h3>
 <p>Becase it is an input to the mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data_path &lt;-<span class="st"> &quot;https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata&quot;</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data_path &lt;-<span class="st"> &quot;https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata&quot;</span>
 grmfile &lt;-<span class="st"> &quot;grm.RData&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(grmfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data_path, grmfile), grmfile)
 grm &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(grmfile)
@@ -459,17 +459,18 @@ annot<span class="op">$</span>residuals &lt;-<span class="st"> </span>mod_<span 
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
 "github": false,
 "facebook": true,
 "twitter": true,
 "google": false,
+"linkedin": false,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",

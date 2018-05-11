@@ -7,14 +7,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>TOPMed Analysis Workshop</title>
   <meta name="description" content="Course materials for the TOPMed analysis workshop">
-  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="TOPMed Analysis Workshop" />
   <meta property="og:type" content="book" />
   
   
   <meta property="og:description" content="Course materials for the TOPMed analysis workshop" />
-  <meta name="github-repo" content="UW-GAC/topmed_workshop_2017" />
+  <meta name="github-repo" content="UW-GAC/topmed_workshop_2018" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="TOPMed Analysis Workshop" />
@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-09">
+<meta name="date" content="2018-05-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -206,18 +206,18 @@ grm &lt;-<span class="st"> </span><span class="kw">snpgdsGRM</span>(gds, <span c
 ## Calculating allele counts/frequencies ...
 ## 
 [..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed      
+[==================================================] 100%, completed in 0s
 ## Excluding 13 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
 ## Working space: 1,126 samples, 1,107 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Wed Aug  9 10:57:55 2017    (internal increment: 680)
+## Fri May 11 11:15:53 2018    (internal increment: 680)
 ## 
 [..................................................]  0%, ETC: ---    
 [==================================================] 100%, completed in 1s
-## Wed Aug  9 10:57:56 2017    Done.</code></pre>
+## Fri May 11 11:15:54 2018    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(grm)</code></pre></div>
-<pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;grm&quot;</code></pre>
+<pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;method&quot;    &quot;grm&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(grm<span class="op">$</span>grm)</code></pre></div>
 <pre><code>## [1] 1126 1126</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqClose</span>(gds)</code></pre></div>
@@ -239,17 +239,18 @@ grm &lt;-<span class="st"> </span><span class="kw">snpgdsGRM</span>(gds, <span c
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
 "github": false,
 "facebook": true,
 "twitter": true,
 "google": false,
+"linkedin": false,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
