@@ -8,7 +8,7 @@ The first step in an association test is to fit the null model. We will need an 
 
 ```{r null_model}
 # sample annotation
-workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2017/raw/master"
+workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master"
 sampfile <- "sample_annotation.RData"
 if (!file.exists(sampfile)) download.file(file.path(workshop.path, sampfile), sampfile)
 annot <- TopmedPipeline::getobj(sampfile)
@@ -42,8 +42,8 @@ We will test for an association between genotype and height, adjusting for sex, 
 
 ```{r}
 library(GENESIS)
-nullmod <- fitNullMM(annot, outcome="height", covars=c("sex", "age", "study"), 
-                     covMatList=grm$grm, group.var="study", verbose=FALSE)
+nullmod <- fitNullModel(annot, outcome="height", covars=c("sex", "age", "study"), 
+                        cov.mat=grm$grm, group.var="study", verbose=FALSE)
 ```
 
 We also recommend taking an inverse normal transform of the residuals and refitting the model. This is done separately for each group, and the transformed residuals are rescaled. See the full procedure in the  
@@ -51,7 +51,7 @@ We also recommend taking an inverse normal transform of the residuals and refitt
 
 ## Single-variant tests
 
-Single-variant tests are the same as in GWAS. We use the `assocTestMM` function in GENESIS. We have to create a `SeqVarData` object including both the GDS file and the sample annotation containing phenotypes.
+Single-variant tests are the same as in GWAS. We use the `assocTestSingle` function in GENESIS. First, we have to create a `SeqVarData` object including both the GDS file and the sample annotation containing phenotypes. We then create a `SeqVarBlockIterator` object to iterate over blocks of variants.
 
 ```{r assoc_single}
 library(SeqVarTools)
@@ -59,7 +59,8 @@ gdsfile <- "1KG_phase3_subset_chr1.gds"
 if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
 gds <- seqOpen(gdsfile)
 seqData <- SeqVarData(gds, sampleData=annot)
-assoc <- assocTestMM(seqData, nullmod)
+iterator <- SeqVarBlockIterator(seqData, verbose=FALSE)
+assoc <- assocTestSingle(iterator, nullmod)
 head(assoc)
 ```
 
@@ -86,47 +87,39 @@ qqPlot <- function(pval) {
         theme_bw()
 }    
 
-qqPlot(assoc$Wald.pval)
+qqPlot(assoc$Score.pval)
 ```
 
 ## Exercises
 
-1. Logistic regression: `fitNullMM` can use a binary phenotype as the outcome variable by specifying the argument `family=binomial`. Use the `status` column in the sample annotation to fit a null model for simulated case/control status, with `sex` and `Population` as covariates. Refer to the documentation for `fitNulMM` to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.
+1. Logistic regression: `fitNullModel` can use a binary phenotype as the outcome variable by specifying the argument `family=binomial`. Use the `status` column in the sample annotation to fit a null model for simulated case/control status, with `sex` and `Population` as covariates. Refer to the documentation for `fitNulModel` to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.
 
 ```{r exercise_logistic}
-nullmod.status <- fitNullMM(annot, outcome="status", covars=c("sex", "Population"), 
-                            covMatList=grm$grm, family=binomial, verbose=FALSE)
-assoc <- assocTestMM(seqData, nullmod.status, test="Score")
+nullmod.status <- fitNullModel(annot, outcome="status", covars=c("sex", "Population"), 
+                               cov.mat=grm$grm, family=binomial, verbose=FALSE)
+seqResetFilter(seqData, verbose=FALSE)
+iterator <- SeqVarBlockIterator(seqData, verbose=FALSE)
+assoc <- assocTestSingle(iterator, nullmod.status, test="Score")
 head(assoc)
 ```
 
-2. Inverse normal transform: use the TopmedPipeline function `addInvNorm` to perform an inverse normal transform on the `height` variable. (You will need to load the TopmedPipeline library.) Inspect the code for this function by typing `addInvNorm` at the R prompt, so you understand what it is doing. Then for each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.
+2. Inverse normal transform: use the function `nullModelInvNorm` to perform an inverse normal transform on the `height` variable. For each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.
 
 ```{r exercise_invnorm}
-library(TopmedPipeline)
-annot.norm <- addInvNorm(annot, nullmod, outcome="height", covars=c("sex", "age", "study"))
-head(pData(annot.norm))
+nullmod.norm.all <- nullModelInvNorm(nullmod, cov.mat=grm$grm, norm.option="all")
+dat.all <- data.frame(sample.id=nullmod.norm.all$sample.id, 
+                      resid.norm=nullmod.norm.all$resid.marginal,
+                      study=annot$study,
+                      run="combined")
 
-addInvNorm
+nullmod.norm.group <- nullModelInvNorm(nullmod, cov.mat=grm$grm, norm.option="by.group")
+dat.group <- data.frame(sample.id=nullmod.norm.group$sample.id, 
+                        resid.norm=nullmod.norm.group$resid.marginal,
+                        study=annot$study,
+                        run="separate")
 
-studies <- sort(unique(annot$study))
-resid.studies <- bind_rows(lapply(studies, function(x) {
-    print(x)
-    annot.study <- annot[annot$study == x,]
-    nullmod.study <- fitNullMM(annot.study, outcome="height", covars=c("sex", "age"), 
-                               covMatList=grm$grm, verbose=FALSE)
-    addInvNorm(annot.study, nullmod.study, outcome="height", covars=c("sex", "age")) %>%
-        pData() %>%
-        select(resid.norm) %>%
-        mutate(study=x, run="separate")
-}))
-head(resid.studies)
+dat <- rbind(dat.all, dat.group)
 
-library(tidyr)
-dat <- pData(annot.norm) %>%
-    select(resid.norm, study) %>% 
-    mutate(run="combined") %>%
-    bind_rows(resid.studies)
 ggplot(dat, aes(study, resid.norm, fill=run)) + geom_boxplot()
 
 dat %>% 
@@ -136,11 +129,12 @@ dat %>%
 
 ## Sliding window tests
 
-For rare variants, we can do burden tests or SKAT on sliding windows using the GENESIS function `assocTestSeqWindow`. We restrict the test to variants with alternate allele frequency < 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme.
+For rare variants, we can do burden tests or SKAT using the GENESIS function `assocTestSeqAggregate`. We restrict the test to variants with alternate allele frequency < 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme. We define a sliding window across the genome using a `SeqVarWindowIterator`.
 
 ```{r assoc_window_burden}
-assoc <- assocTestSeqWindow(seqData, nullmod, test="Burden", AF.range=c(0,0.1),
-                            weight.beta=c(1,1), window.size=5, window.shift=2)
+seqResetFilter(seqData, verbose=FALSE)
+iterator <- SeqVarWindowIterator(seqData, windowSize=5000, windowShift=2000, verbose=FALSE)
+assoc <- assocTestAggregate(iterator, nullmod, test="Burden", AF.max=0.1, weight.beta=c(1,1))
 names(assoc)
 head(assoc$results)
 head(assoc$variantInfo)
@@ -151,8 +145,9 @@ qqPlot(assoc$results$Score.pval)
 For SKAT, we use the Wu weights.
 
 ```{r assoc_window_skat}
-assoc <- assocTestSeqWindow(seqData, nullmod, test="SKAT", AF.range=c(0,0.1),
-                            weight.beta=c(1,25), window.size=5, window.shift=2)
+seqResetFilter(seqData, verbose=FALSE)
+iterator <- SeqVarWindowIterator(seqData, windowSize=5000, windowShift=2000, verbose=FALSE)
+assoc <- assocTestAggregate(iterator, nullmod, test="SKAT", AF.max=0.1, weight.beta=c(1,25))
 head(assoc$results)
 head(assoc$variantInfo)
 
@@ -164,15 +159,21 @@ qqPlot(assoc$results$pval_0)
 Repeat the previous exercise on logistic regression, this time running a sliding-window test.
 
 ```{r exercise_sliding}
-nullmod.status <- fitNullMM(annot, outcome="status", covars=c("sex", "Population"), 
-                            covMatList=grm$grm, family=binomial, verbose=FALSE)
-assoc <- assocTestSeqWindow(seqData, nullmod.status, test="Burden", AF.range=c(0,0.1),
-                            weight.beta=c(1,1), window.size=5, window.shift=2)
+nullmod.status <- fitNullModel(annot, outcome="status", covars=c("sex", "Population"), 
+                               cov.mat=grm$grm, family=binomial, verbose=FALSE)
+seqResetFilter(seqData, verbose=FALSE)
+iterator <- SeqVarWindowIterator(seqData, windowSize=5000, windowShift=2000, verbose=FALSE)
+assoc <- assocTestAggregate(iterator, nullmod, test="SKAT", AF.max=0.1, weight.beta=c(1,25))
 head(assoc$results)
 ```
 
 
 ## Annotation-based aggregate tests
+
+```{r, include=FALSE}
+## REMOVE ME after updating this section
+knitr::opts_chunk$set(eval=FALSE)
+```
 
 **Note:** the code and libraries in this section are under active development, and are not production-level. It is provided to give workshop participants an example of some of the kinds of analysis tasks that might be performed with TOPMed annotation data. Use the code at your own risk, and be warned that it may break in unexpected ways. Github issues and contributions are welcome!
 
@@ -511,6 +512,12 @@ Feel free to look at other summary statistics and do other exploratory data anal
 save(aggregated_variants, file = "chr22_gene_aggregates.RDA")
 ```
 
+```{r, include=FALSE}
+## REMOVE ME after updating this section
+knitr::opts_chunk$set(eval=TRUE)
+```
+
+
 ### Aggregate unit for association testing exercise
 We will be using a slightly different gene-based aggregation unit for the assocation testing exercise. As before, this analysis uses a subset of the TOPMed SNP variants that are present in the 1000 Genomes Project. However, in this exercise, the genic units include TOPMed SNP variants from all chromosomes (no indels, and not just chromosome 22 as before). Further, each genic unit is expanded to include the set of TOPMed SNP variants falling within a GENCODE-defined gene along with 20 kb flanking regions upstream and downstream of that range.
 
@@ -528,7 +535,7 @@ head(aggunit)
 # an example of variant that is present in mutiple groups
 library(dplyr)
 mult <- aggunit %>%
-    group_by(chromosome, position) %>%
+    group_by(chr, pos) %>%
     summarise(n=n()) %>%
     filter(n > 1)
 inner_join(aggunit, mult[2,1:2])
@@ -536,21 +543,23 @@ inner_join(aggunit, mult[2,1:2])
 
 ### Association testing with aggregate units
 
-We can run a burden test or SKAT on each of these units using the GENESIS function `assocTestSeq`. This function expects a list, where each element of the list is a dataframe representing a single aggregation unit and containing the unique variant.id assigned to each variant in a GDS file. We use the TopmedPipeline function `aggregateListByAllele` to quickly convert our single dataframe to the required format. This function can account for multiallelic variants (the same chromosome, position, and ref, but different alt alleles). The first argument is the GDS object returned by `seqOpen` (see above).
+We can run a burden test or SKAT on each of these units using `assocTestAggregate`. We define a `SeqVarListIterator` object where each list element is an aggregate unit. The constructor expects a `GRangesList`, so we use the TopmedPipeline function `aggregateGRangesList` to quickly convert our single dataframe to the required format. This function can account for multiallelic variants (the same chromosome, position, and ref, but different alt alleles).
 
 ```{r aggVarList}
 library(TopmedPipeline)
-aggVarList <- aggregateListByAllele(gds, aggunit)
+aggVarList <- aggregateGRangesList(aggunit)
 length(aggVarList)
 head(names(aggVarList))
 aggVarList[[1]]
+
+seqResetFilter(seqData, verbose=FALSE)
+iterator <- SeqVarListIterator(seqData, variantRanges=aggVarList, verbose=FALSE)
 ```
 
 As in the previous section, we must fit the null model before running the association test.
 
 ```{r assoc_aggregate}
-assoc <- assocTestSeq(seqData, nullmod, test="Burden", aggVarList=aggVarList, 
-                      AF.range=c(0,0.1), weight.beta=c(1,1))
+assoc <- assocTestAggregate(iterator, nullmod, test="Burden", AF.max=0.1, weight.beta=c(1,1))
 names(assoc)
 head(assoc$results)
 head(names(assoc$variantInfo))
@@ -562,30 +571,31 @@ qqPlot(assoc$results$Score.pval)
 
 ### Exercise
 
-Since we are working with a subset of the data, many of the genes listed in `group_id` have a very small number of variants. Create a new set of units based on position rather than gene name, using the TopmedPipeline function `aggregateListByPosition`. Then run SKAT using those units.
+Since we are working with a subset of the data, many of the genes listed in `group_id` have a very small number of variants. Create a new set of units based on position rather than gene name, using the TopmedPipeline function `aggregateGRanges`. Then run SKAT using those units and a `SeqVarRangeIterator`.
 
 ```{r exercise_aggregate}
 agg2 <- aggunit %>%
-    mutate(chromosome=factor(chromosome, levels=c(1:22, "X"))) %>%
-    select(chromosome, position) %>%
+    mutate(chr=factor(chr, levels=c(1:22, "X"))) %>%
+    select(chr, pos) %>%
     distinct() %>%
-    group_by(chromosome) %>%
-    summarise(min=min(position), max=max(position))
+    group_by(chr) %>%
+    summarise(min=min(pos), max=max(pos))
 head(agg2)
 
 aggByPos <- bind_rows(lapply(1:nrow(agg2), function(i) {
-    data.frame(chromosome=agg2$chromosome[i],
+    data.frame(chr=agg2$chr[i],
                start=seq(agg2$min[i], agg2$max[i]-1e6, length.out=10),
                end=seq(agg2$min[i]+1e6, agg2$max[i], length.out=10))
 })) %>%
     mutate(group_id=1:n())
 head(aggByPos)
 
-aggVarList <- aggregateListByPosition(gds, aggByPos)
+aggVarList <- aggregateGRanges(aggByPos)
 aggVarList[1:2]
 
-assoc <- assocTestSeq(seqData, nullmod, test="SKAT", aggVarList=aggVarList,
-                      AF.range=c(0,0.1), weight.beta=c(1,25))
+seqResetFilter(seqData, verbose=FALSE)
+iterator <- SeqVarRangeIterator(seqData, variantRanges=aggVarList, verbose=FALSE)
+assoc <- assocTestAggregate(iterator, nullmod, test="SKAT", AF.max=0.1, weight.beta=c(1,25))
 head(assoc$results)
 ```
 
