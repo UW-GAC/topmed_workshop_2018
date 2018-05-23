@@ -1,7 +1,7 @@
 # Analysis Pipeline
 
 The DCC's analysis pipeline is hosted on github:
-[https://github.com/smgogarten/analysis_pipeline](https://github.com/smgogarten/analysis_pipeline)
+[https://github.com/UW-GAC/analysis_pipeline](https://github.com/UW-GAC/analysis_pipeline)
 
 ## Running on a local cluster
 
@@ -18,7 +18,7 @@ variant_include_file "testdata/variant_include_chr .RData"
 outcome outcome
 covars "sex"
 n_pcs 4
-alt_freq_range "0 0.1"
+alt_freq_max "0.1"
 test "burden"
 test_type "score"
 ```
