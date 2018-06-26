@@ -12,24 +12,22 @@
 
 ### Exercise 1) Run a single variant analysis.  
 
-
+** Part 1: Run null model **
 Log into http://dnanexus.com using the user name and password listed on the handout.  
 Should be in the form of Username:**topmed\_#** and Password:**Topmed\_#**.
 *Ignore warning about default billing account.*
-Navigate to and select **(dcc:tools/genesis\_v0.7)**
+Navigate to and select **(dcc:tools/genesis\_nullmodel)**
 
 File inputs:  
 * phenofile -> phenotype/1KG_pheno.csv  
-* genotypefile -> genotypes/1KG_phase3_subset_chr1.gds  
+* genotypefile -> genotypes/GDS/1KG_phase3_subset_chr1.gds  
 * kinship -> kinship/1KG_kins.Rda  
-* Note: orange aggregation, annotation and genefile can be left empty
 
 Parameter inputs:  
 * output folder: output/YOURFOLDERNAME  
 * outcome _(Column name of the outcome variable)_: outcome  
 * covariates _(case sepecific)_: Population,sex  
 * prefix for output filename: single\_chr1  
-* test_type: Single  
 * pheno_id: sample.id  
 * Note: Other options can be left as their defaults, some are only used for aggreagate tests
 * Note: The job may finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
