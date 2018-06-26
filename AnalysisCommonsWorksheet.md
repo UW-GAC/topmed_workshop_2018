@@ -27,9 +27,9 @@ Parameter inputs:
 * output folder: output/YOURFOLDERNAME  
 * outcome _(Column name of the outcome variable)_: outcome  
 * covariates _(case sepecific)_: Population,sex  
-* prefix for output filename: single\_chr1  
+* prefix for output filename: nullmodel\_outcome  
 * pheno_id: sample.id  
-* Note: Other options can be left as their defaults, some are only used for aggreagate tests
+* Note: Other options can be left as their defaults
 * Note: The job may finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
 ### Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score > 2 and MAF <= 5%.
