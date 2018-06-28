@@ -18,7 +18,7 @@ Should be in the form of Username:**topmed\_#** and Password:**Topmed\_#**.
 
 
 
-####Part 1: Run null model
+#### Part 1: Run null model
 Navigate to and select **(dcc:tools/genesis\_nullmodel)**
 
 File inputs:  
@@ -27,7 +27,7 @@ File inputs:
 * kinship -> kinship/1KG_kins.Rda  
 
 Parameter inputs:  
-* output folder: output/YOURFOLDERNAME  
+* output folder: /output/YOURFOLDERNAME  
 * outcome _(Column name of the outcome variable)_: outcome  
 * covariates _(case sepecific)_: Population,sex  
 * prefix for output filename: nullmodel\_outcome  
@@ -35,27 +35,30 @@ Parameter inputs:
 * Note: Other options can be left as their defaults
 * Note: The job may finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
-####Part 2: Run association tests
+#### Part 2: Run association tests
 Navigate to and select **(dcc:tools/genesis\_tests)**
-* null_model -> output/YOURFOLDERNAME/nullmodel\_outcome.Rda **(output from part1.  If yours has not completed, you can select output/DEMO/nullmodel\_outcome.Rda)**
-* genotypes -> genptypes/GDS/1KG_phase3_subset_chr22.gds
+
+File inputs:  
+* null_model -> /output/YOURFOLDERNAME/nullmodel\_outcome.Rda  **(output from part1.  If yours has not completed, you can select output/DEMO/nullmodel\_outcome.Rda)**
+* genotypes -> genotypes/GDS/1KG_phase3_subset_chr1.gds
+
+Parameter inputs:  
+* output folder: output/YOURFOLDERNAME  
+* prefix for output filename: chr1\_single  
+* test_type: Single  
+* Note: Other options can be left as their defaults
 
 
 
 ### Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score > 2 and MAF <= 5%.
-_Italic_ inputs below are the same as single variant; update the parameters & files to change to a SKAT test.  Go to the monitor tab.  Click on the Name of a job ( or someone’s ) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.   
 
 File inputs:  
-* _phenofile -> phenotype/1KG\_pheno.csv_  
-* _genotypefile -> genotypes/1KG\_phase3\_subset\_chr1.gds_  
-* _kinship -> kinship/1KG\_kins.Rda_  
+* null_model -> /output/YOURFOLDERNAME/nullmodel\_outcome.Rda  **(output from part1.  If yours has not completed, you can select output/DEMO/nullmodel\_outcome.Rda)**
+* genotypefile -> genotypes/1KG\_phase3\_subset\_chr1.gds  
 * annotation -> annotation/1KG\_annotation\_CHR1.txt  
 * genefile -> aggregation/AggUnit\_CHR1\_ucscgene.csv  
 
 Parameter inputs:  
-* _outcome: outcome_  
-* _covariates: Population,sex_  
-* _pheno_id: sample.id_  
 * output folder: output/YOURFOLDERNAME  
 * outputfilename: skat\_chr1\_geneBased\_CADDgt2  
 * test_type: SKAT  
