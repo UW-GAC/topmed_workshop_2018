@@ -12,15 +12,18 @@
 
 ### Exercise 1) Run a single variant analysis.  
 
-** Part 1: Run null model **
 Log into http://dnanexus.com using the user name and password listed on the handout.  
 Should be in the form of Username:**topmed\_#** and Password:**Topmed\_#**.
 *Ignore warning about default billing account.*
+
+
+
+####Part 1: Run null model
 Navigate to and select **(dcc:tools/genesis\_nullmodel)**
 
 File inputs:  
 * phenofile -> phenotype/1KG_pheno.csv  
-* genotypefile -> genotypes/GDS/1KG_phase3_subset_chr1.gds  
+* genotypefile -> genotypes/GDS/1KG_phase3_subset_chr1.gds   **(any chr is fine, is only extracting the sample ids)**
 * kinship -> kinship/1KG_kins.Rda  
 
 Parameter inputs:  
@@ -31,6 +34,13 @@ Parameter inputs:
 * pheno_id: sample.id  
 * Note: Other options can be left as their defaults
 * Note: The job may finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
+
+####Part 2: Run association tests
+Navigate to and select **(dcc:tools/genesis\_tests)**
+* null_model -> output/YOURFOLDERNAME/nullmodel\_outcome.Rda **(output from part1.  If yours has not completed, you can select output/DEMO/nullmodel\_outcome.Rda)**
+* genotypes -> genptypes/GDS/1KG_phase3_subset_chr22.gds
+
+
 
 ### Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score > 2 and MAF <= 5%.
 _Italic_ inputs below are the same as single variant; update the parameters & files to change to a SKAT test.  Go to the monitor tab.  Click on the Name of a job ( or someone’s ) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.   
