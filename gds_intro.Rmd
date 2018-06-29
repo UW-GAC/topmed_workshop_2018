@@ -8,7 +8,7 @@ To use the R packages developed at the DCC for sequence data, we first need to c
 
 ```{r vcf2gds}
 library(SeqArray)
-data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
 vcffile <- "1KG_phase3_subset_chr1.vcf.gz"
 if (!file.exists(vcffile)) download.file(file.path(data.path, vcffile), vcffile)
 gdsfile <- "1KG_phase3_subset_chr1.gds"
@@ -86,15 +86,13 @@ altChar(gds, n=2)[multi.allelic]
 table(isSNV(gds, biallelic=TRUE))
 table(isSNV(gds, biallelic=FALSE))
 # 11 SNVs are multi-allelic
-
-seqClose(gds)
 ```
 
 ## Exercises 
 
 1. Set a filter selecting only multi-allelic variants. Inspect their genotypes using the different methods you learned above. Use the `alleleDosage` method to find dosage for the second (and third, etc.) alternate allele.
 
-```{r exercise_gds, include=FALSE, eval=FALSE}
+```{r exercise_gds}
 seqSetFilter(gds, variant.sel=multi.allelic)
 
 geno <- seqGetData(gds, "genotype")
@@ -123,7 +121,8 @@ head(dos)
 
 2. Use the `hwe` function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes. (Note that the HWE test is only valid for biallelic variants.)
 
-```{r exercise_hwe, include=FALSE, eval=FALSE}
+```{r exercise_hwe}
+seqResetFilter(gds)
 hwe.res <- hwe(gds)
 lowp <- !is.na(hwe.res$p) & hwe.res$p < 1e-4
 head(hwe.res[lowp,])
@@ -131,4 +130,8 @@ head(hwe.res[lowp,])
 seqSetFilter(gds, variant.id=75)
 table(getGenotype(gds))
 table(refDosage(gds))
+```
+
+```{r intro_close}
+seqClose(gds)
 ```

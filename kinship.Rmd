@@ -4,7 +4,7 @@ We can use the [SNPRelate package](https://github.com/zhengxwen/SNPRelate) to co
 
 ```{r grm}
 library(SeqArray)
-data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
 gdsfile <- "1KG_phase3_subset_chr1.gds"
 if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
 gds <- seqOpen(gdsfile)
@@ -34,7 +34,7 @@ set.seed(100)
 ```{r king}
 # use a GDS file with all chromosomes
 library(SeqArray)
-data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
 gdsfile <- "1KG_phase3_subset.gds"
 if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
 gds <- seqOpen(gdsfile)
@@ -203,9 +203,9 @@ seqClose(gds)
 We can detect pedigree errors and sample identity problems by comparing the pedigree with empirical kinship estimates. We use a function from the GWASTools package, `pedigreePairwiseRelatedness`, to get expected pairwise relationships based on the pedigree.
 
 ```{r pedigree}
-pedfile <- "sample_annotation.RData"
+pedfile <- "pedigree.RData"
 if (!file.exists(pedfile)) download.file(file.path(workshop.path, pedfile), pedfile)
-ped <- TopmedPipeline::getobj("pedigree.RData")
+ped <- TopmedPipeline::getobj(pedfile)
 head(ped)
 pw <- GWASTools::pedigreePairwiseRelatedness(ped)
 names(pw)

@@ -141,7 +141,7 @@ save(annot, file = "phenotype_annotation.RData")
 
 Becase it is an input to the mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.
 ```{r}
-data_path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+data_path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
 grmfile <- "grm.RData"
 if (!file.exists(grmfile)) download.file(file.path(data_path, grmfile), grmfile)
 grm <- TopmedPipeline::getobj(grmfile)

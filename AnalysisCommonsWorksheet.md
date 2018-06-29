@@ -11,45 +11,54 @@
 ## Web Interface and Running an Analysis Application 
 
 ### Exercise 1) Run a single variant analysis.  
-Note that the job will finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
-
 
 Log into http://dnanexus.com using the user name and password listed on the handout.  
 Should be in the form of Username:**topmed\_#** and Password:**Topmed\_#**.
 *Ignore warning about default billing account.*
-Navigate to and select **(dcc:tools/genesis\_v0.7)**
+
+
+
+#### Part 1: Run null model
+Navigate to and select **(dcc:tools/genesis\_nullmodel)**
 
 File inputs:  
 * phenofile -> phenotype/1KG_pheno.csv  
-* genotypefile -> genotypes/1KG_phase3_subset_chr1.gds  
+* genotypefile -> genotypes/GDS/1KG_phase3_subset_chr1.gds   **(any chr is fine, is only extracting the sample ids)**
 * kinship -> kinship/1KG_kins.Rda  
-* Note: orange aggregation, annotation and genefile can be left empty
+
+Parameter inputs:  
+* output folder: /output/YOURFOLDERNAME  
+* outcome _(Column name of the outcome variable)_: outcome  
+* covariates _(case sepecific)_: Population,sex  
+* prefix for output filename: nullmodel\_outcome  
+* pheno_id: sample.id  
+* Note: Other options can be left as their defaults
+* Note: The job may finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
+
+#### Part 2: Run association tests
+Navigate to and select **(dcc:tools/genesis\_tests)**
+
+File inputs:  
+* null_model -> /output/YOURFOLDERNAME/nullmodel\_outcome.Rda  **(output from part1.  If yours has not completed, you can select output/DEMO/nullmodel\_outcome.Rda)**
+* genotypes -> genotypes/GDS/1KG_phase3_subset_chr1.gds
 
 Parameter inputs:  
 * output folder: output/YOURFOLDERNAME  
-* outcome _(Column name of the outcome variable)_: outcome  
-* covariates _(case sepecific)_: Population,sex  
-* prefix for output filename: single\_chr1  
+* prefix for output filename: chr1\_single  
 * test_type: Single  
-* pheno_id: sample.id  
-* Note: Other options can be left as their defaults, some are only used for aggreagate tests
+* Note: Other options can be left as their defaults
 
 
 
 ### Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score > 2 and MAF <= 5%.
-_Italic_ inputs below are the same as single variant; update the parameters & files to change to a SKAT test.  Go to the monitor tab.  Click on the Name of a job ( or someone’s ) that successfully completed the single variant analysis, then click “Launch as new Job” and modify the inputs.   
 
 File inputs:  
-* _phenofile -> phenotype/1KG\_pheno.csv_  
-* _genotypefile -> genotypes/1KG\_phase3\_subset\_chr1.gds_  
-* _kinship -> kinship/1KG\_kins.Rda_  
+* null_model -> /output/YOURFOLDERNAME/nullmodel\_outcome.Rda  **(output from part1.  If yours has not completed, you can select output/DEMO/nullmodel\_outcome.Rda)**
+* genotypefile -> genotypes/1KG\_phase3\_subset\_chr1.gds  
 * annotation -> annotation/1KG\_annotation\_CHR1.txt  
 * genefile -> aggregation/AggUnit\_CHR1\_ucscgene.csv  
 
 Parameter inputs:  
-* _outcome: outcome_  
-* _covariates: Population,sex_  
-* _pheno_id: sample.id_  
 * output folder: output/YOURFOLDERNAME  
 * outputfilename: skat\_chr1\_geneBased\_CADDgt2  
 * test_type: SKAT  
@@ -67,8 +76,8 @@ References:
 ### Log in to AWI
 **Replace topmed_## with the user ID from your handout**
 ```
-$ ssh topmed_##@34.212.243.167 --timeout 2h
-You will be prompted for your password, e.g. Topmed_## (Note capitolization)
+$ ssh topmed_##@34.212.243.167
+You will be prompted for your password, e.g. Topmed_## (Note capitalization)
 _Please ignore login warnings
 
 $ source /usr/local/dx-toolkit/environment
@@ -76,7 +85,7 @@ $ source /usr/local/dx-toolkit/environment
 
 
 ```
-$ dx login 
+$ dx login  --timeout 2h
 	Enter the following at the prompts
 		username: topmed_##
 		password: Topmed_##
@@ -224,9 +233,13 @@ Make QQ plot of your single variant results.
 Select results from the multiple chromosome run (chr21 and chr22).  
 
 You will need to identify the p-value column name.  To view the results file try these options:
+
 1) [dx download](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download) to download the results for viewing.  
+
 2) View file through web interface using Visualize ( next to Monitor near top of the page ) and select [*Gzipped File Previewer*](https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#)
+
 3) Pipe zipped file though regular linux commands [dx cat](https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--) to view column names
+
 ```
 $ dx cat output/folder/file | gunzip | head
 ```
@@ -247,7 +260,7 @@ _Note that the output file name cannot contain a colon (e.g. output file name ca
 ### Optional Exercise 8) Create a regional association plot using LD extracted from your data set
 This process requires two steps, one to extract the LD for all variants in the region and one to create the plot.  Sequencing data sets often contain variants not in external refernce panels, so it is helpful to create your own LD reference.
 
-Step 1: Run GILD (**G**DS **I**nto **LD**) App (tools/gild_v1)
+**Step 1**: Run GILD (**G**DS **I**nto **LD**) App (tools/gild_v1)
 
 File inputs:
 * gds_file -> genotypes/1KG_phase3_subset_chr22.gds
@@ -262,7 +275,7 @@ Parameter inputs:
 
 _Note: this can take 10-15 mins to complete_
 
-Step 2: Run AssocPlot (tools/assocplot)
+**Step 2**: Run AssocPlot (tools/assocplot)
 
 File inputs:  
 

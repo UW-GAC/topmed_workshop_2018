@@ -7,14 +7,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>TOPMed Analysis Workshop</title>
   <meta name="description" content="Course materials for the TOPMed analysis workshop">
-  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="TOPMed Analysis Workshop" />
   <meta property="og:type" content="book" />
   
   
   <meta property="og:description" content="Course materials for the TOPMed analysis workshop" />
-  <meta name="github-repo" content="UW-GAC/topmed_workshop_2017" />
+  <meta name="github-repo" content="UW-GAC/topmed_workshop_2018" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="TOPMed Analysis Workshop" />
@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-08-06">
+<meta name="date" content="2018-05-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -133,15 +133,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>7</b> Association tests</a><ul>
 <li class="chapter" data-level="7.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>7.1</b> Null model</a></li>
 <li class="chapter" data-level="7.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>7.2</b> Single-variant tests</a></li>
-<li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.3</b> Sliding window tests</a></li>
-<li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.4</b> Exercises</a></li>
+<li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.3</b> Exercises</a></li>
+<li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.4</b> Sliding window tests</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.4.1</b> Exercise</a></li>
+</ul></li>
 <li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Annotation-based aggregate tests</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#working-with-variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Working with variant annotation</a></li>
 <li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-gene-ranges-for-aggregation"><i class="fa fa-check"></i><b>7.5.2</b> Defining “gene” ranges for aggregation</a></li>
 <li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#aggregating-topmed-variants-into-genic-units"><i class="fa fa-check"></i><b>7.5.3</b> Aggregating TOPMed variants into genic units</a></li>
 <li class="chapter" data-level="7.5.4" data-path="association-tests.html"><a href="association-tests.html#aggregate-unit-for-association-testing-exercise"><i class="fa fa-check"></i><b>7.5.4</b> Aggregate unit for association testing exercise</a></li>
 <li class="chapter" data-level="7.5.5" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.5</b> Association testing with aggregate units</a></li>
-<li class="chapter" data-level="7.5.6" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.5.6</b> Exercise</a></li>
+<li class="chapter" data-level="7.5.6" data-path="association-tests.html"><a href="association-tests.html#exercise-2"><i class="fa fa-check"></i><b>7.5.6</b> Exercise</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>8</b> Analysis Pipeline</a><ul>
@@ -206,7 +208,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">9.2</span> Web Interface and Running an Analysis Application</h2>
 <div id="exercise-1-run-a-single-variant-analysis." class="section level3">
 <h3><span class="header-section-number">9.2.1</span> Exercise 1) Run a single variant analysis.</h3>
-<p>Note that the job will finish instantaneously if you don’t change the output file name. It knows that you are running the exact same job and will just reuse results from previous analyses.</p>
 <p>Log into <a href="http://dnanexus.com" class="uri">http://dnanexus.com</a> using the user name and password listed on the handout.<br />
 Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong>Topmed_#</strong>. <em>Ignore warning about default billing account.</em> Navigate to and select <strong>(dcc:tools/genesis_v0.7)</strong></p>
 <p>File inputs:<br />
@@ -221,7 +222,7 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 * prefix for output filename: single_chr1<br />
 * test_type: Single<br />
 * pheno_id: sample.id<br />
-* Note: Other options can be left as their defaults, some are only used for aggreagate tests</p>
+* Note: Other options can be left as their defaults, some are only used for aggreagate tests * Note: The job may finish instantaneously if you don’t change the output file name. It knows that you are running the exact same job and will just reuse results from previous analyses.</p>
 </div>
 <div id="exercise-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5." class="section level3">
 <h3><span class="header-section-number">9.2.2</span> Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</h3>
@@ -253,12 +254,12 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 <div id="log-in-to-awi" class="section level3">
 <h3><span class="header-section-number">9.3.1</span> Log in to AWI</h3>
 <p><strong>Replace topmed_## with the user ID from your handout</strong></p>
-<pre><code>$ ssh topmed_##@34.212.243.167 --timeout 2h
-You will be prompted for your password, e.g. Topmed_## (Note capitolization)
+<pre><code>$ ssh topmed_##@34.212.243.167
+You will be prompted for your password, e.g. Topmed_## (Note capitalization)
 _Please ignore login warnings
 
 $ source /usr/local/dx-toolkit/environment</code></pre>
-<pre><code>$ dx login 
+<pre><code>$ dx login  --timeout 2h
     Enter the following at the prompts
         username: topmed_##
         password: Topmed_##
@@ -373,8 +374,12 @@ write.csv(pheno,file=&quot;output&quot;,row.names=F)</code></pre>
 <h3><span class="header-section-number">9.4.2</span> Optional Exercise 6) Make QQ plot</h3>
 <p>Make QQ plot of your single variant results.<br />
 Select results from the multiple chromosome run (chr21 and chr22).</p>
-<p>You will need to identify the p-value column name. To view the results file try these options: 1) <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download">dx download</a> to download the results for viewing.<br />
-2) View file through web interface using Visualize ( next to Monitor near top of the page ) and select <a href="https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#"><em>Gzipped File Previewer</em></a> 3) Pipe zipped file though regular linux commands <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--">dx cat</a> to view column names</p>
+<p>You will need to identify the p-value column name. To view the results file try these options:</p>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#download">dx download</a> to download the results for viewing.</p></li>
+<li><p>View file through web interface using Visualize ( next to Monitor near top of the page ) and select <a href="https://platform.dnanexus.com/projects/F5jVpJ80JXGQV51P8GqVxPPQ/visualize#"><em>Gzipped File Previewer</em></a></p></li>
+<li><p>Pipe zipped file though regular linux commands <a href="https://wiki.dnanexus.com/Command-Line-Client/Index-of-dx-Commands#head--">dx cat</a> to view column names</p></li>
+</ol>
 <pre><code>$ dx cat output/folder/file | gunzip | head</code></pre>
 <p>Once you know the name of the p-value column, run qqplot first through web interface and then try running interactivly from the web interface then from the command line.</p>
 <pre><code>$ dx run tools/qqplot</code></pre>
@@ -388,7 +393,7 @@ Select results from the multiple chromosome run (chr21 and chr22).</p>
 <div id="optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set" class="section level3">
 <h3><span class="header-section-number">9.4.4</span> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</h3>
 <p>This process requires two steps, one to extract the LD for all variants in the region and one to create the plot. Sequencing data sets often contain variants not in external refernce panels, so it is helpful to create your own LD reference.</p>
-<p>Step 1: Run GILD (<strong>G</strong>DS <strong>I</strong>nto <strong>LD</strong>) App (tools/gild_v1)</p>
+<p><strong>Step 1</strong>: Run GILD (<strong>G</strong>DS <strong>I</strong>nto <strong>LD</strong>) App (tools/gild_v1)</p>
 <p>File inputs: * gds_file -&gt; genotypes/1KG_phase3_subset_chr22.gds</p>
 <p>Parameter inputs:</p>
 <ul>
@@ -399,7 +404,7 @@ Select results from the multiple chromosome run (chr21 and chr22).</p>
 <li>output/YOURNAME</li>
 </ul>
 <p><em>Note: this can take 10-15 mins to complete</em></p>
-<p>Step 2: Run AssocPlot (tools/assocplot)</p>
+<p><strong>Step 2</strong>: Run AssocPlot (tools/assocplot)</p>
 <p>File inputs:</p>
 <ul>
 <li>datafile -&gt; single variant association results output for chr22</li>
@@ -433,17 +438,18 @@ Select results from the multiple chromosome run (chr21 and chr22).</p>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
 "github": false,
 "facebook": true,
 "twitter": true,
 "google": false,
+"linkedin": false,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
