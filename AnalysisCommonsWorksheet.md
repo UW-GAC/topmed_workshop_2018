@@ -13,13 +13,13 @@
 ### Exercise 1) Run a single variant analysis.  
 
 Log into http://dnanexus.com using the user name and password listed on the handout.  
-Should be in the form of Username:**topmed\_#** and Password:**Topmed\_#**.
+Should be in the form of Username:**topmed\_#** and Password:**TOPMed\_#**.
 *Ignore warning about default billing account.*
 
 
 
 #### Part 1: Run null model
-Navigate to and select **(dcc:tools/genesis\_nullmodel)**
+Navigate to and select **(wgs:tools/genesis\_nullmodel)**
 
 File inputs:  
 * phenofile -> phenotype/1KG_pheno.csv  
@@ -36,7 +36,7 @@ Parameter inputs:
 * Note: The job may finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
 #### Part 2: Run association tests
-Navigate to and select **(dcc:tools/genesis\_tests)**
+Navigate to and select **(wgs:tools/genesis\_tests)**
 
 File inputs:  
 * null_model -> /output/YOURFOLDERNAME/nullmodel\_outcome.Rda  **(output from part1.  If yours has not completed, you can select output/DEMO/nullmodel\_outcome.Rda)**
@@ -77,7 +77,7 @@ References:
 **Replace topmed_## with the user ID from your handout**
 ```
 $ ssh topmed_##@34.212.243.167
-You will be prompted for your password, e.g. Topmed_## (Note capitalization)
+You will be prompted for your password, e.g. TOPMed_## (Note capitalization)
 _Please ignore login warnings
 
 $ source /usr/local/dx-toolkit/environment
@@ -88,11 +88,11 @@ $ source /usr/local/dx-toolkit/environment
 $ dx login  --timeout 2h
 	Enter the following at the prompts
 		username: topmed_##
-		password: Topmed_##
-		project:dcc ( type 0 to select dcc )
+		password: TOPMed_##
+		project:wgs ( type 0 to select wgs )
 
 You can select or change project once you are logged in
-$ dx select dcc
+$ dx select wgs
 ```
 
 
@@ -100,19 +100,19 @@ $ dx select dcc
 ### Exercise 3) Navigate directories, make output directory, examine files
 
 * File paths: \<project\>:/path/to/file.txt
-* Example: dcc:/phenotypes/1KG\_pheno.csv
+* Example: wgs:/phenotypes/1KG\_pheno.csv
 
 
 List directory contents:
 ```
-$ dx select dcc
+$ dx select wgs
 $ dx ls
 $ dx ls /tools
-$ dx ls dcc:/tools
+$ dx ls wgs:/tools
 ```
 Get results from project
 ```
-$ dx download dcc:/phenotype/1KG_pheno.csv
+$ dx download wgs:/phenotype/1KG_pheno.csv
 $ ls
 $ head 1KG_pheno.csv
 ```
