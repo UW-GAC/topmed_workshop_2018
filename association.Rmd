@@ -179,34 +179,34 @@ knitr::opts_chunk$set(eval=FALSE)
 
 Analysts generally aggregate rare variants for association testing to decrease multiple testing burden and increase statistical power. They can group variants that fall within arbitrary ranges (such as sliding windows), or they can group variants with intent. For example, an analyst could aggregate variants that that fall between transcription start sites and stop sites, within coding regions, within regulatory regions, or other genomic features selected from sources like published gene models or position- or transcript-based variant annotation. An analyst could also choose to filter the variants prior or subsequent to aggregation using annotation-based criteria such as functional impact or quality scores.
 
-In this workshop, you will aggregate and filter a set of genomic variants from chromosome 22 using genomic annotation for subsequent association testing. Starting with an annotation file describing variants from TOPMed's Freeze 5 data release that are also in the 1000 Genomes Project, you will define a configuration file to select relevant annotation fields, aggregate the selected variants into genic units, and apply filters to restrict the variants in aggreagation units by predicted functional consequence.
+In this workshop, you will aggregate and filter a set of 1,922 genomic variants from chromosome 22 using genomic annotation for subsequent association testing. Starting with an annotation file describing variants from TOPMed's Freeze 5 data release that are also in the 1000 Genomes Project, you will define a configuration file to select relevant annotation fields, aggregate the selected variants into genic units, and apply filters to restrict the variants in aggreagation units by predicted functional consequence.
 
 ### Working with variant annotation
  
-Variants called from the TOPMed data set are annotated using the [Whole Genome Sequence Annotator (WGSA)](https://sites.google.com/site/jpopgen/wgsa). Output files from WGSA version 0.7 include 366 annotation fields annotating indel variants, and 438 annotation fields annotating snv variants. In each case, some annotation fields are themselves lists of annotation values. Thus, individual variants may be annotated with more than 1000 individual fields. Not all of these fields will be useful for a particular analysis, and some may be incompatible. Thus, you need to parse the WGSA output prior to filtering and aggregation.
+Variants called from the TOPMed data set are annotated using the [Whole Genome Sequence Annotator (WGSA)](https://sites.google.com/site/jpopgen/wgsa). Output files from WGSA version 0.7 include 366 annotation fields annotating indel variants, and 438 annotation fields annotating snv variants. In each case, some annotation fields are themselves lists of annotation values. Thus, individual variants may be annotated with more than 1000 individual fields. Not all of these fields will be useful for a particular analysis, and some may be incompatible, so analysts need to parse the WGSA output prior to filtering and aggregation.
 
- The subsetted variant annotation files we will use for this example are available via github:
+The WGSA-annotated variant annotation files we will use for this exercise are available via github:
 
 ```{r}
-ben.workshop.path <- "https://github.com/bheavner/topmed_workshop_2017_bh/raw/master"
-snpfile <- "snp.tsv.gz"
-if (!file.exists(snpfile)) download.file(file.path(ben.workshop.path, snpfile), snpfile)
+workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/tree/master/data"
+snpfile <- "snv.tsv.gz"
+if (!file.exists(snpfile)) download.file(file.path(workshop.path, snpfile), snpfile)
 
 indelfile <- "indel.tsv.gz"
-if (!file.exists(indelfile)) download.file(file.path(ben.workshop.path, indelfile), indelfile)
+if (!file.exists(indelfile)) download.file(file.path(workshop.path, indelfile), indelfile)
 ```
 
-The WGSA output files are tab-separated text files, with one line per annotated variant. Since there are many annotation fields, these files can be unwieldy to work with directly. As an example, the first two lines of the SNP variant annotation file can be previewed within R:
+WGSA output files are tab-separated text files, with one line per annotated variant. Since there are many annotation fields, these files can be unwieldy to work with directly. As an example, the first two lines of the SNP variant annotation file can be previewed within R:
 
 ```{r}
-readLines("snp.tsv.gz", n=2)
+readLines("snv.tsv.gz", n=2)
 ```
 
-The DCC has begun an R package, *wgsaparsr*, to begin working with WGSA output files. This package is under development, and is available on github at [https://github.com/UW-GAC/wgsaparsr](https://github.com/UW-GAC/wgsaparsr). For now, the package can be installed from github using the *devtools* package:
+The TOPMed DCC uses an R package we developed, *WGSAParsr*, to work with WGSA output files. Briefly, WGSAParsr simplifies the WGSA output files by: 1) selecting a subset of fields; 2) renaming some fields; and 3) simplifying fields that have compound list-entries. The *WGSAParsr* package is under development, and is available on github at [https://github.com/UW-GAC/wgsaparsr](https://github.com/UW-GAC/wgsaparsr). It can be installed using the *devtools* package:
 
 ```{r message=FALSE}
 #library(devtools)
-#devtools::install_github("UW-GAC/wgsaparsr@1.0.0.9003")
+#devtools::install_github("UW-GAC/wgsaparsr", ref = "5.0.6")
 library(wgsaparsr)
 #library(tidyverse) # just in case it's not loaded yet
 library(tibble)
@@ -215,20 +215,22 @@ library(tidyr)
 library(readr)
 ```
 
-*wgsaparsr* includes a *get_fields()* function to list the annotation fields available in a WGSA output file:
+The *wgsaparsr::get_fields()* function lists all of the annotation field headers in a WGSA output file:
 
 ```{r}
-# list all fields in an annotation file: 
-get_fields("snp.tsv.gz")
+# list all fields in an annotation file (transpose to make pretty): 
+t(get_fields("snp.tsv.gz"))
 ```
 
-Only a subset of these annotations may be necessary for a particular association test, and it is unweildy to work with all of them, so it is useful to process the WGSA output file to select fields of interest. The *wgsaparsr* function *parse_to_file()* allows field selection by name.
+Only a subset of these annotations may be necessary for a particular association test, and it is unweildy to work with all of them, so it is useful to process the WGSA output file to select fields of interest.
 
-An additional complication in working with the WGSA output files is that some of the annotation fields are transcript-based, rather than position-based. Thus, if a variant locus is within multiple transcripts, those fields will have multiple entries (often separated by a | character). For example, annotation fields such as `VEP_ensembl_Transcript_ID` may have many values within a single tab-separated field.
+An additional complication in working with the WGSA output files is that some of the annotation fields are transcript-based, rather than position-based. Thus, if a variant locus is within multiple transcripts, those fields will have multiple entries (often separated by a *|* character). For example, annotation fields such as `VEP_ensembl_Transcript_ID` may have many values within a single tab-separated field.
 
 *wgsaparsr::parse_to_file()* addresses this by splitting such list-fields into multiple rows. Other annotation fields for that variant are duplicated, and associated columns are filled with the same value for each transcript that a particular variant falls within. A consequence of this approach is that the processed annotation file has more lines than the WGSA output file. In freeze 4, processing expanded the annotation by a factor of about 5 - the 220 million annotations result in a 1-billion row database for subsequent aggregation.
 
-*wgsaparsr::parse_to_file()* reads a snp annotation file, selects specified fields, and expands user-defined transcript-level annotation fields. It produces a tab-separated output file for subsequent analysis.
+*wgsaparsr::parse_to_file()* function arguments include a path to a WGSA annotation file, a user-defined configuration file, and output destinations. It reads the input annotation file in chunks, processes them following the specification provided in the user-defined configuration file, and writes to the output destinations. It produces a tab-separated output file useful for subsequent analysis.
+
+
 
 ```{r}
 desired_columns <- 
