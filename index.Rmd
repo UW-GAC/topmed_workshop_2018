@@ -1,12 +1,12 @@
 ---
-title: "TOPMed Analysis Workshop"
+title: "SISG Module 12: Computational Pipeline for WGS Data"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
 link-citations: yes
 github-repo: UW-GAC/topmed_workshop_2018
-description: "Course materials for the TOPMed analysis workshop"
+description: "Course materials for SISG Module 12"
 ---
 
 ```{r setup, include=FALSE}
@@ -21,10 +21,10 @@ Data used is located in the [github repository](https://github.com/UW-GAC/topmed
 To work through the exercises, log into RStudio Server at [http://34.208.147.133:8787](http://34.208.147.133:8787) with your username and password.
 
 Slides for lectures are posted here:\
-[https://www.nhlbiwgs.org/topmed-analysis-workshop-2017-materials](https://www.nhlbiwgs.org/topmed-analysis-workshop-2017-materials)
+[https://www.biostat.washington.edu/suminst/SISG2018/modules/SM1812](https://www.biostat.washington.edu/suminst/SISG2018/modules/SM1812)
 
 Join the Slack channel here:\
-[https://join.slack.com/t/topmed-analysis-2017/signup](https://join.slack.com/t/topmed-analysis-2017/signup)
+[https://join.slack.com/t/sisg2018module12/signup](https://join.slack.com/t/sisg2018module12/signup)
 
 If you are new to R, you might find the following material helpful:
 
