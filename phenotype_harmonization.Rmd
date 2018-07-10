@@ -40,7 +40,7 @@ study_3 <- read.table("pheno_data_study_3.txt", header = TRUE, sep = "\t", as.is
 head(study_3)
 ```
 
-We will be looking at differences by harmonization unit (in this case, study), so add the study identifier to the data frame.
+We will be looking at differences by study, so add a study identifier to the data frame.
 ```{r}
 study_1$study <- "study_1"
 study_2$study <- "study_2"
@@ -160,10 +160,10 @@ annot <- annot[match(grm$sample.id, annot$sample.id), ]
 ```
 
 
-### Fit a mixed model without harmonization unit
+### Fit a mixed model without study
 
 We will first fit a mixed model that allows us to see if the mean of the height phenotype is different by study after adjusting for other covariates.
-In this case, we will adjust for age and sex, but not for harmonization unit (`study`), because we are interested in seeing differences in mean height by harmonization unit.
+In this case, we will adjust for age and sex, but not for study, because we are interested in seeing differences in mean height by study.
 We will also include the genetic relatedness matrix as a random effect to account for relatedness between the participants.
 
 ````{r, message = FALSE}
@@ -215,15 +215,15 @@ ggplot(pData(annot), aes(x = study, y = residuals)) + geom_boxplot()
 From the boxplot, it is clear that the different studies have different mean heights.
 
 
-### Fit a model with harmonization unit
+### Fit a model with study
 
-Next, we can look at a model that adjusts for other covariates as well as harmonization unit.
+Next, we can look at a model that adjusts for other covariates as well as study.
 This model allows us to run a statistical test on the fitted study means and to qualitatively check if the variances are the same after adjusting for mean effects.
-The outcome is the same, but we now add the harmonization unit as a covariate.
-We also allow for group-specific residual variance by harmonization unit using the `group.var` argument to `fitNullMM`.
+The outcome is the same, but we now add the study as a covariate.
+We also allow for group-specific residual variance by study using the `group.var` argument to `fitNullMM`.
 
 ```{r, results = 'hide', message = FALSE}
-# include the harmonization unit in the covariates
+# include the study in the covariates
 covars <- c("age", "sex", "study")
 
 mod_2 <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars,
