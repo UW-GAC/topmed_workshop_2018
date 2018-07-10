@@ -6,17 +6,17 @@ library(mvtnorm)
 set.seed(123)
 
 # read in the starting test data
-data.path <- "https://github.com/smgogarten/analysis_pipeline/raw/devel/testdata"
+data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/devel/testdata"
 
 # sample annotation
 sampfile <- "1KG_phase3_subset_annot.RData"
-if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile)
+if (!file.exists(sampfile)) download.file(file.path(data.path, sampfile), sampfile, extra = "-L")
 annot <- TopmedPipeline::getobj(sampfile)
 rm(sampfile)
 
 # grm
 grmfile <- "grm.RData"
-if (!file.exists(grmfile)) download.file(file.path(data.path, grmfile), grmfile)
+if (!file.exists(grmfile)) download.file(file.path(data.path, grmfile, extra = "-L"), grmfile)
 grm_list <- TopmedPipeline::getobj(grmfile)
 rownames(grm_list$grm) <- colnames(grm_list$grm) <- grm_list$sample.id
 grm <- grm_list$grm
@@ -54,12 +54,12 @@ effects <- c(170, 6, -0.05, 10, -10)
 # # generate the model matrix for each study
 # age_mean <- setNames(sample(40:60, 3), studies)
 # age_sd <- setNames(runif(3, min = 5, max = 10), studies)
-# 
+#
 # # add ages to the data frame
 # tmp <- dat %>%
 #   group_by(study) %>%
-#   mutate(age = rnorm(length(study), 
-#                      mean = age_mean[first(study)], 
+#   mutate(age = rnorm(length(study),
+#                      mean = age_mean[first(study)],
 #                      sd = age_sd[first(study)]))
 
 
@@ -69,8 +69,8 @@ study_vars <- c("study_1" = 50, "study_2" = 120, "study_3" = 140)
 var_structure <- diag(study_vars[dat$study]) + 40 * grm
 
 # simulate the outcome with the mean effects and variance structure
-dat$height <- (modmat %*% effects) + 
-  matrix(rmvnorm(n = 1, mean = rep(0, n), 
+dat$height <- (modmat %*% effects) +
+  matrix(rmvnorm(n = 1, mean = rep(0, n),
                  sigma = var_structure))
 dat$height <- round(dat$height, digits = 1)
 

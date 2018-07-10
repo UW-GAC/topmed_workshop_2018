@@ -142,7 +142,7 @@ Becase it is an input to the mixed model, we next need to download the genetic r
 ```{r}
 data_path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
 grmfile <- "data/grm.RData"
-if (!file.exists(grmfile)) download.file(file.path(data_path, grmfile), grmfile)
+if (!file.exists(grmfile)) download.file(file.path(data_path, grmfile, extra = "-L"), grmfile)
 grm <- TopmedPipeline::getobj(grmfile)
 rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
 ```
