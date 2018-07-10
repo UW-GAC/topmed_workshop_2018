@@ -12,8 +12,12 @@ received a harmonized phenotype file from each study.
 We will generate some diagnostic information about the harmonized phenotype.
 
 The exercise uses 1000 Genomes data, with simulated phenotypes for study, age, and height.
+We will be using `dplyr` for a lot of the data manipulation.
+```{r}
+library(dplyr)
+```
 
-## Import phentoype files into R
+## Inspect individual study data in R
 
 The first step is to read the files into R for processing.
 Before we begin, you need to download the data from github so you have access to it.
@@ -28,7 +32,7 @@ for (pheno_file in pheno_files) {
 ```
 
 Next, read the study phenotype files into R.
-In this case, each file is tab-delimited and has the same phenotype variable names.
+In this case, each file is tab-delimited.
 
 ```{r}
 study_1 <- read.table("data/pheno_data_study_1.txt", header = TRUE, sep = "\t", as.is = TRUE)
@@ -41,7 +45,48 @@ study_3 <- read.table("data/pheno_data_study_3.txt", header = TRUE, sep = "\t", 
 head(study_3)
 ```
 
-We will be looking at differences by study, so add a study identifier to the data frame.
+Look carefully at the output and see if anything looks suspicious.
+
+You may have noticed that one of the studies has given their variales slightly different names than the others.
+Rename them as appropriate.
+```{r}
+names(study_2)
+study_2 <- study_2 %>%
+  rename(sex = Sex, age = Age, height = Height)
+# Check that they are correct.
+names(study_2)
+```
+
+You'll also want to calculate summaries of the data values to see if anything looks very different than what you expect.
+
+```{r}
+summary(study_1$height)
+summary(study_2$height)
+summary(study_3$height)
+```
+
+Here, the values that study_3 has given you don't seem to have the same range as those from study_1 and study_2.
+In cases like this, you'll want to follow up with whoever provided the harmonized data to see what's going on.
+It could represent an error in calculating the harmonized data values, a true property of the study (e.g., a study containing all children), or something else.
+In this case, the values were measured in inches instead of centimeters, so they will need to be converted to centimeters to be compatible with the other studies.
+```{r}
+study_3 <- study_3 %>%
+  mutate(height = height * 2.54)
+```
+
+Calculate the summary again and compare it to the other studies above.
+```{r}
+summary(study_3$height)
+```
+
+The corrected values look much more similar now.
+
+
+## Compare study values
+
+Next we will make some more direct comparisons between the three studies, so we will combine the data into one data frame.
+
+First, add a study identifier to the data frame for organizational purposes.
 ```{r}
 study_1$study <- "study_1"
 study_2$study <- "study_2"
@@ -49,17 +94,14 @@ study_3$study <- "study_3"
 ```
 
 Combine the three different study data frames into one large data frame for joint analysis.
-Before doing this, we should check that the column headers are the same.
+Double check that all column names are the same.
 ```{r, message = FALSE}
 all.equal(names(study_1), names(study_2))
 all.equal(names(study_1), names(study_3))
 
-library(dplyr)
 phen <- dplyr::bind_rows(study_1, study_2, study_3)
 ```
 
-
-## Run some quick diagnostics on the files
 
 We can look at the distribution of phenotype data with text-based reports or with plots.
 
@@ -86,8 +128,8 @@ ggplot(phen, aes(x = study, fill = sex, y = height)) + geom_boxplot()
 ```
 
 These diagnostics are helpful to get a feel for the data.
-They can help you see if one study is vastly different from the others or detect outlier values.
-Some of the differences could be accounted for by covariates, so we will assess the statistical significance of study differences in the next section.
+They can help you see if one study is vastly different from the others or detect outlier values that you may want to look into further.
+Some of the differences could also be accounted for by covariates.
 
 
 ## Use using mixed models to compare studies

@@ -77,6 +77,14 @@ dat$height <- round(dat$height, digits = 1)
 # split by study
 list_df <- split(dat, dat$study)
 
+# Make one study provide different variable names.
+names(list_df[[2]])[names(list_df[[2]]) == "height"] <- "Height"
+names(list_df[[2]])[names(list_df[[2]]) == "sex"] <- "Sex"
+names(list_df[[2]])[names(list_df[[2]]) == "age"] <- "Age"
+
+#  Make one study report their phenotype in inches instead of cm.
+list_df[[3]]$height <- round(list_df[[3]]$height / 2.54, digits=1)
+
 lapply(list_df, function(x) {
   study <- unique(x$study)
   stopifnot(length(study) == 1)
