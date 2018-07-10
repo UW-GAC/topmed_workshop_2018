@@ -173,11 +173,11 @@ covars <- c("sex", "age")
 covariance_matrices <- grm$grm
 
 library(GENESIS)
-mod_1 <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars,
-                     covMatList = covariance_matrices)
+mod_1 <- GENESIS::fitNullModel(annot, outcome = outcome, covars = covars,
+                     cov.mat = covariance_matrices)
 ```
 
-The output of `fitNullMM` is a list with a number of named elements
+The output of `fitNullModel` is a list with a number of named elements
 ```{r}
 names(mod_1)
 ```
@@ -220,14 +220,14 @@ From the boxplot, it is clear that the different studies have different mean hei
 Next, we can look at a model that adjusts for other covariates as well as study.
 This model allows us to run a statistical test on the fitted study means and to qualitatively check if the variances are the same after adjusting for mean effects.
 The outcome is the same, but we now add the study as a covariate.
-We also allow for group-specific residual variance by study using the `group.var` argument to `fitNullMM`.
+We also allow for group-specific residual variance by study using the `group.var` argument to `fitNullModel`.
 
 ```{r, results = 'hide', message = FALSE}
 # include the study in the covariates
 covars <- c("age", "sex", "study")
 
-mod_2 <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars,
-                            group.var = "study", covMatList = covariance_matrices)
+mod_2 <- GENESIS::fitNullModel(annot, outcome = outcome, covars = covars,
+                            group.var = "study", cov.mat = covariance_matrices)
 ```
 
 The `fixef` element now includes effects for study:
