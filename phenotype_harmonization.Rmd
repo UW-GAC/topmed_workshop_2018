@@ -235,33 +235,7 @@ The `fixef` element now includes effects for study:
 mod_2$fixef
 ```
 
-First we'll run a Wald test on the study effects to see how significant the mean difference is.
-The null hypothesis of this test is that all of the studies have the same mean height.
-
-First, identify the fixed effects and their covariance for the study indicator variables.
-There are only two studies in the fixed effects element because the other study is used as a reference group.
-```{r}
-# these rows are associated with the study effects
-idx <- 4:5
-
-# fixed effect estimates for the studies
-study_effect <- mod_2$fixef[idx, ]
-study_effect
-
-# covariance of the study effects
-study_cov <- mod_2$betaCov[idx, idx]
-study_cov
-```
-
-Next, calculate the Wald test statistic and associated p-value.
-```{r}
-test_stat <- t(study_effect$Est) %*% solve(study_cov) %*% study_effect$Est
-pval <- pchisq(test_stat, df = length(study_effect), lower.tail = FALSE)
-pval
-```
-
-The small p-value indicates that the null hypothesis is rejected; the height measurements from the studies do not have the same mean height even after adjusting for the other covariates.
-Even if this test were not significant, though, the studies' mean heights could still be different enough to indicate a problem with harmonization.
+The mixed model also shows the differences in mean height by study.
 
 Finally, we want to check if the height distributions from the different studies have the same variance.
 Start by looking at the variance components (`varComp`) element of the model.
@@ -287,9 +261,6 @@ ggplot(pData(annot), aes(x = study, y = residuals)) +
 ```
 
 Both methods of looking at the variance components indicate that study 1 has a smaller residual variance than the others.
-It is more complicated to perform a test to see if the difference is statistically significant.
-The distribution of the null hypothesis is not a simple chi-squared distribution due to the fact that variance components cannot be negative.
-Therefore, we will only discuss the qualitative differences in variance between the studies at this point.
 
 
 ## Final considerations
