@@ -269,8 +269,8 @@ We have determined that the different studies have both different mean and diffe
 Before performing genotype-phenotype association tests with these data, you would need to think carefully about whether the phenotype is homogeneous enough to be analyzed together.
 In some cases, there may be a valid reason for different means or variances, for example:
 
-* different heights in different study populations, such as a study composed primarily of Asian participants vs. a study with primarily European participants
-* possible secular trends in height, such as comparing the Framingham Original cohort from ~1950 to a cohort from the present day
+* different heights in different study populations, such as a study composed primarily of Asian participants vs. a study with primarily European participants or a study of all men vs. a study of all women;
+* possible secular trends in height, such as comparing the Framingham Original cohort from ~1950 to a cohort from the present day.
 
 In other cases, there may be good reasons to exclude one or more studies, for example:
 
@@ -283,4 +283,4 @@ Studies may have used different measurement equipment or calibrated their data d
 There might also be other batch effects due to lab procedures or assays that could result in differences in the variance or mean by study.
 
 Unfortunately there is no single set of guidelines you can use to decide how to proceedw ith analysis of a phenotype.
-It is necessary to involve domain experts (e.g., the Working Group members) and study experts to determine whether the phenotype is homogeneous enough to analyze the studies together.
+It is necessary to involve both domain experts and study experts to determine whether the phenotype is homogeneous enough to analyze the studies together.
