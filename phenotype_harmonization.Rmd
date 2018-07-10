@@ -13,7 +13,7 @@ We will generate some diagnostic information about the harmonized phenotype.
 
 The exercise uses 1000 Genomes data, with simulated phenotypes for study, age, and height.
 We will be using `dplyr` for a lot of the data manipulation.
-```{r}
+```{r, message = FALSE}
 library(dplyr)
 ```
 
@@ -47,7 +47,7 @@ head(study_3)
 
 Look carefully at the output and see if anything looks suspicious.
 
-You may have noticed that one of the studies has given their variales slightly different names than the others.
+You may have noticed that one of the studies has given their variables slightly different names than the others.
 Rename them as appropriate.
 ```{r}
 names(study_2)
@@ -255,7 +255,8 @@ We will first do this qualitatively by making a boxplot of the residuals by stud
 ggplot(pData(annot), aes(x = study, y = residuals)) + geom_boxplot()
 ```
 
-From the boxplot, it is clear that the different studies have different mean heights.
+From the boxplot, it is clear that the different studies have different mean heights, even after adjustment for sex and age.
+At this point, you would need to determine if the differences are acceptable for use in a combined analysis.
 
 
 ### Fit a model with study
@@ -325,5 +326,5 @@ It may be necessary to look at other variables that you had not previously consi
 Studies may have used different measurement equipment or calibrated their data differently.
 There might also be other batch effects due to lab procedures or assays that could result in differences in the variance or mean by study.
 
-Unfortunately there is no single set of guidelines you can use to decide how to proceedw ith analysis of a phenotype.
+Unfortunately there is no single set of guidelines you can use to decide how to proceed with analysis of a phenotype.
 It is necessary to involve both domain experts and study experts to determine whether the phenotype is homogeneous enough to analyze the studies together.
