@@ -1,12 +1,10 @@
 # Phenotype Harmonization
 
-Because TOPMed comprises multiple, distinct studies, it is necessary to perform phenotype harmonization before running a cross-study analysis.
-Harmonization is generally performed by "harmonization unit", which is defined as a group of subjects whose phenotypes can be similarly processed.
-In many cases, one study corresponds to one harmonization unit, but more complicated studies may require multiple harmonization units.
-For example, the Framingham Heart study has multiple subcohorts (Original, Offspring, etc.), with phenotypes measured differently for subjects in different cohorts.
-Since the phenotypes have been measured differently, the different subcohorts have to be harmonized separately.
+To increase your sample set, you may need to combine phenotype data from different studies in order to run a cross-study analysis.
+The studies involved may have collected data in different ways, used different protocols or measurement units, or used different cutpoints to determine case status.
+The process of manipulating the phenotype data from different studies so that they can be analyzed together is called "phenotype harmonization".
 
-In this exercise, we assume that you have
+In this exercise, we assume that you have 
 created a phenotype harmonization plan for height,
 sent it to members from three studies to perform the harmonization,
 and
