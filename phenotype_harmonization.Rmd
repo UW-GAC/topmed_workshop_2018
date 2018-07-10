@@ -1,12 +1,10 @@
 # Phenotype Harmonization
 
-Because TOPMed comprises multiple, distinct studies, it is necessary to perform phenotype harmonization before running a cross-study analysis.
-Harmonization is generally performed by "harmonization unit", which is defined as a group of subjects whose phenotypes can be similarly processed.
-In many cases, one study corresponds to one harmonization unit, but more complicated studies may require multiple harmonization units.
-For example, the Framingham Heart study has multiple subcohorts (Original, Offspring, etc.), with phenotypes measured differently for subjects in different cohorts.
-Since the phenotypes have been measured differently, the different subcohorts have to be harmonized separately.
+To increase your sample set, you may need to combine phenotype data from different studies in order to run a cross-study analysis.
+The studies involved may have collected data in different ways, used different protocols or measurement units, or used different cutpoints to determine case status.
+The process of manipulating the phenotype data from different studies so that they can be analyzed together is called "phenotype harmonization".
 
-In this exercise, we assume that you have
+In this exercise, we assume that you have 
 created a phenotype harmonization plan for height,
 sent it to members from three studies to perform the harmonization,
 and
@@ -14,35 +12,81 @@ received a harmonized phenotype file from each study.
 We will generate some diagnostic information about the harmonized phenotype.
 
 The exercise uses 1000 Genomes data, with simulated phenotypes for study, age, and height.
+We will be using `dplyr` for a lot of the data manipulation.
+```{r, message = FALSE}
+library(dplyr)
+```
 
-## Import phentoype files into R
+## Inspect individual study data in R
 
 The first step is to read the files into R for processing.
 Before we begin, you need to download the data from github so you have access to it.
 
 ```{r}
-repo_path <- "https://github.com/UW-GAC/topmed_workshop_2017/raw/master"
-pheno_files <- c("pheno_data_study_1.txt", "pheno_data_study_2.txt", "pheno_data_study_3.txt")
+repo_path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master"
+pheno_files <- c("data/pheno_data_study_1.txt", "data/pheno_data_study_2.txt", "data/pheno_data_study_3.txt")
+if (!dir.exists("data")) dir.create("data")
 for (pheno_file in pheno_files) {
-  if (!file.exists(pheno_file)) download.file(file.path(repo_path, pheno_file), pheno_file)
+  if (!file.exists(pheno_file)) download.file(file.path(repo_path, pheno_file), pheno_file, extra = "-L")
 }
 ```
 
 Next, read the study phenotype files into R.
-In this case, each file is tab-delimited and has the same phenotype variable names.
+In this case, each file is tab-delimited.
 
 ```{r}
-study_1 <- read.table("pheno_data_study_1.txt", header = TRUE, sep = "\t", as.is = TRUE)
+study_1 <- read.table("data/pheno_data_study_1.txt", header = TRUE, sep = "\t", as.is = TRUE)
 head(study_1)
 
-study_2 <- read.table("pheno_data_study_2.txt", header = TRUE, sep = "\t", as.is = TRUE)
+study_2 <- read.table("data/pheno_data_study_2.txt", header = TRUE, sep = "\t", as.is = TRUE)
 head(study_2)
 
-study_3 <- read.table("pheno_data_study_3.txt", header = TRUE, sep = "\t", as.is = TRUE)
+study_3 <- read.table("data/pheno_data_study_3.txt", header = TRUE, sep = "\t", as.is = TRUE)
 head(study_3)
 ```
 
-We will be looking at differences by harmonization unit (in this case, study), so add the study identifier to the data frame.
+Look carefully at the output and see if anything looks suspicious.
+
+You may have noticed that one of the studies has given their variables slightly different names than the others.
+Rename them as appropriate.
+```{r}
+names(study_2)
+study_2 <- study_2 %>%
+  rename(sex = Sex, age = Age, height = Height)
+# Check that they are correct.
+names(study_2)
+```
+
+You'll also want to calculate summaries of the data values to see if anything looks very different than what you expect.
+
+```{r}
+summary(study_1$height)
+summary(study_2$height)
+summary(study_3$height)
+```
+
+Here, the values that study_3 has given you don't seem to have the same range as those from study_1 and study_2.
+In cases like this, you'll want to follow up with whoever provided the harmonized data to see what's going on.
+It could represent an error in calculating the harmonized data values, a true property of the study (e.g., a study containing all children), or something else.
+In this case, the values were measured in inches instead of centimeters, so they will need to be converted to centimeters to be compatible with the other studies.
+```{r}
+study_3 <- study_3 %>%
+  mutate(height = height * 2.54)
+```
+
+Calculate the summary again and compare it to the other studies above.
+```{r}
+summary(study_3$height)
+```
+
+The corrected values look much more similar now.
+
+
+## Compare study values
+
+Next we will make some more direct comparisons between the three studies, so we will combine the data into one data frame.
+
+First, add a study identifier to the data frame for organizational purposes.
 ```{r}
 study_1$study <- "study_1"
 study_2$study <- "study_2"
@@ -50,17 +94,14 @@ study_3$study <- "study_3"
 ```
 
 Combine the three different study data frames into one large data frame for joint analysis.
-Before doing this, we should check that the column headers are the same.
+Double check that all column names are the same.
 ```{r, message = FALSE}
 all.equal(names(study_1), names(study_2))
 all.equal(names(study_1), names(study_3))
 
-library(dplyr)
 phen <- dplyr::bind_rows(study_1, study_2, study_3)
 ```
 
-
-## Run some quick diagnostics on the files
 
 We can look at the distribution of phenotype data with text-based reports or with plots.
 
@@ -87,8 +128,8 @@ ggplot(phen, aes(x = study, fill = sex, y = height)) + geom_boxplot()
 ```
 
 These diagnostics are helpful to get a feel for the data.
-They can help you see if one study is vastly different from the others or detect outlier values.
-Some of the differences could be accounted for by covariates, so we will assess the statistical significance of study differences in the next section.
+They can help you see if one study is vastly different from the others or detect outlier values that you may want to look into further.
+Some of the differences could also be accounted for by covariates.
 
 
 ## Use using mixed models to compare studies
@@ -142,8 +183,8 @@ save(annot, file = "phenotype_annotation.RData")
 Becase it is an input to the mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.
 ```{r}
 data_path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
-grmfile <- "grm.RData"
-if (!file.exists(grmfile)) download.file(file.path(data_path, grmfile), grmfile)
+grmfile <- "data/grm.RData"
+if (!file.exists(grmfile)) download.file(file.path(data_path, grmfile, extra = "-L"), grmfile)
 grm <- TopmedPipeline::getobj(grmfile)
 rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
 ```
@@ -162,10 +203,10 @@ annot <- annot[match(grm$sample.id, annot$sample.id), ]
 ```
 
 
-### Fit a mixed model without harmonization unit
+### Fit a mixed model without study
 
 We will first fit a mixed model that allows us to see if the mean of the height phenotype is different by study after adjusting for other covariates.
-In this case, we will adjust for age and sex, but not for harmonization unit (`study`), because we are interested in seeing differences in mean height by harmonization unit.
+In this case, we will adjust for age and sex, but not for study, because we are interested in seeing differences in mean height by study.
 We will also include the genetic relatedness matrix as a random effect to account for relatedness between the participants.
 
 ````{r, message = FALSE}
@@ -175,11 +216,11 @@ covars <- c("sex", "age")
 covariance_matrices <- grm$grm
 
 library(GENESIS)
-mod_1 <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars,
-                     covMatList = covariance_matrices)
+mod_1 <- GENESIS::fitNullModel(annot, outcome = outcome, covars = covars,
+                     cov.mat = covariance_matrices)
 ```
 
-The output of `fitNullMM` is a list with a number of named elements
+The output of `fitNullModel` is a list with a number of named elements
 ```{r}
 names(mod_1)
 ```
@@ -214,22 +255,23 @@ We will first do this qualitatively by making a boxplot of the residuals by stud
 ggplot(pData(annot), aes(x = study, y = residuals)) + geom_boxplot()
 ```
 
-From the boxplot, it is clear that the different studies have different mean heights.
+From the boxplot, it is clear that the different studies have different mean heights, even after adjustment for sex and age.
+At this point, you would need to determine if the differences are acceptable for use in a combined analysis.
 
 
-### Fit a model with harmonization unit
+### Fit a model with study
 
-Next, we can look at a model that adjusts for other covariates as well as harmonization unit.
+Next, we can look at a model that adjusts for other covariates as well as study.
 This model allows us to run a statistical test on the fitted study means and to qualitatively check if the variances are the same after adjusting for mean effects.
-The outcome is the same, but we now add the harmonization unit as a covariate.
-We also allow for group-specific residual variance by harmonization unit using the `group.var` argument to `fitNullMM`.
+The outcome is the same, but we now add the study as a covariate.
+We also allow for group-specific residual variance by study using the `group.var` argument to `fitNullModel`.
 
 ```{r, results = 'hide', message = FALSE}
-# include the harmonization unit in the covariates
+# include the study in the covariates
 covars <- c("age", "sex", "study")
 
-mod_2 <- GENESIS::fitNullMM(annot, outcome = outcome, covars = covars,
-                            group.var = "study", covMatList = covariance_matrices)
+mod_2 <- GENESIS::fitNullModel(annot, outcome = outcome, covars = covars,
+                            group.var = "study", cov.mat = covariance_matrices)
 ```
 
 The `fixef` element now includes effects for study:
@@ -237,33 +279,7 @@ The `fixef` element now includes effects for study:
 mod_2$fixef
 ```
 
-First we'll run a Wald test on the study effects to see how significant the mean difference is.
-The null hypothesis of this test is that all of the studies have the same mean height.
-
-First, identify the fixed effects and their covariance for the study indicator variables.
-There are only two studies in the fixed effects element because the other study is used as a reference group.
-```{r}
-# these rows are associated with the study effects
-idx <- 4:5
-
-# fixed effect estimates for the studies
-study_effect <- mod_2$fixef[idx, ]
-study_effect
-
-# covariance of the study effects
-study_cov <- mod_2$betaCov[idx, idx]
-study_cov
-```
-
-Next, calculate the Wald test statistic and associated p-value.
-```{r}
-test_stat <- t(study_effect$Est) %*% solve(study_cov) %*% study_effect$Est
-pval <- pchisq(test_stat, df = length(study_effect), lower.tail = FALSE)
-pval
-```
-
-The small p-value indicates that the null hypothesis is rejected; the height measurements from the studies do not have the same mean height even after adjusting for the other covariates.
-Even if this test were not significant, though, the studies' mean heights could still be different enough to indicate a problem with harmonization.
+The mixed model also shows the differences in mean height by study.
 
 Finally, we want to check if the height distributions from the different studies have the same variance.
 Start by looking at the variance components (`varComp`) element of the model.
@@ -289,9 +305,6 @@ ggplot(pData(annot), aes(x = study, y = residuals)) +
 ```
 
 Both methods of looking at the variance components indicate that study 1 has a smaller residual variance than the others.
-It is more complicated to perform a test to see if the difference is statistically significant.
-The distribution of the null hypothesis is not a simple chi-squared distribution due to the fact that variance components cannot be negative.
-Therefore, we will only discuss the qualitative differences in variance between the studies at this point.
 
 
 ## Final considerations
@@ -300,8 +313,8 @@ We have determined that the different studies have both different mean and diffe
 Before performing genotype-phenotype association tests with these data, you would need to think carefully about whether the phenotype is homogeneous enough to be analyzed together.
 In some cases, there may be a valid reason for different means or variances, for example:
 
-* different heights in different study populations, such as a study composed primarily of Asian participants vs. a study with primarily European participants
-* possible secular trends in height, such as comparing the Framingham Original cohort from ~1950 to a cohort from the present day
+* different heights in different study populations, such as a study composed primarily of Asian participants vs. a study with primarily European participants or a study of all men vs. a study of all women;
+* possible secular trends in height, such as comparing the Framingham Original cohort from ~1950 to a cohort from the present day.
 
 In other cases, there may be good reasons to exclude one or more studies, for example:
 
@@ -313,5 +326,5 @@ It may be necessary to look at other variables that you had not previously consi
 Studies may have used different measurement equipment or calibrated their data differently.
 There might also be other batch effects due to lab procedures or assays that could result in differences in the variance or mean by study.
 
-Unfortunately there is no single set of guidelines you can use to decide how to proceedw ith analysis of a phenotype.
-It is necessary to involve domain experts (e.g., the Working Group members) and study experts to determine whether the phenotype is homogeneous enough to analyze the studies together.
+Unfortunately there is no single set of guidelines you can use to decide how to proceed with analysis of a phenotype.
+It is necessary to involve both domain experts and study experts to determine whether the phenotype is homogeneous enough to analyze the studies together.
