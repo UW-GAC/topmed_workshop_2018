@@ -175,7 +175,7 @@ varMetadata(annot)
 
 Save the AnnotatedDataFrame for future use.
 ```{r}
-save(annot, file = "phenotype_annotation.RData")
+save(annot, file = "data/phenotype_annotation.RData")
 ```
 
 ### Obtain the genetic relatedness matrix
