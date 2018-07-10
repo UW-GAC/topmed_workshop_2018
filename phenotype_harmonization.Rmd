@@ -20,9 +20,10 @@ Before we begin, you need to download the data from github so you have access to
 
 ```{r}
 repo_path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master"
-pheno_files <- c("pheno_data_study_1.txt", "pheno_data_study_2.txt", "pheno_data_study_3.txt")
+pheno_files <- c("data/pheno_data_study_1.txt", "data/pheno_data_study_2.txt", "data/pheno_data_study_3.txt")
+if (!dir.exists("data")) dir.create("data")
 for (pheno_file in pheno_files) {
-  if (!file.exists(pheno_file)) download.file(file.path(repo_path, pheno_file), pheno_file)
+  if (!file.exists(pheno_file)) download.file(file.path(repo_path, pheno_file), pheno_file, extra = "-L")
 }
 ```
 
@@ -30,13 +31,13 @@ Next, read the study phenotype files into R.
 In this case, each file is tab-delimited and has the same phenotype variable names.
 
 ```{r}
-study_1 <- read.table("pheno_data_study_1.txt", header = TRUE, sep = "\t", as.is = TRUE)
+study_1 <- read.table("data/pheno_data_study_1.txt", header = TRUE, sep = "\t", as.is = TRUE)
 head(study_1)
 
-study_2 <- read.table("pheno_data_study_2.txt", header = TRUE, sep = "\t", as.is = TRUE)
+study_2 <- read.table("data/pheno_data_study_2.txt", header = TRUE, sep = "\t", as.is = TRUE)
 head(study_2)
 
-study_3 <- read.table("pheno_data_study_3.txt", header = TRUE, sep = "\t", as.is = TRUE)
+study_3 <- read.table("data/pheno_data_study_3.txt", header = TRUE, sep = "\t", as.is = TRUE)
 head(study_3)
 ```
 
@@ -140,7 +141,7 @@ save(annot, file = "phenotype_annotation.RData")
 Becase it is an input to the mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.
 ```{r}
 data_path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
-grmfile <- "grm.RData"
+grmfile <- "data/grm.RData"
 if (!file.exists(grmfile)) download.file(file.path(data_path, grmfile), grmfile)
 grm <- TopmedPipeline::getobj(grmfile)
 rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
