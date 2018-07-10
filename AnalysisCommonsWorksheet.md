@@ -12,7 +12,7 @@
 
 ### Exercise 1) Run a single variant analysis.  
 
-Log into http://dnanexus.com using the user name and password listed on the handout.  
+Log into http://dnanexus.com using the Analysis Commons user name and password listed on the website.  
 Should be in the form of Username:**topmed\_#** and Password:**TOPMed\_#**.
 *Ignore warning about default billing account.*
 
@@ -23,7 +23,6 @@ Navigate to and select **(wgs:tools/genesis\_nullmodel)**
 
 File inputs:  
 * phenofile -> phenotype/1KG_pheno.csv  
-* genotypefile -> genotypes/GDS/1KG_phase3_subset_chr1.gds   **(any chr is fine, is only extracting the sample ids)**
 * kinship -> kinship/1KG_kins.Rda  
 
 Parameter inputs:  
@@ -120,7 +119,7 @@ $ head 1KG_pheno.csv
 
 Open the single_multichrom.sh bash script and edit to replace the output directory “YOURNAME” to your folder
 ```
-$ dx describe tools/genesis_v0.7
+$ dx describe tools/genesis_tests
 ```
 Either edit using nano
 ```
@@ -147,7 +146,7 @@ Choose a class (<TAB> twice for choices): file
 This is an optional parameter [y/n]: n
 
 2nd input name (<ENTER> to finish): model
-Label (optional human-readable name) []: model for creating residuals (e.g. outcome~age+Population )
+Label (optional human-readable name) []: model for creating residuals (e.g. outcome~sex+Population )
 Choose a class (<TAB> twice for choices): string
 This is an optional parameter [y/n]: n
 
@@ -186,12 +185,16 @@ main() {
 
     dx download "$phenofile" -o phenofile
 
+    ## ADD THIS LINE ##
     Rscript /make_resid.R $model
 
     output=$(dx upload output --brief)
 
-    dx-jobutil-add-output output "$output" --class=file
+    ## ADD THIS LINE ##
     dx mv ${output} ${prefix}.csv
+    
+    dx-jobutil-add-output output "$output" --class=file
+    
 }
 
 ```
@@ -250,11 +253,6 @@ Once you know the name of the p-value column, run qqplot first through web inter
 $ dx run tools/qqplot
 ```
 _Note: the plot label must not contain spaces._
-
-### Optional Exercise 7) Run conditional analysis
-Find the name of one associated variant in the single snp results and rerun the single variant analysis conditioning on that variant (e.g. 22:17105517).  
-_Note that the output file name cannot contain a colon (e.g. output file name cannot be single\_chr22\_single\_22:17105517, try single\_chr22\_single\_22\_17105517 instead)._
-
 
 
 ### Optional Exercise 8) Create a regional association plot using LD extracted from your data set
