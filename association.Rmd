@@ -170,157 +170,248 @@ head(assoc$results)
 
 ## Annotation-based aggregate tests
 
-```{r, include=FALSE}
-## REMOVE ME after updating this section
-knitr::opts_chunk$set(eval=FALSE)
-```
+**Note:** the code and libraries in this section are under active development. This section uses [WGSAParsr v 5.0.6](https://github.com/UW-GAC/wgsaparsr/tree/5.0.6) to parse output from [WGSA version 0.7](https://sites.google.com/site/jpopgen/wgsa). Use this code at your own risk, and be warned that it may break in unexpected ways or be incompatible across different versions of the software. [Github issues and contribution](https://github.com/UW-GAC/wgsaparsr) are welcome!
 
-**Note:** the code and libraries in this section are under active development, and are not production-level. This module is provided to give workshop participants an example of some of the kinds of analysis tasks that might be performed with TOPMed annotation data. This section uses [WGSAParsr v 5.0.6](https://github.com/UW-GAC/wgsaparsr/tree/5.0.6) to parse output from [WGSA version 0.7](https://sites.google.com/site/jpopgen/wgsa). Use this code at your own risk, and be warned that it may break in unexpected ways or be incompatible across different versions of the software. [Github issues and contribution](https://github.com/UW-GAC/wgsaparsr) are welcome!
+This module is provided to give workshop participants an example of some of the kinds of analysis tasks that might be performed with TOPMed annotation data. 
 
 Analysts generally aggregate rare variants for association testing to decrease multiple testing burden and increase statistical power. They can group variants that fall within arbitrary ranges (such as sliding windows), or they can group variants with intent. For example, an analyst could aggregate variants that that fall between transcription start sites and stop sites, within coding regions, within regulatory regions, or other genomic features selected from sources like published gene models or position- or transcript-based variant annotation. An analyst could also choose to filter the variants prior or subsequent to aggregation using annotation-based criteria such as functional impact or quality scores.
 
-In this workshop, you will aggregate and filter a set of 1,922 genomic variants from chromosome 22 using genomic annotation for subsequent association testing. Starting with an annotation file describing variants from TOPMed's Freeze 5 data release that are also in the 1000 Genomes Project, you will define a configuration file to select relevant annotation fields, aggregate the selected variants into genic units, and apply filters to restrict the variants in aggreagation units by predicted functional consequence.
+In this workshop, you will aggregate and filter genomic variants using genomic annotation for subsequent association testing. Starting with an annotation file describing 1,922 genomic variants on chromosome 22 from TOPMed's Freeze 5 data release that are also in the 1000 Genomes Project, you will define a configuration file to use the *WGSAParsr* package to select relevant annotation fields, then aggregate the selected variants into genic units and apply filters to restrict the variants in aggreagation units by predicted functional consequence.
 
 ### Working with variant annotation
  
 Variants called from the TOPMed data set are annotated using the [Whole Genome Sequence Annotator (WGSA)](https://sites.google.com/site/jpopgen/wgsa). Output files from WGSA version 0.7 include 366 annotation fields annotating indel variants, and 438 annotation fields annotating snv variants. In each case, some annotation fields are themselves lists of annotation values. Thus, individual variants may be annotated with more than 1000 individual fields. Not all of these fields will be useful for a particular analysis, and some may be incompatible, so analysts need to parse the WGSA output prior to filtering and aggregation.
 
 The WGSA-annotated variant annotation files we will use for this exercise are available via github:
-
 ```{r}
-workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/tree/master/data"
-snpfile <- "snv.tsv.gz"
-if (!file.exists(snpfile)) download.file(file.path(workshop.path, snpfile), snpfile)
+workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master/"
 
-indelfile <- "indel.tsv.gz"
-if (!file.exists(indelfile)) download.file(file.path(workshop.path, indelfile), indelfile)
+if (!dir.exists("data")) dir.create("data")
+
+snvfile <- "data/snv.tsv.gz"
+if (!file.exists(snvfile)) download.file(file.path(workshop.path, snvfile), snvfile, extra="-L")
+
+indelfile <- "data/indel.tsv.gz"
+if (!file.exists(indelfile)) download.file(file.path(workshop.path, indelfile), indelfile, extra="-L")
+```
+
+Also, you'll be using functions from the `tidyverse` package, so load that library as well:
+```{r}
+library(tidyverse)
 ```
 
 WGSA output files are tab-separated text files, with one line per annotated variant. Since there are many annotation fields, these files can be unwieldy to work with directly. As an example, the first two lines of the SNP variant annotation file can be previewed within R:
-
 ```{r}
-readLines("snv.tsv.gz", n=2)
+readLines(snvfile, n=2)
 ```
 
-The TOPMed DCC uses an R package we developed, *WGSAParsr*, to work with WGSA output files. Briefly, WGSAParsr simplifies the WGSA output files by: 1) selecting a subset of fields; 2) renaming some fields; and 3) simplifying fields that have compound list-entries. The *WGSAParsr* package is under development, and is available on github at [https://github.com/UW-GAC/wgsaparsr](https://github.com/UW-GAC/wgsaparsr). It can be installed using the *devtools* package:
+The TOPMed DCC uses an R package we developed, *WGSAParsr*, to work with WGSA output files. Briefly, WGSAParsr simplifies the WGSA output files by: 1) selecting a subset of fields; 2) renaming some fields; and 3) simplifying fields that have compound list-entries. The *WGSAParsr* package is under development, and is available on github at [https://github.com/UW-GAC/wgsaparsr](https://github.com/UW-GAC/wgsaparsr). It can be installed using the *devtools* package, like this:
+```{r eval=FALSE}
+devtools::install_github("UW-GAC/wgsaparsr", ref = "5.0.7", upgrade_dependencies = FALSE)
+```
 
-```{r message=FALSE}
-#library(devtools)
-#devtools::install_github("UW-GAC/wgsaparsr", ref = "5.0.6")
+Once the package is installed locally, it can be loaded to the workspace in the usual manner:
+```{r}
 library(wgsaparsr)
-#library(tidyverse) # just in case it's not loaded yet
-library(tibble)
-library(dplyr)
-library(tidyr)
-library(readr)
 ```
 
-The *wgsaparsr::get_fields()* function lists all of the annotation field headers in a WGSA output file:
-
+Then we can begin using tools in the package. `wgsaparsr::get_fields()` lists all of the annotation field headers in a WGSA output file:
 ```{r}
 # list all fields in an annotation file (transpose to make pretty): 
-t(get_fields("snp.tsv.gz"))
+t(get_fields(snvfile))
 ```
 
-Only a subset of these annotations may be necessary for a particular association test, and it is unweildy to work with all of them, so it is useful to process the WGSA output file to select fields of interest.
+Only a subset of these annotations will be necessary for a particular association test, and it is unweildy to work with all of them, so it is useful to process the WGSA output file to select fields of interest.
 
-An additional complication in working with the WGSA output files is that some of the annotation fields are transcript-based, rather than position-based. Thus, if a variant locus is within multiple transcripts, those fields will have multiple entries (often separated by a *|* character). For example, annotation fields such as `VEP_ensembl_Transcript_ID` may have many values within a single tab-separated field.
+An additional complication in working with the WGSA output files is that some of the annotation fields are transcript-based, rather than position-based. Thus, if a variant locus is within multiple transcripts, those fields will have multiple entries (often separated by a `|` character). For example, annotation fields such as `VEP_ensembl_Transcript_ID` may have many values within a single tab-separated field.
 
-*wgsaparsr::parse_to_file()* addresses this by splitting such list-fields into multiple rows. Other annotation fields for that variant are duplicated, and associated columns are filled with the same value for each transcript that a particular variant falls within. A consequence of this approach is that the processed annotation file has more lines than the WGSA output file. In freeze 4, processing expanded the annotation by a factor of about 5 - the 220 million annotations result in a 1-billion row database for subsequent aggregation.
+WGSAParsr's `parse_to_file()` addresses this by splitting such list-fields into multiple rows. Other annotation fields for that variant are duplicated, and associated columns are filled with the same value for each transcript that a particular variant falls within. A consequence of this approach is that the processed annotation file has more lines than the WGSA output file. In freeze 4, processing expanded the annotation by a factor of about 5 - the 220 million annotations result in a 1-billion row database for subsequent aggregation.
 
-*wgsaparsr::parse_to_file()* function arguments include a path to a WGSA annotation file, a user-defined configuration file, and output destinations. It reads the input annotation file in chunks, processes them following the specification provided in the user-defined configuration file, and writes to the output destinations. It produces a tab-separated output file useful for subsequent analysis.
+`parse_to_file()` function arguments include a path to a WGSA annotation file, a user-defined configuration file, and output destinations. It reads the input annotation file in chunks, processes them following the specification provided in the user-defined configuration file, and writes to the output destinations. It produces a tab-separated output file useful for subsequent analysis.
 
+The first task, then, is to build the configuration file for `parse_to_file()`.
 
+#### WGSAParsr Configuration 
 
+Details of the configuration file are documented in the `wgsaparsr::load_config()` function documentation, 
+```{r eval=FALSE}
+?load_config
+```
+
+From the documentation, you can see that the configuration file is a tab-separated text file that must have the following columns (in any order): `field`, `SNV`, `indel`, `dbnsfp`, `pivotGroup`, `pivotChar`, `parseGroup`, and `transformation`.
+
+You will look at each of these fields in turn as you build your configuration file. Additionally, the configuration file that the TOPMed DCC used to parse the freeze 5 data release is included as an example in the WGSAParsr package.
+
+The configuration file you'll make in this workshop will not be as extensive or complicated as the example, but if you'd like, you can load it into your working session to examine:
 ```{r}
-desired_columns <- 
-  c(
-    "`#chr`", #NOTE: backtics on #chr because it starts with special character!
-    "pos",
-    "ref",
-    "alt",
-    "rs_dbSNP147",
-    # "CADDphred",
-    "CADD_phred", #NOTE: different than the indel annotation file.
-    "VEP_ensembl_Transcript_ID",
-    "VEP_ensembl_Gene_Name",
-    "VEP_ensembl_Gene_ID",
-    "VEP_ensembl_Consequence",
-    "VEP_ensembl_Amino_Acid_Change",
-    "VEP_ensembl_LoF",
-    "VEP_ensembl_LoF_filter",
-    "VEP_ensembl_LoF_flags",
-    "VEP_ensembl_LoF_info"
-    # "1000Gp3_AF" #skipped for the workshop because code doesn't work with this variable name
-    )
-    
-to_split <-
-    c(
-    "VEP_ensembl_Consequence",
-    "VEP_ensembl_Transcript_ID",
-    "VEP_ensembl_Gene_Name",
-    "VEP_ensembl_Gene_ID",
-    "VEP_ensembl_Amino_Acid_Change",
-    "VEP_ensembl_LoF",
-    "VEP_ensembl_LoF_filter",
-    "VEP_ensembl_LoF_flags",
-    "VEP_ensembl_LoF_info"
-    )
-  
-parse_to_file("snp.tsv.gz", "parsed_snp.tsv", desired_columns, to_split, verbose = TRUE)
+freeze_5_config <- load_config(wgsaparsr_example("fr_5_config.tsv"))
 ```
 
-Although the output file has fewer columns than the the raw WGSA output file, this .tsv file is not particularly nice to work with in R:
-
+Recall that our objective is to aggregate the variants into genic units and to apply filters to restrict the variants in aggreagation units by predicted functional consequence. To achieve this, we will use the following annotation fields: `CHROM`, `POS`, `REF`, `ALT`, `VEP_ensembl_Gene_ID`, `VEP_ensembl_Consequence`, and `CADD_phred`. This list of fields is the first variable we'll need for the configuration file:
 ```{r}
-readLines("parsed_snp.tsv", n=2)
+field <-  c("CHROM",
+            "POS",
+            "REF",
+            "ALT",
+            "VEP_ensembl_Gene_ID",
+            "VEP_ensembl_Consequence",
+            "CADD_phred")
 ```
 
-However, *get_fields()* does work on the parsed file to view available fields:
+The next required variable is `SNV`, a logical value indiciating whether these fields are present in the SNV annotation file. In this case, all of the fields are present in SNV annotation:
+```{r}
+SNV <- c(rep(TRUE, 7))
+```
 
+Then comes `indel`, a logical value indicating whether these fields are present in the indel annotation file. In this case, all of the fields are present in indel annotation:
+```{r}
+indel <- c(rep(TRUE, 7))
+```
+
+[dbNSFP](http://varianttools.sourceforge.net/Annotation/DbNSFP) is an annotation resource included in WGSA. These annotation fields reference gene-oriented features rather than transcript-oriented features, so must be parsed separately if needed for analysis. We do not need to use any dbNSFP variables in this exercise, so the `dbnsfp` variable is FALSE in our configuration:
+```{r}
+dbnsfp <- c(rep(FALSE, 7))
+```
+
+The next two variables are related to the pivoting of annotation list-fields to make them "tidy". Recall that some annotation fields have many values within a single tab-separated field. For example, there is a variant on chromosome 22 at position 15699830 that is annotated with this VEP_ensembl_Gene_ID: `ENSG00000198062|ENSG00000236666|ENSG00000212216|ENSG00000198062|ENSG00000198062` and this VEP_ensembl_Consequence: `intron_variant,NMD_transcript_variant|non_coding_transcript_exon_variant,non_coding_transcript_variant|upstream_gene_variant|intron_variant|intron_variant`. Such list-fields are awkward to work with, so they should be split into 5 lines, with the corresponding fields on the same line (e.g. the first VEP_ensembl_Gene_ID entry and the first VEP_ensembl_Consequence should go together).
+
+This is specified in the configuration file using the `pivotGroup` variable and the `pivotChar` variable is used to specify the character that is the list delimiter - `|` in this case. Build the `pivotGroup` and `pivotChar` variables like this for your configuration:
+```{r}
+pivotGroup <- c(rep(NA, 4), rep(as.integer(1), 2), NA)
+
+pivotChar <- c(rep(NA, 4), rep("|", 2), NA)
+```
+
+The final required variables for the configuration are `parseGroup`, and `transformation`. `parseGroup` defines sets of annotation fields that should be modified together (this primarily applies to sets of dbnsfp annotation fields), and `transformation` defines the modification that should happen. Valid values for `transformation` include `max`, `min`, `pick_Y`, `pick_N`, `pick_A`, `clean`, and `distinct`. 
+
+*WGSAParsr* applies the specified transformation to the field specified in the configuration file, and selects the corresponding value from other fields in the same parseGroup. No transformation or parseGroup is needed for this exercise, but to give an example for completeness, position 21791443 of chromosome 22 has a variant from reference A, the alternative AACAT. This variant is annotated with this Eigen_PC_raw value: `.{2}-0.08822322727842{1}-0.0955006471597487{1}`. A `transformation` of `max` would select the maximum numeric value of this annotation field - the value likely to have the most functional impact - of -0.08822322727842. If there were another field with corresponding entries, such as that variant's Eigen_raw value: `.{2}-0.27473415163451{1}-0.313313344373439{1}`, membership in the same parseGroup would pick the value in that field that corresponded to the maximum value in the Eigen_PC_raw annotation - in this case, -0.27473415163451. Note that the transformation would _not_ return the maximum Eigen_raw value in this case. 
+
+Other possible transformations include the following: `min` selects the minimum value, `pick_Y` picks the character `Y` if present,`pick_N` picks the character `N` if present, `pick_A` picks the character `A` (used for the MutationTaster_pred annotation), `clean` removes unneeded bracketed number strings (used for Ensembl_Regulatory_Build_feature_type, hESC_Topological_Domain, and IMR90_Topological_Domain fields), and `distinct` splits a field to disticnt values (used for Ensembl_Regulatory_Build_TFBS).
+
+None of these transformations are needed for our filtering and aggregation, so we can define the variables for the configuration this way:
+```{r}
+parseGroup <- c(rep(as.integer(NA), 7))
+transformation <- c(rep(as.character(NA), 7))
+```
+
+Finally, add an optional configuration variable: `order`. The `order` variable spcifies the column-order in the output file - this is particularly useful if you're working with many annotations, but want to make sure that `CHROM`, `POS`, `REF`, and `ALT` are at the beginning. Note: when using `order` un-numbered fields will go after numbered fields.
+```{r}
+order <- seq(1,7)
+```
+
+Put the configuration variables together in a tibble for validation and saving (a [tibble](https://tibble.tidyverse.org/) is a particular kind of data frame):
+```{r}
+my_config <-
+  tibble(
+    field,
+    SNV,
+    indel,
+    dbnsfp,
+    pivotGroup,
+    pivotChar,
+    parseGroup,
+    transformation,
+    order
+  )
+```
+
+Now inspect the configuration tibble:
+```{r}
+my_config
+```
+
+*WGSAParsr* includes a configuration validation function, `validate_config()`. A valid configuration tibble or file should get no errors from the validation function:
+```{r}
+validate_config(my_config)
+```
+
+save my_config
+```{r}
+write_tsv(my_config, "data/my_config.tsv")
+```
+
+```{r echo=FALSE}
+# cleanup needed for knitting
+if (file.exists("data/snv_parsed.tsv"))(file.remove("data/snv_parsed.tsv"))
+if (file.exists("data/indel_parsed.tsv"))(file.remove("data/indel_parsed.tsv"))
+```
+
+#### Parsing with WGSAParsr
+
+parse the example files
+```{r}
+parse_to_file(source_file = snvfile, 
+              config = "data/my_config.tsv",
+              destination = "data/snv_parsed.tsv",
+              chunk_size = 100,
+              verbose = FALSE)
+
+parse_to_file(source_file = indelfile, 
+              config = "data/my_config.tsv",
+              destination = "data/indel_parsed.tsv",
+              chunk_size = 100,
+              verbose = FALSE)
+```
+
+Although the output file has fewer columns than the the raw WGSA output file, this .tsv file is still not particularly nice to work with directly:
+```{r}
+readLines("data/snv_parsed.tsv", n=2)
+```
+
+But `get_fields()` works as expected on the parsed file:
 ```{r}
 # list all fields in an annotation file: 
-get_fields("parsed_snp.tsv")
+get_fields("data/snv_parsed.tsv")
 ```
 
-The WGSA output files for indel variants differs from the output for SNPs. Some of the field names differ slightly (e.g. "CADDphred" instead of "CADD_phred"), and there are some fields of interest that include feature counts in brackets (e.g. ENCODE_Dnase_cells includes fields like 125\{23\}). Thus, (for now) *wgsaparsr* includes *parse_indel_to_file()*. *parse_indel_to_file()* is very similar to *parse_to_file()*, and will likely be incorporated to that function in the near future. The syntax for *parse_indel_to_file()* is the same as *parse_to_file()*:
-
+And in this case, the parsed files are small enough that we can load them into the R session and work with the resulting dataframes for subsequent analysis. (At full scale, the TOPMed DCC imports the parsed files to a database, and uses the annotation data that way):
 ```{r}
-desired_columns_indel <- 
-  c(
-    "`#chr`", #NOTE: backtics on #chr because it starts with special character!
-    "pos",
-    "ref",
-    "alt",
-    "rs_dbSNP147",
-    "CADDphred",
-    #  "CADD_phred", #NOTE: different than the general annotation file.
-    "VEP_ensembl_Transcript_ID",
-    "VEP_ensembl_Gene_Name",
-    "VEP_ensembl_Gene_ID",
-    "VEP_ensembl_Consequence",
-    "VEP_ensembl_Amino_Acid_Change",
-    "VEP_ensembl_LoF",
-    "VEP_ensembl_LoF_filter",
-    "VEP_ensembl_LoF_flags",
-    "VEP_ensembl_LoF_info"
-    # "1000Gp3_AF"#skipped for the workshop because code doesn't work with this variable name
-    )
-  
-parse_indel_to_file("indel.tsv.gz", "parsed_indel.tsv", desired_columns_indel, to_split, verbose = TRUE)
+snv_annotation <- read_tsv("data/snv_parsed.tsv",
+                           col_types = cols(
+                             CHROM = col_character(),
+                             POS = col_integer(),
+                             REF = col_character(),
+                             ALT = col_character(),
+                             VEP_ensembl_Gene_ID = col_character(),
+                             VEP_ensembl_Consequence = col_character(),
+                             CADD_phred = col_double()
+                           ))
+```
+Since there are warnings on that loading, check them out:
+```{r}
+problems(snv_annotation)
 ```
 
-Inspection shows that the output format is the same for this function:
-
+Ah, so not really anything to worry about - "." values will be replaced with NA when casting to type double. Go ahead and read the indel file:
 ```{r}
-readLines("parsed_indel.tsv", n=2)
+indel_annotation <- read_tsv("data/indel_parsed.tsv",
+                             col_types = cols(
+                             CHROM = col_character(),
+                             POS = col_integer(),
+                             REF = col_character(),
+                             ALT = col_character(),
+                             VEP_ensembl_Gene_ID = col_character(),
+                             VEP_ensembl_Consequence = col_character(),
+                             CADD_phred = col_double()
+                           ))
 ```
 
-Or as a list,
+And since that's fine, go ahead and put them together for subsequent analysis:
+```{r}
+combined_annotation <- bind_rows(snv_annotation, indel_annotation)
+```
+
+### Aggregating and filtering variants using annotation
+
+I AM HERE
+
+```{r, include=FALSE}
+## REMOVE ME after updating this section
+knitr::opts_chunk$set(eval=FALSE)
+```
 
 ```{r}
-# list all fields in an annotation file: 
-get_fields("parsed_indel.tsv")
+combined_annotation %>% filter(VEP_ensembl_Gene_ID != ".") %>% group_by(VEP_ensembl_Gene_ID) %>% filter(CADD_phred > 3) %>% filter(str_detect(VEP_ensembl_Consequence, "intron_variant"))
 ```
 
 If an analyst wished to filter the list of variants prior to aggregation, the processing code could be modified to apply filters during parsing, or the annotation file could be reprocessed to apply filters at this point. Alternatively, filters can also be applied subsequent to aggregation.
@@ -336,80 +427,7 @@ parsedindelfile <- "parsed_indel.tsv"
 if (!file.exists(parsedindelfile)) download.file(file.path(ben.workshop.path, parsedindelfile), parsedindelfile)
 ```
 
-### Defining "gene" ranges for aggregation
 
-Aggregation requires definition of the desired aggregation units. As a relatively simple example, we will build a list of genomic ranges corresponding to genes as defined by the [GENCODE Project](https://www.gencodegenes.org/about.html).
-
-The GENCODE Project's Genomic ENCylopedia Of DNA Elements is available in the well-documented [.gtf file format](https://www.gencodegenes.org/data_format.html). Generally, .gtf files consist of 9 tab-separated fields, some of which may consist of various numbers of key:value pairs.
-
-The DCC has begun an R package, *genetable*, to parse and work with .gtf files. This package is under development, and is available on github at [https://github.com/UW-GAC/genetable](https://github.com/UW-GAC/genetable). For now, the package can be installed from github using the *devtools* package:
-
-```{r message=FALSE}
-#library(devtools)
-#devtools::install_github("UW-GAC/genetable")
-
-library(genetable)
-```
-
-I'll be working with the gencode release 19 because it's the last one on GRCh37. The [file](ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_human/release_19/gencode.v19.annotation.gtf.gz) can be downloaded via [https://www.gencodegenes.org/releases/19.html](https://www.gencodegenes.org/releases/19.html).
-
-In this case, I've trimmed the gencode file to include only chromosome 22 feature definitions (since that's the variant annotation set I'm using for the demo).
-
-```{r}
-gtffile <- "chr22.gtf.gz"
-if (!file.exists(gtffile)) download.file(file.path(ben.workshop.path, gtffile), gtffile)
-
-gtf_source <- "chr22.gtf.gz"
-```
-
-The details of the *genetable* package are of less interest for this workshop, so we'll just use it - we can import and tidy the .gtf file:
-```{r}
-# import the gtf file to a tidy data frame (a tibble)
-gtf <- import_gencode(gtf_source)
-
-# look at the tibble
-glimpse(gtf)
-```
-
-We can see that genomic features are tagged by feature type:
-```{r}
-# summarize the number of features by tag.
-summarize_tag(gtf, tag = "basic")
-```
-
-And we can use these feature type tags to filter the .gtf annotation to extract the starting and ending genomic positions for features of interest, such as features tagged "gene":
-```{r}
-# filter gtf file to return transcript features tagged basic
-basic_transcripts <- filter_gencode(gtf, featurearg = "transcript", tagarg = "basic")
-
-# or filter for features == "gene"
-genes <- filter_gencode(gtf, featurearg = "gene")
-
-# define the boundaries of the feature of interest
-# this can be slow for complicated features
-#gene_bounds <- define_boundaries(basic_transcripts, "gene_id")
-gene_bounds <- define_boundaries(genes, "gene_id")
-
-# can check the resulting tibble for sanity
-glimpse(gene_bounds)
-```
-
-Finally, *genetable* includes a function to save a self-documented tab separated file containing the filtered .gtf results:
-```{r}
-# save to file
-note <- 'This file includes starting and ending ranges for feature = "gene" in the gtf file.'
-save_to_file(gene_bounds, notes = note) # will automatically make file called feature_bounds_DATE.tsv
-```
-
-As insurance for this exercise, the genic range definitions that I made last week are also available on github:
-
-```{r}
-ben.workshop.path <- "https://github.com/bheavner/topmed_workshop_2017_bh/raw/master"
-boundsfile <- "feature_bounds_20170804.tsv"
-if (!file.exists(boundsfile)) download.file(file.path(ben.workshop.path, boundsfile), boundsfile)
-```
-
-### Aggregating TOPMed variants into genic units
 
 Now we've generated a set of variants with a manaageable number of annotation fields, and defined the desired aggregation units as sets of genomic ranges. The set of variants may be filtered using the annotation fields we've chosen (our list is unfiltered in this example).
 

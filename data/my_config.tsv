@@ -1,0 +1,8 @@
+field	SNV	indel	dbnsfp	pivotGroup	pivotChar	parseGroup	transformation	order
+CHROM	TRUE	TRUE	FALSE	NA	NA	NA	NA	1
+POS	TRUE	TRUE	FALSE	NA	NA	NA	NA	2
+REF	TRUE	TRUE	FALSE	NA	NA	NA	NA	3
+ALT	TRUE	TRUE	FALSE	NA	NA	NA	NA	4
+VEP_ensembl_Gene_ID	TRUE	TRUE	FALSE	1	|	NA	NA	5
+VEP_ensembl_Consequence	TRUE	TRUE	FALSE	1	|	NA	NA	6
+CADD_phred	TRUE	TRUE	FALSE	NA	NA	NA	NA	7
