@@ -12,12 +12,16 @@ received a harmonized phenotype file from each study.
 We will generate some diagnostic information about the harmonized phenotype.
 
 The exercise uses 1000 Genomes data, with simulated phenotypes for study, age, and height.
-We will be using `dplyr` for a lot of the data manipulation.
+The example phenotype files shown here are very simplified compared to how actual studies store and organize their their data.
+
+In this exercise, we will be using `dplyr` for a lot of the data manipulation, so load it now.
 ```{r, message = FALSE}
 library(dplyr)
 ```
 
+
 ## Inspect individual study data in R
+
 
 The first step is to read the files into R for processing.
 Before we begin, you need to download the data from github so you have access to it.
@@ -81,6 +85,9 @@ summary(study_3$height)
 
 The corrected values look much more similar now.
 
+Note that this sort of error is easy to correct, but it is not uncommon to have more subtle issues that need to be addressed when working with phenotype data.
+Knowledge of the study design as well as the phenotype area of interest is essential to address them properly.
+Additionally, different decisions may need to be made for different analyses based on the specific questions they are trying to answer.
 
 ## Compare study values
 
@@ -184,7 +191,7 @@ Becase it is an input to the mixed model, we next need to download the genetic r
 ```{r}
 data_path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
 grmfile <- "data/grm.RData"
-if (!file.exists(grmfile)) download.file(file.path(data_path, grmfile, extra = "-L"), grmfile)
+if (!file.exists(grmfile)) download.file(file.path(data_path, basename(grmfile)), grmfile)
 grm <- TopmedPipeline::getobj(grmfile)
 rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
 ```
@@ -325,6 +332,7 @@ In other cases, there may be good reasons to exclude one or more studies, for ex
 It may be necessary to look at other variables that you had not previously considered.
 Studies may have used different measurement equipment or calibrated their data differently.
 There might also be other batch effects due to lab procedures or assays that could result in differences in the variance or mean by study.
+The other variables that you may need to consider are highly dependent both on the phenotype being harmonized and on how a given study has been designed.
 
 Unfortunately there is no single set of guidelines you can use to decide how to proceed with analysis of a phenotype.
-It is necessary to involve both domain experts and study experts to determine whether the phenotype is homogeneous enough to analyze the studies together.
+It is necessary to involve both domain experts and study experts to determine whether the phenotype is homogeneous enough to use in cross-study analysis.
