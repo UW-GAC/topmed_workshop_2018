@@ -22,5 +22,5 @@ time | topic | presenters
 --- | --- | ---
 8:30 am - 10:00 am | Variant annotation | Ben, Stephanie
 10:30 am - 12:00 pm | Pipeline design and examples | Dave, Stephanie, Roy
-1:30 pm - 3:00 pm | Analysis Commons | Jen
+1:30 pm - 3:00 pm | Cloud platforms: Seven Bridges, Analysis Commons | Milan, Jen
 3:30 pm - 5:00 pm | Hands-on cloud computing | Roy, Jen

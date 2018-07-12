@@ -6,3 +6,7 @@
 1KG_phase3_subset*
 grm.RData
 _bookdown_files
+packrat/
+packrat/lib*/
+.Rprofile
+libs/

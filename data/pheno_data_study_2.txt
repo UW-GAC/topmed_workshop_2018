@@ -1,4 +1,4 @@
-subject_id	sex	age	height
+subject_id	Sex	Age	Height
 HG00099	F	40	185.5
 HG00103	M	50	190.8
 HG00106	F	51	165.5

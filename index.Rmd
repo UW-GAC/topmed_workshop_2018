@@ -1,12 +1,12 @@
---- 
-title: "TOPMed Analysis Workshop"
+---
+title: "SISG Module 12: Computational Pipeline for WGS Data"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
 link-citations: yes
 github-repo: UW-GAC/topmed_workshop_2018
-description: "Course materials for the TOPMed analysis workshop"
+description: "Course materials for SISG Module 12"
 ---
 
 ```{r setup, include=FALSE}
@@ -18,13 +18,13 @@ knitr::opts_chunk$set(echo=TRUE, message=FALSE)
 This site contains course materials for SISG Module 12: Computational Pipeline for WGS Data, July 18-20, 2018.
 Data used is located in the [github repository](https://github.com/UW-GAC/topmed_workshop_2018) from which the site is built, as well as in the [TOPMed analysis pipeline](https://github.com/UW-GAC/analysis_pipeline).
 
-To work through the exercises, log into RStudio Server at [http://52.25.72.68:8787](http://52.25.72.68:8787) with your username and password.
+To work through the exercises, log into RStudio Server at [http://34.208.147.133:8787](http://34.208.147.133:8787) with your username and password.
 
 Slides for lectures are posted here:\
-[https://www.nhlbiwgs.org/topmed-analysis-workshop-2017-materials](https://www.nhlbiwgs.org/topmed-analysis-workshop-2017-materials)
+[https://www.biostat.washington.edu/suminst/SISG2018/modules/SM1812](https://www.biostat.washington.edu/suminst/SISG2018/modules/SM1812)
 
 Join the Slack channel here:\
-[https://join.slack.com/t/topmed-analysis-2017/signup](https://join.slack.com/t/topmed-analysis-2017/signup)
+[https://join.slack.com/t/sisg2018module12/signup](https://join.slack.com/t/sisg2018module12/signup)
 
 If you are new to R, you might find the following material helpful:
 

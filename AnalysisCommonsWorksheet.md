@@ -12,18 +12,17 @@
 
 ### Exercise 1) Run a single variant analysis.  
 
-Log into http://dnanexus.com using the user name and password listed on the handout.  
-Should be in the form of Username:**topmed\_#** and Password:**Topmed\_#**.
+Log into http://dnanexus.com using the Analysis Commons user name and password listed on the website.  
+Should be in the form of Username:**topmed\_#** and Password:**TOPMed\_#**.
 *Ignore warning about default billing account.*
 
 
 
 #### Part 1: Run null model
-Navigate to and select **(dcc:tools/genesis\_nullmodel)**
+Navigate to and select **(wgs:tools/genesis\_nullmodel)**
 
 File inputs:  
 * phenofile -> phenotype/1KG_pheno.csv  
-* genotypefile -> genotypes/GDS/1KG_phase3_subset_chr1.gds   **(any chr is fine, is only extracting the sample ids)**
 * kinship -> kinship/1KG_kins.Rda  
 
 Parameter inputs:  
@@ -36,7 +35,7 @@ Parameter inputs:
 * Note: The job may finish instantaneously if you don’t change the output file name.  It knows that you are running the exact same job and will just reuse results from previous analyses. 
 
 #### Part 2: Run association tests
-Navigate to and select **(dcc:tools/genesis\_tests)**
+Navigate to and select **(wgs:tools/genesis\_tests)**
 
 File inputs:  
 * null_model -> /output/YOURFOLDERNAME/nullmodel\_outcome.Rda  **(output from part1.  If yours has not completed, you can select output/DEMO/nullmodel\_outcome.Rda)**
@@ -76,8 +75,8 @@ References:
 ### Log in to AWI
 **Replace topmed_## with the user ID from your handout**
 ```
-$ ssh topmed_##@34.212.243.167
-You will be prompted for your password, e.g. Topmed_## (Note capitalization)
+$ ssh topmed_##@34.208.147.133
+You will be prompted for your password, e.g. TOPMed_## (Note capitalization)
 _Please ignore login warnings
 
 $ source /usr/local/dx-toolkit/environment
@@ -88,11 +87,11 @@ $ source /usr/local/dx-toolkit/environment
 $ dx login  --timeout 2h
 	Enter the following at the prompts
 		username: topmed_##
-		password: Topmed_##
-		project:dcc ( type 0 to select dcc )
+		password: TOPMed_##
+		project:wgs ( type 0 to select wgs )
 
 You can select or change project once you are logged in
-$ dx select dcc
+$ dx select wgs
 ```
 
 
@@ -100,19 +99,19 @@ $ dx select dcc
 ### Exercise 3) Navigate directories, make output directory, examine files
 
 * File paths: \<project\>:/path/to/file.txt
-* Example: dcc:/phenotypes/1KG\_pheno.csv
+* Example: wgs:/phenotypes/1KG\_pheno.csv
 
 
 List directory contents:
 ```
-$ dx select dcc
+$ dx select wgs
 $ dx ls
 $ dx ls /tools
-$ dx ls dcc:/tools
+$ dx ls wgs:/tools
 ```
 Get results from project
 ```
-$ dx download dcc:/phenotype/1KG_pheno.csv
+$ dx download wgs:/phenotype/1KG_pheno.csv
 $ ls
 $ head 1KG_pheno.csv
 ```
@@ -120,7 +119,7 @@ $ head 1KG_pheno.csv
 
 Open the single_multichrom.sh bash script and edit to replace the output directory “YOURNAME” to your folder
 ```
-$ dx describe tools/genesis_v0.7
+$ dx describe tools/genesis_tests
 ```
 Either edit using nano
 ```
@@ -147,7 +146,7 @@ Choose a class (<TAB> twice for choices): file
 This is an optional parameter [y/n]: n
 
 2nd input name (<ENTER> to finish): model
-Label (optional human-readable name) []: model for creating residuals (e.g. outcome~age+Population )
+Label (optional human-readable name) []: model for creating residuals (e.g. outcome~sex+Population )
 Choose a class (<TAB> twice for choices): string
 This is an optional parameter [y/n]: n
 
@@ -186,12 +185,16 @@ main() {
 
     dx download "$phenofile" -o phenofile
 
+    ## ADD THIS LINE ##
     Rscript /make_resid.R $model
 
     output=$(dx upload output --brief)
 
-    dx-jobutil-add-output output "$output" --class=file
+    ## ADD THIS LINE ##
     dx mv ${output} ${prefix}.csv
+    
+    dx-jobutil-add-output output "$output" --class=file
+    
 }
 
 ```
@@ -250,11 +253,6 @@ Once you know the name of the p-value column, run qqplot first through web inter
 $ dx run tools/qqplot
 ```
 _Note: the plot label must not contain spaces._
-
-### Optional Exercise 7) Run conditional analysis
-Find the name of one associated variant in the single snp results and rerun the single variant analysis conditioning on that variant (e.g. 22:17105517).  
-_Note that the output file name cannot contain a colon (e.g. output file name cannot be single\_chr22\_single\_22:17105517, try single\_chr22\_single\_22\_17105517 instead)._
-
 
 
 ### Optional Exercise 8) Create a regional association plot using LD extracted from your data set
