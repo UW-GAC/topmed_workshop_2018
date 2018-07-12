@@ -124,13 +124,13 @@ summary(study_1$height)
 
 It is also helpful to use plots to inspect the distributions of phenotype data.
 Here, we will look at boxplots of height by study.
-```{r, message = FALSE}
+```{r height_study, message = FALSE}
 library(ggplot2)
 ggplot(phen, aes(x = study, y = height)) + geom_boxplot()
 ```
 
 You may also want to see the difference in height when you include both study and sex:
-```{r}
+```{r height_study_sex}
 ggplot(phen, aes(x = study, fill = sex, y = height)) + geom_boxplot()
 ```
 
@@ -139,7 +139,7 @@ They can help you see if one study is vastly different from the others or detect
 Some of the differences could also be accounted for by covariates.
 
 
-## Use using mixed models to compare studies
+## Using mixed models to compare studies
 
 The quick diagnostics in the previous section let you see if the data from one study are completely different from the others, but such differences could be due to other factors that could be adjusted for in analysis.
 To account for these other factors, we need to fit a statistical model to the data.
@@ -258,7 +258,7 @@ annot$residuals <- mod_1$resid.marginal[j]
 
 Next, we want to check if the different studies have the same mean height after adjustment for other covariates (here, age and sex).
 We will first do this qualitatively by making a boxplot of the residuals by study.
-```{r}
+```{r resid_1}
 ggplot(pData(annot), aes(x = study, y = residuals)) + geom_boxplot()
 ```
 
@@ -306,7 +306,7 @@ annot$residuals <- mod_2$resid.marginal[j]
 ```
 
 Next make a boxplot of the residuals by study.
-```{r}
+```{r resid_2}
 ggplot(pData(annot), aes(x = study, y = residuals)) +
   geom_boxplot()
 ```
