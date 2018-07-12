@@ -5,26 +5,26 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>TOPMed Analysis Workshop</title>
-  <meta name="description" content="Course materials for the TOPMed analysis workshop">
+  <title>SISG Module 12: Computational Pipeline for WGS Data</title>
+  <meta name="description" content="Course materials for SISG Module 12">
   <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="TOPMed Analysis Workshop" />
+  <meta property="og:title" content="SISG Module 12: Computational Pipeline for WGS Data" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Course materials for the TOPMed analysis workshop" />
+  <meta property="og:description" content="Course materials for SISG Module 12" />
   <meta name="github-repo" content="UW-GAC/topmed_workshop_2018" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="TOPMed Analysis Workshop" />
+  <meta name="twitter:title" content="SISG Module 12: Computational Pipeline for WGS Data" />
   
-  <meta name="twitter:description" content="Course materials for the TOPMed analysis workshop" />
+  <meta name="twitter:description" content="Course materials for SISG Module 12" />
   
 
 
 
-<meta name="date" content="2018-05-11">
+<meta name="date" content="2018-07-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="pc-relate.html">
-<link rel="next" href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html">
+<link rel="next" href="association-tests.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -98,7 +98,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#schedule"><i class="fa fa-check"></i><b>1.1</b> Schedule</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#resources"><i class="fa fa-check"></i><b>1.2</b> Resources</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>2</b> GDS format</a><ul>
 <li class="chapter" data-level="2.1" data-path="gds-format.html"><a href="gds-format.html#exploring-a-gds-file"><i class="fa fa-check"></i><b>2.1</b> Exploring a GDS file</a></li>
 <li class="chapter" data-level="2.2" data-path="gds-format.html"><a href="gds-format.html#exercises"><i class="fa fa-check"></i><b>2.2</b> Exercises</a></li>
@@ -112,66 +115,58 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.5" data-path="pc-relate.html"><a href="pc-relate.html#exercise"><i class="fa fa-check"></i><b>4.5</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html"><i class="fa fa-check"></i><b>5</b> Phenotype Harmonization</a><ul>
-<li class="chapter" data-level="5.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#import-phentoype-files-into-r"><i class="fa fa-check"></i><b>5.1</b> Import phentoype files into R</a></li>
-<li class="chapter" data-level="5.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#run-some-quick-diagnostics-on-the-files"><i class="fa fa-check"></i><b>5.2</b> Run some quick diagnostics on the files</a></li>
+<li class="chapter" data-level="5.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#inspect-individual-study-data-in-r"><i class="fa fa-check"></i><b>5.1</b> Inspect individual study data in R</a></li>
+<li class="chapter" data-level="5.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#compare-study-values"><i class="fa fa-check"></i><b>5.2</b> Compare study values</a></li>
 <li class="chapter" data-level="5.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#use-using-mixed-models-to-compare-studies"><i class="fa fa-check"></i><b>5.3</b> Use using mixed models to compare studies</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#create-an-annotated-data-frame"><i class="fa fa-check"></i><b>5.3.1</b> Create an Annotated Data Frame</a></li>
 <li class="chapter" data-level="5.3.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#obtain-the-genetic-relatedness-matrix"><i class="fa fa-check"></i><b>5.3.2</b> Obtain the genetic relatedness matrix</a></li>
-<li class="chapter" data-level="5.3.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-mixed-model-without-harmonization-unit"><i class="fa fa-check"></i><b>5.3.3</b> Fit a mixed model without harmonization unit</a></li>
-<li class="chapter" data-level="5.3.4" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-model-with-harmonization-unit"><i class="fa fa-check"></i><b>5.3.4</b> Fit a model with harmonization unit</a></li>
+<li class="chapter" data-level="5.3.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-mixed-model-without-study"><i class="fa fa-check"></i><b>5.3.3</b> Fit a mixed model without study</a></li>
+<li class="chapter" data-level="5.3.4" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-model-with-study"><i class="fa fa-check"></i><b>5.3.4</b> Fit a model with study</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#final-considerations"><i class="fa fa-check"></i><b>5.4</b> Final considerations</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><i class="fa fa-check"></i><b>6</b> Finding unharmonized TOPMed study phenotypes on dbGaP</a><ul>
-<li class="chapter" data-level="6.1" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#ways-to-get-topmed-phenotype-data"><i class="fa fa-check"></i><b>6.1</b> Ways to get TOPMed phenotype data</a></li>
-<li class="chapter" data-level="6.2" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#dbgap-accession-lingo"><i class="fa fa-check"></i><b>6.2</b> dbGaP accession lingo</a></li>
-<li class="chapter" data-level="6.3" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#dbgap-advanced-search-tools"><i class="fa fa-check"></i><b>6.3</b> dbGaP advanced search tools</a><ul>
-<li class="chapter" data-level="6.3.1" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#entrez-advanced-search"><i class="fa fa-check"></i><b>6.3.1</b> <a href="https://www.ncbi.nlm.nih.gov/gap/advanced">Entrez advanced search</a></a></li>
-<li class="chapter" data-level="6.3.2" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#faceted-advanced-search"><i class="fa fa-check"></i><b>6.3.2</b> <a href="https://www.ncbi.nlm.nih.gov/projects/gapsolr/facets.html">Faceted advanced search</a></a></li>
+<li class="chapter" data-level="6" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>6</b> Association tests</a><ul>
+<li class="chapter" data-level="6.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>6.1</b> Null model</a></li>
+<li class="chapter" data-level="6.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>6.2</b> Single-variant tests</a></li>
+<li class="chapter" data-level="6.3" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>6.3</b> Exercises</a></li>
+<li class="chapter" data-level="6.4" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>6.4</b> Sliding window tests</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>6.4.1</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>6.5</b> Annotation-based aggregate tests</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="association-tests.html"><a href="association-tests.html#working-with-variant-annotation"><i class="fa fa-check"></i><b>6.5.1</b> Working with variant annotation</a></li>
+<li class="chapter" data-level="6.5.2" data-path="association-tests.html"><a href="association-tests.html#aggregating-and-filtering-variants-using-annotation"><i class="fa fa-check"></i><b>6.5.2</b> Aggregating and filtering variants using annotation</a></li>
+<li class="chapter" data-level="6.5.3" data-path="association-tests.html"><a href="association-tests.html#aggregate-unit-for-association-testing-exercise"><i class="fa fa-check"></i><b>6.5.3</b> Aggregate unit for association testing exercise</a></li>
+<li class="chapter" data-level="6.5.4" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>6.5.4</b> Association testing with aggregate units</a></li>
+<li class="chapter" data-level="6.5.5" data-path="association-tests.html"><a href="association-tests.html#exercise-2"><i class="fa fa-check"></i><b>6.5.5</b> Exercise</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>7</b> Association tests</a><ul>
-<li class="chapter" data-level="7.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>7.1</b> Null model</a></li>
-<li class="chapter" data-level="7.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>7.2</b> Single-variant tests</a></li>
-<li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.3</b> Exercises</a></li>
-<li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.4</b> Sliding window tests</a><ul>
-<li class="chapter" data-level="7.4.1" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.4.1</b> Exercise</a></li>
-</ul></li>
-<li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Annotation-based aggregate tests</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#working-with-variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Working with variant annotation</a></li>
-<li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-gene-ranges-for-aggregation"><i class="fa fa-check"></i><b>7.5.2</b> Defining “gene” ranges for aggregation</a></li>
-<li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#aggregating-topmed-variants-into-genic-units"><i class="fa fa-check"></i><b>7.5.3</b> Aggregating TOPMed variants into genic units</a></li>
-<li class="chapter" data-level="7.5.4" data-path="association-tests.html"><a href="association-tests.html#aggregate-unit-for-association-testing-exercise"><i class="fa fa-check"></i><b>7.5.4</b> Aggregate unit for association testing exercise</a></li>
-<li class="chapter" data-level="7.5.5" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.5</b> Association testing with aggregate units</a></li>
-<li class="chapter" data-level="7.5.6" data-path="association-tests.html"><a href="association-tests.html#exercise-2"><i class="fa fa-check"></i><b>7.5.6</b> Exercise</a></li>
+<li class="chapter" data-level="7" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>7</b> Analysis Pipeline</a><ul>
+<li class="chapter" data-level="7.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-a-local-cluster"><i class="fa fa-check"></i><b>7.1</b> Running on a local cluster</a></li>
+<li class="chapter" data-level="7.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-aws-batch"><i class="fa fa-check"></i><b>7.2</b> Running on AWS Batch</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#log-into-aws-docker-image"><i class="fa fa-check"></i><b>7.2.1</b> Log into AWS docker image</a></li>
+<li class="chapter" data-level="7.2.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#download-the-docker-helper-functions"><i class="fa fa-check"></i><b>7.2.2</b> Download the docker helper functions</a></li>
+<li class="chapter" data-level="7.2.3" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#cd-to-working-directory-and-create-config-file"><i class="fa fa-check"></i><b>7.2.3</b> cd to working directory and create config file</a></li>
+<li class="chapter" data-level="7.2.4" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#execute-the-python-helper-function-to-run-the-docker-image"><i class="fa fa-check"></i><b>7.2.4</b> Execute the python helper function to run the docker image</a></li>
+<li class="chapter" data-level="7.2.5" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#print-out-aws-commands-if-executing-the-pipeline"><i class="fa fa-check"></i><b>7.2.5</b> Print out AWS commands if executing the pipeline</a></li>
+<li class="chapter" data-level="7.2.6" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#execute-the-pipeline"><i class="fa fa-check"></i><b>7.2.6</b> Execute the pipeline</a></li>
+<li class="chapter" data-level="7.2.7" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#monitor-the-jobs"><i class="fa fa-check"></i><b>7.2.7</b> Monitor the jobs</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>8</b> Analysis Pipeline</a><ul>
-<li class="chapter" data-level="8.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-a-local-cluster"><i class="fa fa-check"></i><b>8.1</b> Running on a local cluster</a></li>
-<li class="chapter" data-level="8.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-aws-batch"><i class="fa fa-check"></i><b>8.2</b> Running on AWS Batch</a><ul>
-<li class="chapter" data-level="8.2.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#log-into-aws-docker-image"><i class="fa fa-check"></i><b>8.2.1</b> Log into AWS docker image</a></li>
-<li class="chapter" data-level="8.2.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#cd-to-working-directory-and-create-config-file"><i class="fa fa-check"></i><b>8.2.2</b> cd to working directory and create config file</a></li>
-<li class="chapter" data-level="8.2.3" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#print-out-aws-commands-if-executing-the-pipeline"><i class="fa fa-check"></i><b>8.2.3</b> Print out AWS commands if executing the pipeline</a></li>
-<li class="chapter" data-level="8.2.4" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#execute-the-pipeline"><i class="fa fa-check"></i><b>8.2.4</b> Execute the pipeline</a></li>
-<li class="chapter" data-level="8.2.5" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#monitor-the-jobs"><i class="fa fa-check"></i><b>8.2.5</b> Monitor the jobs</a></li>
+<li class="chapter" data-level="8" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>8</b> Analysis Commons</a><ul>
+<li class="chapter" data-level="8.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>8.1</b> Outline</a></li>
+<li class="chapter" data-level="8.2" data-path="analysis-commons.html"><a href="analysis-commons.html#web-interface-and-running-an-analysis-application"><i class="fa fa-check"></i><b>8.2</b> Web Interface and Running an Analysis Application</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-1-run-a-single-variant-analysis."><i class="fa fa-check"></i><b>8.2.1</b> Exercise 1) Run a single variant analysis.</a></li>
+<li class="chapter" data-level="8.2.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5."><i class="fa fa-check"></i><b>8.2.2</b> Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</a></li>
 </ul></li>
+<li class="chapter" data-level="8.3" data-path="analysis-commons.html"><a href="analysis-commons.html#command-line-interface"><i class="fa fa-check"></i><b>8.3</b> Command line interface</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="analysis-commons.html"><a href="analysis-commons.html#log-in-to-awi"><i class="fa fa-check"></i><b>8.3.1</b> Log in to AWI</a></li>
+<li class="chapter" data-level="8.3.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-3-navigate-directories-make-output-directory-examine-files"><i class="fa fa-check"></i><b>8.3.2</b> Exercise 3) Navigate directories, make output directory, examine files</a></li>
+<li class="chapter" data-level="8.3.3" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-4-run-single-variant-analysis-from-command-line-using-bash-script"><i class="fa fa-check"></i><b>8.3.3</b> Exercise 4) Run single variant analysis from command line using bash script</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>9</b> Analysis Commons</a><ul>
-<li class="chapter" data-level="9.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>9.1</b> Outline</a></li>
-<li class="chapter" data-level="9.2" data-path="analysis-commons.html"><a href="analysis-commons.html#web-interface-and-running-an-analysis-application"><i class="fa fa-check"></i><b>9.2</b> Web Interface and Running an Analysis Application</a><ul>
-<li class="chapter" data-level="9.2.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-1-run-a-single-variant-analysis."><i class="fa fa-check"></i><b>9.2.1</b> Exercise 1) Run a single variant analysis.</a></li>
-<li class="chapter" data-level="9.2.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5."><i class="fa fa-check"></i><b>9.2.2</b> Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</a></li>
-</ul></li>
-<li class="chapter" data-level="9.3" data-path="analysis-commons.html"><a href="analysis-commons.html#command-line-interface"><i class="fa fa-check"></i><b>9.3</b> Command line interface</a><ul>
-<li class="chapter" data-level="9.3.1" data-path="analysis-commons.html"><a href="analysis-commons.html#log-in-to-awi"><i class="fa fa-check"></i><b>9.3.1</b> Log in to AWI</a></li>
-<li class="chapter" data-level="9.3.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-3-navigate-directories-make-output-directory-examine-files"><i class="fa fa-check"></i><b>9.3.2</b> Exercise 3) Navigate directories, make output directory, examine files</a></li>
-<li class="chapter" data-level="9.3.3" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-4-run-single-variant-analysis-from-command-line-using-bash-script"><i class="fa fa-check"></i><b>9.3.3</b> Exercise 4) Run single variant analysis from command line using bash script</a></li>
-</ul></li>
-<li class="chapter" data-level="9.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>9.4</b> Writing your own Apps</a><ul>
-<li class="chapter" data-level="9.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>9.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
-<li class="chapter" data-level="9.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>9.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
-<li class="chapter" data-level="9.4.3" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-7-run-conditional-analysis"><i class="fa fa-check"></i><b>9.4.3</b> Optional Exercise 7) Run conditional analysis</a></li>
-<li class="chapter" data-level="9.4.4" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set"><i class="fa fa-check"></i><b>9.4.4</b> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</a></li>
+<li class="chapter" data-level="8.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>8.4</b> Writing your own Apps</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>8.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
+<li class="chapter" data-level="8.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>8.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
+<li class="chapter" data-level="8.4.3" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set"><i class="fa fa-check"></i><b>8.4.3</b> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -183,7 +178,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">TOPMed Analysis Workshop</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">SISG Module 12: Computational Pipeline for WGS Data</a>
           </h1>
         </div>
 
@@ -193,19 +188,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="phenotype-harmonization" class="section level1">
 <h1><span class="header-section-number">5</span> Phenotype Harmonization</h1>
-<p>Because TOPMed comprises multiple, distinct studies, it is necessary to perform phenotype harmonization before running a cross-study analysis. Harmonization is generally performed by “harmonization unit”, which is defined as a group of subjects whose phenotypes can be similarly processed. In many cases, one study corresponds to one harmonization unit, but more complicated studies may require multiple harmonization units. For example, the Framingham Heart study has multiple subcohorts (Original, Offspring, etc.), with phenotypes measured differently for subjects in different cohorts. Since the phenotypes have been measured differently, the different subcohorts have to be harmonized separately.</p>
+<p>To increase your sample set, you may need to combine phenotype data from different studies in order to run a cross-study analysis. The studies involved may have collected data in different ways, used different protocols or measurement units, or used different cutpoints to determine case status. The process of manipulating the phenotype data from different studies so that they can be analyzed together is called “phenotype harmonization”.</p>
 <p>In this exercise, we assume that you have created a phenotype harmonization plan for height, sent it to members from three studies to perform the harmonization, and received a harmonized phenotype file from each study. We will generate some diagnostic information about the harmonized phenotype.</p>
-<p>The exercise uses 1000 Genomes data, with simulated phenotypes for study, age, and height.</p>
-<div id="import-phentoype-files-into-r" class="section level2">
-<h2><span class="header-section-number">5.1</span> Import phentoype files into R</h2>
+<p>The exercise uses 1000 Genomes data, with simulated phenotypes for study, age, and height. The example phenotype files shown here are very simplified compared to how actual studies store and organize their their data.</p>
+<p>In this exercise, we will be using <code>dplyr</code> for a lot of the data manipulation, so load it now.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre></div>
+<div id="inspect-individual-study-data-in-r" class="section level2">
+<h2><span class="header-section-number">5.1</span> Inspect individual study data in R</h2>
 <p>The first step is to read the files into R for processing. Before we begin, you need to download the data from github so you have access to it.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">repo_path &lt;-<span class="st"> &quot;https://github.com/UW-GAC/topmed_workshop_2017/raw/master&quot;</span>
-pheno_files &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;pheno_data_study_1.txt&quot;</span>, <span class="st">&quot;pheno_data_study_2.txt&quot;</span>, <span class="st">&quot;pheno_data_study_3.txt&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">repo_path &lt;-<span class="st"> &quot;https://github.com/UW-GAC/topmed_workshop_2018/raw/master&quot;</span>
+pheno_files &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;data/pheno_data_study_1.txt&quot;</span>, <span class="st">&quot;data/pheno_data_study_2.txt&quot;</span>, <span class="st">&quot;data/pheno_data_study_3.txt&quot;</span>)
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">dir.exists</span>(<span class="st">&quot;data&quot;</span>)) <span class="kw">dir.create</span>(<span class="st">&quot;data&quot;</span>)
 <span class="cf">for</span> (pheno_file <span class="cf">in</span> pheno_files) {
-  <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(pheno_file)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(repo_path, pheno_file), pheno_file)
+  <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(pheno_file)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(repo_path, pheno_file), pheno_file, <span class="dt">extra =</span> <span class="st">&quot;-L&quot;</span>)
 }</code></pre></div>
-<p>Next, read the study phenotype files into R. In this case, each file is tab-delimited and has the same phenotype variable names.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">study_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;pheno_data_study_1.txt&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">as.is =</span> <span class="ot">TRUE</span>)
+<p>Next, read the study phenotype files into R. In this case, each file is tab-delimited.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">study_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;data/pheno_data_study_1.txt&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">as.is =</span> <span class="ot">TRUE</span>)
 <span class="kw">head</span>(study_<span class="dv">1</span>)</code></pre></div>
 <pre><code>##   subject_id sex age height
 ## 1    HG00096   M  47  165.3
@@ -214,38 +212,66 @@ pheno_files &lt;-<span class="st"> </span><span class="kw">c</span>(<span class=
 ## 4    HG00114   M  49  169.5
 ## 5    HG00115   M  35  161.1
 ## 6    HG00116   M  37  182.2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">study_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;pheno_data_study_2.txt&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">as.is =</span> <span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">study_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;data/pheno_data_study_2.txt&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">as.is =</span> <span class="ot">TRUE</span>)
 <span class="kw">head</span>(study_<span class="dv">2</span>)</code></pre></div>
-<pre><code>##   subject_id sex age height
+<pre><code>##   subject_id Sex Age Height
 ## 1    HG00099   F  40  185.5
 ## 2    HG00103   M  50  190.8
 ## 3    HG00106   F  51  165.5
 ## 4    HG00107   M  39  195.8
 ## 5    HG00109   M  48  181.5
 ## 6    HG00111   F  42  194.9</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">study_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;pheno_data_study_3.txt&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">as.is =</span> <span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">study_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;data/pheno_data_study_3.txt&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">as.is =</span> <span class="ot">TRUE</span>)
 <span class="kw">head</span>(study_<span class="dv">3</span>)</code></pre></div>
 <pre><code>##   subject_id sex age height
-## 1    HG00097   F  47  144.9
-## 2    HG00100   F  45  150.5
-## 3    HG00101   M  40  177.9
-## 4    HG00105   M  34  158.5
-## 5    HG00108   M  47  168.5
-## 6    HG00110   F  44  159.3</code></pre>
-<p>We will be looking at differences by harmonization unit (in this case, study), so add the study identifier to the data frame.</p>
+## 1    HG00097   F  47   57.0
+## 2    HG00100   F  45   59.3
+## 3    HG00101   M  40   70.0
+## 4    HG00105   M  34   62.4
+## 5    HG00108   M  47   66.3
+## 6    HG00110   F  44   62.7</code></pre>
+<p>Look carefully at the output and see if anything looks suspicious.</p>
+<p>You may have noticed that one of the studies has given their variables slightly different names than the others. Rename them as appropriate.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(study_<span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] &quot;subject_id&quot; &quot;Sex&quot;        &quot;Age&quot;        &quot;Height&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">study_<span class="dv">2</span> &lt;-<span class="st"> </span>study_<span class="dv">2</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">sex =</span> Sex, <span class="dt">age =</span> Age, <span class="dt">height =</span> Height)
+<span class="co"># Check that they are correct.</span>
+<span class="kw">names</span>(study_<span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] &quot;subject_id&quot; &quot;sex&quot;        &quot;age&quot;        &quot;height&quot;</code></pre>
+<p>You’ll also want to calculate summaries of the data values to see if anything looks very different than what you expect.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(study_<span class="dv">1</span><span class="op">$</span>height)</code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   139.6   163.8   169.9   170.2   176.7   200.3</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(study_<span class="dv">2</span><span class="op">$</span>height)</code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   142.1   171.8   181.3   180.8   190.5   218.6</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(study_<span class="dv">3</span><span class="op">$</span>height)</code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   47.00   59.60   63.40   63.42   67.10   79.60</code></pre>
+<p>Here, the values that study_3 has given you don’t seem to have the same range as those from study_1 and study_2. In cases like this, you’ll want to follow up with whoever provided the harmonized data to see what’s going on. It could represent an error in calculating the harmonized data values, a true property of the study (e.g., a study containing all children), or something else. In this case, the values were measured in inches instead of centimeters, so they will need to be converted to centimeters to be compatible with the other studies.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">study_<span class="dv">3</span> &lt;-<span class="st"> </span>study_<span class="dv">3</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">height =</span> height <span class="op">*</span><span class="st"> </span><span class="fl">2.54</span>)</code></pre></div>
+<p>Calculate the summary again and compare it to the other studies above.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(study_<span class="dv">3</span><span class="op">$</span>height)</code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   119.4   151.4   161.0   161.1   170.4   202.2</code></pre>
+<p>The corrected values look much more similar now.</p>
+<p>Note that this sort of error is easy to correct, but it is not uncommon to have more subtle issues that need to be addressed when working with phenotype data. Knowledge of the study design as well as the phenotype area of interest is essential to address them properly. Additionally, different decisions may need to be made for different analyses based on the specific questions they are trying to answer.</p>
+</div>
+<div id="compare-study-values" class="section level2">
+<h2><span class="header-section-number">5.2</span> Compare study values</h2>
+<p>Next we will make some more direct comparisons between the three studies, so we will combine the data into one data frame.</p>
+<p>First, add a study identifier to the data frame for organizational purposes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">study_<span class="dv">1</span><span class="op">$</span>study &lt;-<span class="st"> &quot;study_1&quot;</span>
 study_<span class="dv">2</span><span class="op">$</span>study &lt;-<span class="st"> &quot;study_2&quot;</span>
 study_<span class="dv">3</span><span class="op">$</span>study &lt;-<span class="st"> &quot;study_3&quot;</span></code></pre></div>
-<p>Combine the three different study data frames into one large data frame for joint analysis. Before doing this, we should check that the column headers are the same.</p>
+<p>Combine the three different study data frames into one large data frame for joint analysis. Double check that all column names are the same.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">all.equal</span>(<span class="kw">names</span>(study_<span class="dv">1</span>), <span class="kw">names</span>(study_<span class="dv">2</span>))</code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">all.equal</span>(<span class="kw">names</span>(study_<span class="dv">1</span>), <span class="kw">names</span>(study_<span class="dv">3</span>))</code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
-phen &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_rows</span>(study_<span class="dv">1</span>, study_<span class="dv">2</span>, study_<span class="dv">3</span>)</code></pre></div>
-</div>
-<div id="run-some-quick-diagnostics-on-the-files" class="section level2">
-<h2><span class="header-section-number">5.2</span> Run some quick diagnostics on the files</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">phen &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_rows</span>(study_<span class="dv">1</span>, study_<span class="dv">2</span>, study_<span class="dv">3</span>)</code></pre></div>
 <p>We can look at the distribution of phenotype data with text-based reports or with plots.</p>
 <p>First, inspect distributions with <code>table</code> for categorical traits and with <code>summary</code> for quantitative traits. The commads are shown here for study_1, but you should run them for study_2 and study_3 as well to see if you can see any differences.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(study_<span class="dv">1</span><span class="op">$</span>sex)</code></pre></div>
@@ -261,11 +287,11 @@ phen &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="k
 <p>It is also helpful to use plots to inspect the distributions of phenotype data. Here, we will look at boxplots of height by study.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(phen, <span class="kw">aes</span>(<span class="dt">x =</span> study, <span class="dt">y =</span> height)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>()</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>You may also want to see the difference in height when you include both study and sex:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(phen, <span class="kw">aes</span>(<span class="dt">x =</span> study, <span class="dt">fill =</span> sex, <span class="dt">y =</span> height)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>()</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>These diagnostics are helpful to get a feel for the data. They can help you see if one study is vastly different from the others or detect outlier values. Some of the differences could be accounted for by covariates, so we will assess the statistical significance of study differences in the next section.</p>
+<p><img src="_main_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>These diagnostics are helpful to get a feel for the data. They can help you see if one study is vastly different from the others or detect outlier values that you may want to look into further. Some of the differences could also be accounted for by covariates.</p>
 </div>
 <div id="use-using-mixed-models-to-compare-studies" class="section level2">
 <h2><span class="header-section-number">5.3</span> Use using mixed models to compare studies</h2>
@@ -305,14 +331,14 @@ annot &lt;-<span class="st"> </span><span class="kw">AnnotatedDataFrame</span>(p
 ## height           subject&#39;s height in cm
 ## study                  study identifier</code></pre>
 <p>Save the AnnotatedDataFrame for future use.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save</span>(annot, <span class="dt">file =</span> <span class="st">&quot;phenotype_annotation.RData&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save</span>(annot, <span class="dt">file =</span> <span class="st">&quot;data/phenotype_annotation.RData&quot;</span>)</code></pre></div>
 </div>
 <div id="obtain-the-genetic-relatedness-matrix" class="section level3">
 <h3><span class="header-section-number">5.3.2</span> Obtain the genetic relatedness matrix</h3>
 <p>Becase it is an input to the mixed model, we next need to download the genetic relatedness matrix calculated for these subjects.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data_path &lt;-<span class="st"> &quot;https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata&quot;</span>
-grmfile &lt;-<span class="st"> &quot;grm.RData&quot;</span>
-<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(grmfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data_path, grmfile), grmfile)
+grmfile &lt;-<span class="st"> &quot;data/grm.RData&quot;</span>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(grmfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(data_path, <span class="kw">basename</span>(grmfile)), grmfile)
 grm &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span class="kw">getobj</span>(grmfile)
 <span class="kw">rownames</span>(grm<span class="op">$</span>grm) &lt;-<span class="st"> </span><span class="kw">colnames</span>(grm<span class="op">$</span>grm) &lt;-<span class="st"> </span>grm<span class="op">$</span>sample.id</code></pre></div>
 <p>The <code>GENESIS</code> code to fit the mixed model also requires a <code>sample.id</code> column. Typically the <code>sample.id</code> column represents a sample identifier, not a subject id. In this case, we are only working with subject-level data, so we can use the subject identifier as the sample identifier for model-fitting purposes.</p>
@@ -321,34 +347,35 @@ grm &lt;-<span class="st"> </span>TopmedPipeline<span class="op">::</span><span 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># put the phenotype data in the same order as the GRM</span>
 annot &lt;-<span class="st"> </span>annot[<span class="kw">match</span>(grm<span class="op">$</span>sample.id, annot<span class="op">$</span>sample.id), ]</code></pre></div>
 </div>
-<div id="fit-a-mixed-model-without-harmonization-unit" class="section level3">
-<h3><span class="header-section-number">5.3.3</span> Fit a mixed model without harmonization unit</h3>
-<p>We will first fit a mixed model that allows us to see if the mean of the height phenotype is different by study after adjusting for other covariates. In this case, we will adjust for age and sex, but not for harmonization unit (<code>study</code>), because we are interested in seeing differences in mean height by harmonization unit. We will also include the genetic relatedness matrix as a random effect to account for relatedness between the participants.</p>
+<div id="fit-a-mixed-model-without-study" class="section level3">
+<h3><span class="header-section-number">5.3.3</span> Fit a mixed model without study</h3>
+<p>We will first fit a mixed model that allows us to see if the mean of the height phenotype is different by study after adjusting for other covariates. In this case, we will adjust for age and sex, but not for study, because we are interested in seeing differences in mean height by study. We will also include the genetic relatedness matrix as a random effect to account for relatedness between the participants.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">outcome &lt;-<span class="st"> &quot;height&quot;</span>
 covars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;age&quot;</span>)
 
 covariance_matrices &lt;-<span class="st"> </span>grm<span class="op">$</span>grm
 
 <span class="kw">library</span>(GENESIS)
-mod_<span class="dv">1</span> &lt;-<span class="st"> </span>GENESIS<span class="op">::</span><span class="kw">fitNullMM</span>(annot, <span class="dt">outcome =</span> outcome, <span class="dt">covars =</span> covars,
-                     <span class="dt">covMatList =</span> covariance_matrices)</code></pre></div>
-<pre><code>## [1]   107.6520433   107.6520433 -4584.2852579     0.9797695
-## [1]   104.9578627   108.1741689 -4584.0158948     0.9879743
-## [1]    54.201361   145.872003 -4580.515278     1.014609
-## [1]    59.006946   144.320038 -4580.480094     1.000327
-## [1]    59.10002   144.30106 -4580.48008     1.00000
-## [1]    59.09859   144.30237 -4580.48008     1.00000
-## [1]    59.09862   144.30235 -4580.48008     1.00000</code></pre>
-<p>The output of <code>fitNullMM</code> is a list with a number of named elements</p>
+mod_<span class="dv">1</span> &lt;-<span class="st"> </span>GENESIS<span class="op">::</span><span class="kw">fitNullModel</span>(annot, <span class="dt">outcome =</span> outcome, <span class="dt">covars =</span> covars,
+                     <span class="dt">cov.mat =</span> covariance_matrices)</code></pre></div>
+<pre><code>## [1]   107.6619072   107.6619072 -4584.3333768     0.9797637
+## [1]   104.9674150   108.1835219 -4584.0640858     0.9879716
+## [1]    54.204363   145.886059 -4580.563495     1.014608
+## [1]    59.010099   144.334151 -4580.528313     1.000327
+## [1]    59.10315   144.31520 -4580.52830     1.00000
+## [1]    59.10171   144.31651 -4580.52830     1.00000
+## [1]    59.10174   144.31649 -4580.52830     1.00000</code></pre>
+<p>The output of <code>fitNullModel</code> is a list with a number of named elements</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(mod_<span class="dv">1</span>)</code></pre></div>
-<pre><code>##  [1] &quot;varComp&quot;           &quot;varCompCov&quot;        &quot;fixef&quot;            
-##  [4] &quot;betaCov&quot;           &quot;fitted.values&quot;     &quot;resid.marginal&quot;   
-##  [7] &quot;eta&quot;               &quot;resid.conditional&quot; &quot;logLikR&quot;          
-## [10] &quot;logLik&quot;            &quot;AIC&quot;               &quot;RSS&quot;              
+<pre><code>##  [1] &quot;family&quot;            &quot;hetResid&quot;          &quot;varComp&quot;          
+##  [4] &quot;varCompCov&quot;        &quot;fixef&quot;             &quot;betaCov&quot;          
+##  [7] &quot;fitted.values&quot;     &quot;resid.marginal&quot;    &quot;resid.conditional&quot;
+## [10] &quot;logLik&quot;            &quot;logLikR&quot;           &quot;AIC&quot;              
 ## [13] &quot;workingY&quot;          &quot;outcome&quot;           &quot;model.matrix&quot;     
-## [16] &quot;cholSigmaInv&quot;      &quot;scanID&quot;            &quot;family&quot;           
-## [19] &quot;converged&quot;         &quot;zeroFLAG&quot;          &quot;hetResid&quot;         
-## [22] &quot;call&quot;</code></pre>
+## [16] &quot;group.idx&quot;         &quot;cholSigmaInv&quot;      &quot;converged&quot;        
+## [19] &quot;zeroFLAG&quot;          &quot;RSS&quot;               &quot;Ytilde&quot;           
+## [22] &quot;resid&quot;             &quot;CX&quot;                &quot;CXCXI&quot;            
+## [25] &quot;sample.id&quot;</code></pre>
 <p>The elements that we will work with in this exercise are:</p>
 <ul>
 <li><code>converged</code>: an indicator of whether the model successfully converged</li>
@@ -366,53 +393,30 @@ mod_<span class="dv">1</span> &lt;-<span class="st"> </span>GENESIS<span class="
 annot<span class="op">$</span>residuals &lt;-<span class="st"> </span>mod_<span class="dv">1</span><span class="op">$</span>resid.marginal[j]</code></pre></div>
 <p>Next, we want to check if the different studies have the same mean height after adjustment for other covariates (here, age and sex). We will first do this qualitatively by making a boxplot of the residuals by study.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">pData</span>(annot), <span class="kw">aes</span>(<span class="dt">x =</span> study, <span class="dt">y =</span> residuals)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>()</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
-<p>From the boxplot, it is clear that the different studies have different mean heights.</p>
+<p><img src="_main_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>From the boxplot, it is clear that the different studies have different mean heights, even after adjustment for sex and age. At this point, you would need to determine if the differences are acceptable for use in a combined analysis.</p>
 </div>
-<div id="fit-a-model-with-harmonization-unit" class="section level3">
-<h3><span class="header-section-number">5.3.4</span> Fit a model with harmonization unit</h3>
-<p>Next, we can look at a model that adjusts for other covariates as well as harmonization unit. This model allows us to run a statistical test on the fitted study means and to qualitatively check if the variances are the same after adjusting for mean effects. The outcome is the same, but we now add the harmonization unit as a covariate. We also allow for group-specific residual variance by harmonization unit using the <code>group.var</code> argument to <code>fitNullMM</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># include the harmonization unit in the covariates</span>
+<div id="fit-a-model-with-study" class="section level3">
+<h3><span class="header-section-number">5.3.4</span> Fit a model with study</h3>
+<p>Next, we can look at a model that adjusts for other covariates as well as study. This model allows us to run a statistical test on the fitted study means and to qualitatively check if the variances are the same after adjusting for mean effects. The outcome is the same, but we now add the study as a covariate. We also allow for group-specific residual variance by study using the <code>group.var</code> argument to <code>fitNullModel</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># include the study in the covariates</span>
 covars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;sex&quot;</span>, <span class="st">&quot;study&quot;</span>)
 
-mod_<span class="dv">2</span> &lt;-<span class="st"> </span>GENESIS<span class="op">::</span><span class="kw">fitNullMM</span>(annot, <span class="dt">outcome =</span> outcome, <span class="dt">covars =</span> covars,
-                            <span class="dt">group.var =</span> <span class="st">&quot;study&quot;</span>, <span class="dt">covMatList =</span> covariance_matrices)</code></pre></div>
+mod_<span class="dv">2</span> &lt;-<span class="st"> </span>GENESIS<span class="op">::</span><span class="kw">fitNullModel</span>(annot, <span class="dt">outcome =</span> outcome, <span class="dt">covars =</span> covars,
+                            <span class="dt">group.var =</span> <span class="st">&quot;study&quot;</span>, <span class="dt">cov.mat =</span> covariance_matrices)</code></pre></div>
 <p>The <code>fixef</code> element now includes effects for study:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">2</span><span class="op">$</span>fixef</code></pre></div>
 <pre><code>##                       Est         SE         Stat         pval
-## (Intercept)  164.27749628 3.04751310 2905.7951013 0.000000e+00
-## age            0.06043261 0.06642232    0.8277795 3.629154e-01
-## sexM           6.43122130 0.65686268   95.8600682 1.232974e-22
-## studystudy_2  10.59017952 0.78904317  180.1379060 4.521785e-41
-## studystudy_3  -8.94559707 0.82086206  118.7622189 1.180674e-27</code></pre>
-<p>First we’ll run a Wald test on the study effects to see how significant the mean difference is. The null hypothesis of this test is that all of the studies have the same mean height.</p>
-<p>First, identify the fixed effects and their covariance for the study indicator variables. There are only two studies in the fixed effects element because the other study is used as a reference group.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># these rows are associated with the study effects</span>
-idx &lt;-<span class="st"> </span><span class="dv">4</span><span class="op">:</span><span class="dv">5</span>
-
-<span class="co"># fixed effect estimates for the studies</span>
-study_effect &lt;-<span class="st"> </span>mod_<span class="dv">2</span><span class="op">$</span>fixef[idx, ]
-study_effect</code></pre></div>
-<pre><code>##                    Est        SE     Stat         pval
-## studystudy_2 10.590180 0.7890432 180.1379 4.521785e-41
-## studystudy_3 -8.945597 0.8208621 118.7622 1.180674e-27</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># covariance of the study effects</span>
-study_cov &lt;-<span class="st"> </span>mod_<span class="dv">2</span><span class="op">$</span>betaCov[idx, idx]
-study_cov</code></pre></div>
-<pre><code>##              studystudy_2 studystudy_3
-## studystudy_2    0.6225891    0.2308666
-## studystudy_3    0.2308666    0.6738145</code></pre>
-<p>Next, calculate the Wald test statistic and associated p-value.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test_stat &lt;-<span class="st"> </span><span class="kw">t</span>(study_effect<span class="op">$</span>Est) <span class="op">%*%</span><span class="st"> </span><span class="kw">solve</span>(study_cov) <span class="op">%*%</span><span class="st"> </span>study_effect<span class="op">$</span>Est
-pval &lt;-<span class="st"> </span><span class="kw">pchisq</span>(test_stat, <span class="dt">df =</span> <span class="kw">length</span>(study_effect), <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)
-pval</code></pre></div>
-<pre><code>##              [,1]
-## [1,] 1.191252e-98</code></pre>
-<p>The small p-value indicates that the null hypothesis is rejected; the height measurements from the studies do not have the same mean height even after adjusting for the other covariates. Even if this test were not significant, though, the studies’ mean heights could still be different enough to indicate a problem with harmonization.</p>
+## (Intercept)  164.27654459 3.04753893 2905.7121853 0.000000e+00
+## age            0.06044813 0.06642284    0.8281916 3.627960e-01
+## sexM           6.43111542 0.65686823   95.8552913 1.235952e-22
+## studystudy_2  10.59046078 0.78904348  180.1473364 4.500398e-41
+## studystudy_3  -8.94782432 0.82087372  118.8179863 1.147942e-27</code></pre>
+<p>The mixed model also shows the differences in mean height by study.</p>
 <p>Finally, we want to check if the height distributions from the different studies have the same variance. Start by looking at the variance components (<code>varComp</code>) element of the model.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">2</span><span class="op">$</span>varComp</code></pre></div>
 <pre><code>##       V_A V_study_1 V_study_3 V_study_2 
-##  54.26533  42.80310 116.50950  98.08945</code></pre>
+##  54.25789  42.80994 116.52075  98.09390</code></pre>
 <p><code>V_A</code> represents the variance in height due to genetic relatedness. The other variance components (<code>V_study_1</code>, <code>V_study_2</code>, and <code>V_study_3</code>) represent the residual variance in each study. The fitted values of the variance components are different for the different studies, indicating that the distributions of height in the three studies have different variance even after accounting for the other covariates.</p>
 <p>We can also show the same information by plotting the residuals by study. We first have to add the residuals from this model to the AnnotatedDataFrame, again making sure to match them correctly by subject.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">j &lt;-<span class="st"> </span><span class="kw">match</span>(annot<span class="op">$</span>subject_id, <span class="kw">rownames</span>(mod_<span class="dv">2</span><span class="op">$</span>model.matrix))
@@ -420,16 +424,16 @@ annot<span class="op">$</span>residuals &lt;-<span class="st"> </span>mod_<span 
 <p>Next make a boxplot of the residuals by study.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">pData</span>(annot), <span class="kw">aes</span>(<span class="dt">x =</span> study, <span class="dt">y =</span> residuals)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_boxplot</span>()</code></pre></div>
-<p><img src="_main_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
-<p>Both methods of looking at the variance components indicate that study 1 has a smaller residual variance than the others. It is more complicated to perform a test to see if the difference is statistically significant. The distribution of the null hypothesis is not a simple chi-squared distribution due to the fact that variance components cannot be negative. Therefore, we will only discuss the qualitative differences in variance between the studies at this point.</p>
+<p><img src="_main_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>Both methods of looking at the variance components indicate that study 1 has a smaller residual variance than the others.</p>
 </div>
 </div>
 <div id="final-considerations" class="section level2">
 <h2><span class="header-section-number">5.4</span> Final considerations</h2>
 <p>We have determined that the different studies have both different mean and different variance by study for height. Before performing genotype-phenotype association tests with these data, you would need to think carefully about whether the phenotype is homogeneous enough to be analyzed together. In some cases, there may be a valid reason for different means or variances, for example:</p>
 <ul>
-<li>different heights in different study populations, such as a study composed primarily of Asian participants vs. a study with primarily European participants</li>
-<li>possible secular trends in height, such as comparing the Framingham Original cohort from ~1950 to a cohort from the present day</li>
+<li>different heights in different study populations, such as a study composed primarily of Asian participants vs. a study with primarily European participants or a study of all men vs. a study of all women;</li>
+<li>possible secular trends in height, such as comparing the Framingham Original cohort from ~1950 to a cohort from the present day.</li>
 </ul>
 <p>In other cases, there may be good reasons to exclude one or more studies, for example:</p>
 <ul>
@@ -437,8 +441,8 @@ annot<span class="op">$</span>residuals &lt;-<span class="st"> </span>mod_<span 
 <li>miscalculation or misinterpretation of the harmonization algorithm</li>
 <li>study populations that are too different to be compared, such as trying to include a study composed primarily of children with one composed of adults in a height analysis</li>
 </ul>
-<p>It may be necessary to look at other variables that you had not previously considered. Studies may have used different measurement equipment or calibrated their data differently. There might also be other batch effects due to lab procedures or assays that could result in differences in the variance or mean by study.</p>
-<p>Unfortunately there is no single set of guidelines you can use to decide how to proceedw ith analysis of a phenotype. It is necessary to involve domain experts (e.g., the Working Group members) and study experts to determine whether the phenotype is homogeneous enough to analyze the studies together.</p>
+<p>It may be necessary to look at other variables that you had not previously considered. Studies may have used different measurement equipment or calibrated their data differently. There might also be other batch effects due to lab procedures or assays that could result in differences in the variance or mean by study. The other variables that you may need to consider are highly dependent both on the phenotype being harmonized and on how a given study has been designed.</p>
+<p>Unfortunately there is no single set of guidelines you can use to decide how to proceed with analysis of a phenotype. It is necessary to involve both domain experts and study experts to determine whether the phenotype is homogeneous enough to use in cross-study analysis.</p>
 
 </div>
 </div>
@@ -448,7 +452,7 @@ annot<span class="op">$</span>residuals &lt;-<span class="st"> </span>mod_<span 
         </div>
       </div>
 <a href="pc-relate.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="association-tests.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

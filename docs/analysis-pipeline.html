@@ -5,26 +5,26 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>TOPMed Analysis Workshop</title>
-  <meta name="description" content="Course materials for the TOPMed analysis workshop">
+  <title>SISG Module 12: Computational Pipeline for WGS Data</title>
+  <meta name="description" content="Course materials for SISG Module 12">
   <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="TOPMed Analysis Workshop" />
+  <meta property="og:title" content="SISG Module 12: Computational Pipeline for WGS Data" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Course materials for the TOPMed analysis workshop" />
+  <meta property="og:description" content="Course materials for SISG Module 12" />
   <meta name="github-repo" content="UW-GAC/topmed_workshop_2018" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="TOPMed Analysis Workshop" />
+  <meta name="twitter:title" content="SISG Module 12: Computational Pipeline for WGS Data" />
   
-  <meta name="twitter:description" content="Course materials for the TOPMed analysis workshop" />
+  <meta name="twitter:description" content="Course materials for SISG Module 12" />
   
 
 
 
-<meta name="date" content="2018-05-11">
+<meta name="date" content="2018-07-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -98,7 +98,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#schedule"><i class="fa fa-check"></i><b>1.1</b> Schedule</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#resources"><i class="fa fa-check"></i><b>1.2</b> Resources</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="gds-format.html"><a href="gds-format.html"><i class="fa fa-check"></i><b>2</b> GDS format</a><ul>
 <li class="chapter" data-level="2.1" data-path="gds-format.html"><a href="gds-format.html#exploring-a-gds-file"><i class="fa fa-check"></i><b>2.1</b> Exploring a GDS file</a></li>
 <li class="chapter" data-level="2.2" data-path="gds-format.html"><a href="gds-format.html#exercises"><i class="fa fa-check"></i><b>2.2</b> Exercises</a></li>
@@ -112,66 +115,58 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.5" data-path="pc-relate.html"><a href="pc-relate.html#exercise"><i class="fa fa-check"></i><b>4.5</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html"><i class="fa fa-check"></i><b>5</b> Phenotype Harmonization</a><ul>
-<li class="chapter" data-level="5.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#import-phentoype-files-into-r"><i class="fa fa-check"></i><b>5.1</b> Import phentoype files into R</a></li>
-<li class="chapter" data-level="5.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#run-some-quick-diagnostics-on-the-files"><i class="fa fa-check"></i><b>5.2</b> Run some quick diagnostics on the files</a></li>
+<li class="chapter" data-level="5.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#inspect-individual-study-data-in-r"><i class="fa fa-check"></i><b>5.1</b> Inspect individual study data in R</a></li>
+<li class="chapter" data-level="5.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#compare-study-values"><i class="fa fa-check"></i><b>5.2</b> Compare study values</a></li>
 <li class="chapter" data-level="5.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#use-using-mixed-models-to-compare-studies"><i class="fa fa-check"></i><b>5.3</b> Use using mixed models to compare studies</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#create-an-annotated-data-frame"><i class="fa fa-check"></i><b>5.3.1</b> Create an Annotated Data Frame</a></li>
 <li class="chapter" data-level="5.3.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#obtain-the-genetic-relatedness-matrix"><i class="fa fa-check"></i><b>5.3.2</b> Obtain the genetic relatedness matrix</a></li>
-<li class="chapter" data-level="5.3.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-mixed-model-without-harmonization-unit"><i class="fa fa-check"></i><b>5.3.3</b> Fit a mixed model without harmonization unit</a></li>
-<li class="chapter" data-level="5.3.4" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-model-with-harmonization-unit"><i class="fa fa-check"></i><b>5.3.4</b> Fit a model with harmonization unit</a></li>
+<li class="chapter" data-level="5.3.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-mixed-model-without-study"><i class="fa fa-check"></i><b>5.3.3</b> Fit a mixed model without study</a></li>
+<li class="chapter" data-level="5.3.4" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-model-with-study"><i class="fa fa-check"></i><b>5.3.4</b> Fit a model with study</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#final-considerations"><i class="fa fa-check"></i><b>5.4</b> Final considerations</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><i class="fa fa-check"></i><b>6</b> Finding unharmonized TOPMed study phenotypes on dbGaP</a><ul>
-<li class="chapter" data-level="6.1" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#ways-to-get-topmed-phenotype-data"><i class="fa fa-check"></i><b>6.1</b> Ways to get TOPMed phenotype data</a></li>
-<li class="chapter" data-level="6.2" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#dbgap-accession-lingo"><i class="fa fa-check"></i><b>6.2</b> dbGaP accession lingo</a></li>
-<li class="chapter" data-level="6.3" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#dbgap-advanced-search-tools"><i class="fa fa-check"></i><b>6.3</b> dbGaP advanced search tools</a><ul>
-<li class="chapter" data-level="6.3.1" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#entrez-advanced-search"><i class="fa fa-check"></i><b>6.3.1</b> <a href="https://www.ncbi.nlm.nih.gov/gap/advanced">Entrez advanced search</a></a></li>
-<li class="chapter" data-level="6.3.2" data-path="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html"><a href="finding-unharmonized-topmed-study-phenotypes-on-dbgap.html#faceted-advanced-search"><i class="fa fa-check"></i><b>6.3.2</b> <a href="https://www.ncbi.nlm.nih.gov/projects/gapsolr/facets.html">Faceted advanced search</a></a></li>
+<li class="chapter" data-level="6" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>6</b> Association tests</a><ul>
+<li class="chapter" data-level="6.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>6.1</b> Null model</a></li>
+<li class="chapter" data-level="6.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>6.2</b> Single-variant tests</a></li>
+<li class="chapter" data-level="6.3" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>6.3</b> Exercises</a></li>
+<li class="chapter" data-level="6.4" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>6.4</b> Sliding window tests</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>6.4.1</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>6.5</b> Annotation-based aggregate tests</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="association-tests.html"><a href="association-tests.html#working-with-variant-annotation"><i class="fa fa-check"></i><b>6.5.1</b> Working with variant annotation</a></li>
+<li class="chapter" data-level="6.5.2" data-path="association-tests.html"><a href="association-tests.html#aggregating-and-filtering-variants-using-annotation"><i class="fa fa-check"></i><b>6.5.2</b> Aggregating and filtering variants using annotation</a></li>
+<li class="chapter" data-level="6.5.3" data-path="association-tests.html"><a href="association-tests.html#aggregate-unit-for-association-testing-exercise"><i class="fa fa-check"></i><b>6.5.3</b> Aggregate unit for association testing exercise</a></li>
+<li class="chapter" data-level="6.5.4" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>6.5.4</b> Association testing with aggregate units</a></li>
+<li class="chapter" data-level="6.5.5" data-path="association-tests.html"><a href="association-tests.html#exercise-2"><i class="fa fa-check"></i><b>6.5.5</b> Exercise</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="association-tests.html"><a href="association-tests.html"><i class="fa fa-check"></i><b>7</b> Association tests</a><ul>
-<li class="chapter" data-level="7.1" data-path="association-tests.html"><a href="association-tests.html#null-model"><i class="fa fa-check"></i><b>7.1</b> Null model</a></li>
-<li class="chapter" data-level="7.2" data-path="association-tests.html"><a href="association-tests.html#single-variant-tests"><i class="fa fa-check"></i><b>7.2</b> Single-variant tests</a></li>
-<li class="chapter" data-level="7.3" data-path="association-tests.html"><a href="association-tests.html#exercises-1"><i class="fa fa-check"></i><b>7.3</b> Exercises</a></li>
-<li class="chapter" data-level="7.4" data-path="association-tests.html"><a href="association-tests.html#sliding-window-tests"><i class="fa fa-check"></i><b>7.4</b> Sliding window tests</a><ul>
-<li class="chapter" data-level="7.4.1" data-path="association-tests.html"><a href="association-tests.html#exercise-1"><i class="fa fa-check"></i><b>7.4.1</b> Exercise</a></li>
-</ul></li>
-<li class="chapter" data-level="7.5" data-path="association-tests.html"><a href="association-tests.html#annotation-based-aggregate-tests"><i class="fa fa-check"></i><b>7.5</b> Annotation-based aggregate tests</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="association-tests.html"><a href="association-tests.html#working-with-variant-annotation"><i class="fa fa-check"></i><b>7.5.1</b> Working with variant annotation</a></li>
-<li class="chapter" data-level="7.5.2" data-path="association-tests.html"><a href="association-tests.html#defining-gene-ranges-for-aggregation"><i class="fa fa-check"></i><b>7.5.2</b> Defining “gene” ranges for aggregation</a></li>
-<li class="chapter" data-level="7.5.3" data-path="association-tests.html"><a href="association-tests.html#aggregating-topmed-variants-into-genic-units"><i class="fa fa-check"></i><b>7.5.3</b> Aggregating TOPMed variants into genic units</a></li>
-<li class="chapter" data-level="7.5.4" data-path="association-tests.html"><a href="association-tests.html#aggregate-unit-for-association-testing-exercise"><i class="fa fa-check"></i><b>7.5.4</b> Aggregate unit for association testing exercise</a></li>
-<li class="chapter" data-level="7.5.5" data-path="association-tests.html"><a href="association-tests.html#association-testing-with-aggregate-units"><i class="fa fa-check"></i><b>7.5.5</b> Association testing with aggregate units</a></li>
-<li class="chapter" data-level="7.5.6" data-path="association-tests.html"><a href="association-tests.html#exercise-2"><i class="fa fa-check"></i><b>7.5.6</b> Exercise</a></li>
+<li class="chapter" data-level="7" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>7</b> Analysis Pipeline</a><ul>
+<li class="chapter" data-level="7.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-a-local-cluster"><i class="fa fa-check"></i><b>7.1</b> Running on a local cluster</a></li>
+<li class="chapter" data-level="7.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-aws-batch"><i class="fa fa-check"></i><b>7.2</b> Running on AWS Batch</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#log-into-aws-docker-image"><i class="fa fa-check"></i><b>7.2.1</b> Log into AWS docker image</a></li>
+<li class="chapter" data-level="7.2.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#download-the-docker-helper-functions"><i class="fa fa-check"></i><b>7.2.2</b> Download the docker helper functions</a></li>
+<li class="chapter" data-level="7.2.3" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#cd-to-working-directory-and-create-config-file"><i class="fa fa-check"></i><b>7.2.3</b> cd to working directory and create config file</a></li>
+<li class="chapter" data-level="7.2.4" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#execute-the-python-helper-function-to-run-the-docker-image"><i class="fa fa-check"></i><b>7.2.4</b> Execute the python helper function to run the docker image</a></li>
+<li class="chapter" data-level="7.2.5" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#print-out-aws-commands-if-executing-the-pipeline"><i class="fa fa-check"></i><b>7.2.5</b> Print out AWS commands if executing the pipeline</a></li>
+<li class="chapter" data-level="7.2.6" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#execute-the-pipeline"><i class="fa fa-check"></i><b>7.2.6</b> Execute the pipeline</a></li>
+<li class="chapter" data-level="7.2.7" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#monitor-the-jobs"><i class="fa fa-check"></i><b>7.2.7</b> Monitor the jobs</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html"><i class="fa fa-check"></i><b>8</b> Analysis Pipeline</a><ul>
-<li class="chapter" data-level="8.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-a-local-cluster"><i class="fa fa-check"></i><b>8.1</b> Running on a local cluster</a></li>
-<li class="chapter" data-level="8.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#running-on-aws-batch"><i class="fa fa-check"></i><b>8.2</b> Running on AWS Batch</a><ul>
-<li class="chapter" data-level="8.2.1" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#log-into-aws-docker-image"><i class="fa fa-check"></i><b>8.2.1</b> Log into AWS docker image</a></li>
-<li class="chapter" data-level="8.2.2" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#cd-to-working-directory-and-create-config-file"><i class="fa fa-check"></i><b>8.2.2</b> cd to working directory and create config file</a></li>
-<li class="chapter" data-level="8.2.3" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#print-out-aws-commands-if-executing-the-pipeline"><i class="fa fa-check"></i><b>8.2.3</b> Print out AWS commands if executing the pipeline</a></li>
-<li class="chapter" data-level="8.2.4" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#execute-the-pipeline"><i class="fa fa-check"></i><b>8.2.4</b> Execute the pipeline</a></li>
-<li class="chapter" data-level="8.2.5" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#monitor-the-jobs"><i class="fa fa-check"></i><b>8.2.5</b> Monitor the jobs</a></li>
+<li class="chapter" data-level="8" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>8</b> Analysis Commons</a><ul>
+<li class="chapter" data-level="8.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>8.1</b> Outline</a></li>
+<li class="chapter" data-level="8.2" data-path="analysis-commons.html"><a href="analysis-commons.html#web-interface-and-running-an-analysis-application"><i class="fa fa-check"></i><b>8.2</b> Web Interface and Running an Analysis Application</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-1-run-a-single-variant-analysis."><i class="fa fa-check"></i><b>8.2.1</b> Exercise 1) Run a single variant analysis.</a></li>
+<li class="chapter" data-level="8.2.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5."><i class="fa fa-check"></i><b>8.2.2</b> Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</a></li>
 </ul></li>
+<li class="chapter" data-level="8.3" data-path="analysis-commons.html"><a href="analysis-commons.html#command-line-interface"><i class="fa fa-check"></i><b>8.3</b> Command line interface</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="analysis-commons.html"><a href="analysis-commons.html#log-in-to-awi"><i class="fa fa-check"></i><b>8.3.1</b> Log in to AWI</a></li>
+<li class="chapter" data-level="8.3.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-3-navigate-directories-make-output-directory-examine-files"><i class="fa fa-check"></i><b>8.3.2</b> Exercise 3) Navigate directories, make output directory, examine files</a></li>
+<li class="chapter" data-level="8.3.3" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-4-run-single-variant-analysis-from-command-line-using-bash-script"><i class="fa fa-check"></i><b>8.3.3</b> Exercise 4) Run single variant analysis from command line using bash script</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>9</b> Analysis Commons</a><ul>
-<li class="chapter" data-level="9.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>9.1</b> Outline</a></li>
-<li class="chapter" data-level="9.2" data-path="analysis-commons.html"><a href="analysis-commons.html#web-interface-and-running-an-analysis-application"><i class="fa fa-check"></i><b>9.2</b> Web Interface and Running an Analysis Application</a><ul>
-<li class="chapter" data-level="9.2.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-1-run-a-single-variant-analysis."><i class="fa fa-check"></i><b>9.2.1</b> Exercise 1) Run a single variant analysis.</a></li>
-<li class="chapter" data-level="9.2.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5."><i class="fa fa-check"></i><b>9.2.2</b> Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</a></li>
-</ul></li>
-<li class="chapter" data-level="9.3" data-path="analysis-commons.html"><a href="analysis-commons.html#command-line-interface"><i class="fa fa-check"></i><b>9.3</b> Command line interface</a><ul>
-<li class="chapter" data-level="9.3.1" data-path="analysis-commons.html"><a href="analysis-commons.html#log-in-to-awi"><i class="fa fa-check"></i><b>9.3.1</b> Log in to AWI</a></li>
-<li class="chapter" data-level="9.3.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-3-navigate-directories-make-output-directory-examine-files"><i class="fa fa-check"></i><b>9.3.2</b> Exercise 3) Navigate directories, make output directory, examine files</a></li>
-<li class="chapter" data-level="9.3.3" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-4-run-single-variant-analysis-from-command-line-using-bash-script"><i class="fa fa-check"></i><b>9.3.3</b> Exercise 4) Run single variant analysis from command line using bash script</a></li>
-</ul></li>
-<li class="chapter" data-level="9.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>9.4</b> Writing your own Apps</a><ul>
-<li class="chapter" data-level="9.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>9.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
-<li class="chapter" data-level="9.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>9.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
-<li class="chapter" data-level="9.4.3" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-7-run-conditional-analysis"><i class="fa fa-check"></i><b>9.4.3</b> Optional Exercise 7) Run conditional analysis</a></li>
-<li class="chapter" data-level="9.4.4" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set"><i class="fa fa-check"></i><b>9.4.4</b> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</a></li>
+<li class="chapter" data-level="8.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>8.4</b> Writing your own Apps</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>8.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
+<li class="chapter" data-level="8.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>8.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
+<li class="chapter" data-level="8.4.3" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set"><i class="fa fa-check"></i><b>8.4.3</b> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -183,7 +178,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">TOPMed Analysis Workshop</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">SISG Module 12: Computational Pipeline for WGS Data</a>
           </h1>
         </div>
 
@@ -192,10 +187,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="analysis-pipeline" class="section level1">
-<h1><span class="header-section-number">8</span> Analysis Pipeline</h1>
-<p>The DCC’s analysis pipeline is hosted on github: <a href="https://github.com/smgogarten/analysis_pipeline" class="uri">https://github.com/smgogarten/analysis_pipeline</a></p>
+<h1><span class="header-section-number">7</span> Analysis Pipeline</h1>
+<p>The DCC’s analysis pipeline is hosted on github: <a href="https://github.com/UW-GAC/analysis_pipeline" class="uri">https://github.com/UW-GAC/analysis_pipeline</a></p>
 <div id="running-on-a-local-cluster" class="section level2">
-<h2><span class="header-section-number">8.1</span> Running on a local cluster</h2>
+<h2><span class="header-section-number">7.1</span> Running on a local cluster</h2>
 <p>To run a burden test on our local SGE cluster, first we create a config file and call it <code>assoc_window_burden.config</code>:</p>
 <pre><code>out_prefix &quot;test&quot;
 gds_file &quot;testdata/1KG_phase3_subset_chr .gds&quot;
@@ -207,7 +202,7 @@ variant_include_file &quot;testdata/variant_include_chr .RData&quot;
 outcome outcome
 covars &quot;sex&quot;
 n_pcs 4
-alt_freq_range &quot;0 0.1&quot;
+alt_freq_max &quot;0.1&quot;
 test &quot;burden&quot;
 test_type &quot;score&quot;</code></pre>
 <p>We will use the python script <code>assoc.py</code> to submit all jobs. First we look at the available options:</p>
@@ -221,17 +216,17 @@ $PIPELINE/assoc.py --help</code></pre>
 <p>We can use the <code>qstat</code> command to check the status of our jobs.</p>
 </div>
 <div id="running-on-aws-batch" class="section level2">
-<h2><span class="header-section-number">8.2</span> Running on AWS Batch</h2>
-<p>To run a burden test on AWS Batch, we do the following general steps: 1. Log into the the docker AMI instance 2. cd to a working directory on our EFS volume 3. Create the configuration file <code>assoc_window_burden.config</code> 4. Optionally execute the association pipeline specifying the AWS Batch service to print out the commands (not running the pipeline) 5. Execute the association pipeline specifying the AWS Batch service to run the pipeline 6. Monitor the pipeline via the AWS Batch console</p>
+<h2><span class="header-section-number">7.2</span> Running on AWS Batch</h2>
+<p>To run a burden test on AWS Batch, we do the following general steps: 1. Log into the the docker AMI instance 2. Download the docker helper functions 2. cd to a working directory on our NFS volume 3. Create the configuration file <code>assoc_window_burden.config</code> 4. Execute the python helper function to run the docker image 4. Optionally execute the association pipeline specifying the AWS Batch service to print out the commands (not running the pipeline) 5. Execute the association pipeline specifying the AWS Batch service to run the pipeline 6. Monitor the pipeline via the AWS Batch console</p>
 <div id="log-into-aws-docker-image" class="section level3">
-<h3><span class="header-section-number">8.2.1</span> Log into AWS docker image</h3>
+<h3><span class="header-section-number">7.2.1</span> Log into AWS docker image</h3>
 <p>ssh into our image which is running docker. Various docker commands can be executed including running TOPMed version of R (note: TOPMed data is not part of the docker image).</p>
-<pre><code>ssh -i ~/.ssh/&lt;some private key&gt; kuraisa@54.244.25.94
+<pre><code>ssh -i ~/.ssh/&lt;some private key&gt; kuraisa@52.27.98.54
 [kuraisa@ip-172-255-46-100]~
 _4816$ docker images
 ...
 [kuraisa@ip-172-255-46-100]~
-_4817$ docker run -it uwgac/r-topmed:dev /bin/bash
+_4817$ docker run -it uwgac/r-topmed:dev
 /# which R
 ...
 /# R
@@ -246,33 +241,39 @@ _4817$ docker run -it uwgac/r-topmed:dev /bin/bash
 [kuraisa@ip-172-255-46-100]~
 _4818$  </code></pre>
 </div>
+<div id="download-the-docker-helper-functions" class="section level3">
+<h3><span class="header-section-number">7.2.2</span> Download the docker helper functions</h3>
+<pre><code>git clone https://github.com/uw-gac/docker_helpers
+alias pipeline=&#39;/home/kuraisa/docker_helpers/analysis_pipeline.py&#39;</code></pre>
+</div>
 <div id="cd-to-working-directory-and-create-config-file" class="section level3">
-<h3><span class="header-section-number">8.2.2</span> cd to working directory and create config file</h3>
-<pre><code>cd /projects/topmed/analysts/kuraisa/tm-workshop/
+<h3><span class="header-section-number">7.2.3</span> cd to working directory and create config file</h3>
+<pre><code>cd /projects/topmed/analysts/kuraisa/workshop/burden
 vi assoc_window_burden.config
 ...</code></pre>
 </div>
+<div id="execute-the-python-helper-function-to-run-the-docker-image" class="section level3">
+<h3><span class="header-section-number">7.2.4</span> Execute the python helper function to run the docker image</h3>
+<pre><code>pipeline</code></pre>
+</div>
 <div id="print-out-aws-commands-if-executing-the-pipeline" class="section level3">
-<h3><span class="header-section-number">8.2.3</span> Print out AWS commands if executing the pipeline</h3>
-<pre><code>python /projects/topmed/dev_code/analysis_pipeline/assoc.py \
- single ./assoc_window_burden.config \
-  --cluster_type AWS_Batch --verbose \
-  --cluster_file \
-   /projects/topmed/dev_code/analysis_pipeline/testdata_batch.json \
+<h3><span class="header-section-number">7.2.5</span> Print out AWS commands if executing the pipeline</h3>
+<pre><code>/usr/local/analysis_pipeline/assoc.py \
+ single testdata/assoc_window_burden.config \
+  --cluster_type AWS_Batch \
+  --cluster_file custom_batch.json \
   --print &gt; single_print.log  2&gt;&amp;1</code></pre>
 </div>
 <div id="execute-the-pipeline" class="section level3">
-<h3><span class="header-section-number">8.2.4</span> Execute the pipeline</h3>
-<pre><code>python /projects/topmed/dev_code/analysis_pipeline/assoc.py \
- single ./assoc_window_burden.config \
-  --cluster_type AWS_Batch --verbose \
-  --cluster_file \
-   /projects/topmed/dev_code/analysis_pipeline/testdata_batch.json \
-  &gt; burden_print.log  2&gt;&amp;1
+<h3><span class="header-section-number">7.2.6</span> Execute the pipeline</h3>
+<pre><code>/usr/local/analysis_pipeline/assoc.py \
+ single testdata/assoc_window_burden.config \
+  --cluster_type AWS_Batch \
+  --cluster_file custom_batch.json  &gt; single_burden.log  2&gt;&amp;1
 </code></pre>
 </div>
 <div id="monitor-the-jobs" class="section level3">
-<h3><span class="header-section-number">8.2.5</span> Monitor the jobs</h3>
+<h3><span class="header-section-number">7.2.7</span> Monitor the jobs</h3>
 <p>From the web browser, log into the AWS account and select the <strong>Batch Services</strong> to monitor: - Summary via <strong>Dashboard</strong> - Job queue <strong>Optimal_topmed_testdata</strong> - View high-level job logs</p>
 <p>You can switch to <strong>ec2 services</strong> to monitor instances being created or running to support the various jobs.</p>
 
