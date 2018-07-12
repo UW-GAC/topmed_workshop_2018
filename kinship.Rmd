@@ -5,8 +5,8 @@ We can use the [SNPRelate package](https://github.com/zhengxwen/SNPRelate) to co
 ```{r grm}
 library(SeqArray)
 data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
-gdsfile <- "1KG_phase3_subset_chr1.gds"
-if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
+gdsfile <- "data/1KG_phase3_subset_chr1.gds"
+if (!file.exists(gdsfile)) download.file(file.path(data.path, basename(gdsfile)), gdsfile)
 gds <- seqOpen(gdsfile)
 
 library(SNPRelate)
@@ -26,27 +26,23 @@ To disentangle ancestry from recent familial relatedness, we use the [PC-Relate]
 
 Step 1 is to get initial estimates of kinship using [KING](http://www.ncbi.nlm.nih.gov/pubmed/20926424), which is robust to population structure but not admixture. The KING algorithm is available in SNPRelate. Typically we select a subset of variants for this calculation with LD pruning.
 
-```{r seed, echo=FALSE}
-# set seed for LD pruning
-set.seed(100)
-```
-
 ```{r king}
 # use a GDS file with all chromosomes
 library(SeqArray)
 data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
-gdsfile <- "1KG_phase3_subset.gds"
-if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
+gdsfile <- "data/1KG_phase3_subset.gds"
+if (!file.exists(gdsfile)) download.file(file.path(data.path, basename(gdsfile)), gdsfile)
 gds <- seqOpen(gdsfile)
 
 # use a subset of 100 samples to make things run faster
-workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2017/raw/master"
-sampfile <- "samples_subset100.RData"
+workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master"
+sampfile <- "data/samples_subset100.RData"
 if (!file.exists(sampfile)) download.file(file.path(workshop.path, sampfile), sampfile)
 sample.id <- TopmedPipeline::getobj(sampfile)
 
 # LD pruning to get variant set
 library(SNPRelate)
+set.seed(100) # LD pruning has a random element; so make this reproducible
 snpset <- snpgdsLDpruning(gds, sample.id=sample.id, method="corr", 
                           slide.max.bp=10e6, ld.threshold=sqrt(0.1))
 sapply(snpset, length)
@@ -109,7 +105,7 @@ We need to determine which PCs are ancestry informative. To do this we need popu
 
 ```{r annot}
 library(Biobase)
-sampfile <- "sample_annotation.RData"
+sampfile <- "data/sample_annotation.RData"
 if (!file.exists(sampfile)) download.file(file.path(workshop.path, sampfile), sampfile)
 annot <- TopmedPipeline::getobj(sampfile)
 annot
@@ -203,7 +199,7 @@ seqClose(gds)
 We can detect pedigree errors and sample identity problems by comparing the pedigree with empirical kinship estimates. We use a function from the GWASTools package, `pedigreePairwiseRelatedness`, to get expected pairwise relationships based on the pedigree.
 
 ```{r pedigree}
-pedfile <- "pedigree.RData"
+pedfile <- "data/pedigree.RData"
 if (!file.exists(pedfile)) download.file(file.path(workshop.path, pedfile), pedfile)
 ped <- TopmedPipeline::getobj(pedfile)
 head(ped)
