@@ -9,14 +9,14 @@ The first step in an association test is to fit the null model. We will need an 
 ```{r null_model}
 # sample annotation
 workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master"
-sampfile <- "sample_annotation.RData"
+sampfile <- "data/sample_annotation.RData"
 if (!file.exists(sampfile)) download.file(file.path(workshop.path, sampfile), sampfile)
 annot <- TopmedPipeline::getobj(sampfile)
 library(Biobase)
 head(pData(annot))
 
 # phenotypes by subject ID
-phenfile <- "phenotype_annotation.RData"
+phenfile <- "data/phenotype_annotation.RData"
 if (!file.exists(phenfile)) download.file(file.path(workshop.path, phenfile), phenfile)
 phen <- TopmedPipeline::getobj(phenfile)
 head(pData(phen))
@@ -31,8 +31,8 @@ annot <- AnnotatedDataFrame(dat, meta)
 
 # load the GRM
 data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
-grmfile <- "grm.RData"
-if (!file.exists(grmfile)) download.file(file.path(data.path, grmfile), grmfile)
+grmfile <- "data/grm.RData"
+if (!file.exists(grmfile)) download.file(file.path(data.path, basename(grmfile)), grmfile)
 grm <- TopmedPipeline::getobj(grmfile)
 # the row and column names of the covariance matrix must be set to sample.id
 rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
@@ -55,8 +55,8 @@ Single-variant tests are the same as in GWAS. We use the `assocTestSingle` funct
 
 ```{r assoc_single}
 library(SeqVarTools)
-gdsfile <- "1KG_phase3_subset_chr1.gds"
-if (!file.exists(gdsfile)) download.file(file.path(data.path, gdsfile), gdsfile)
+gdsfile <- "data/1KG_phase3_subset_chr1.gds"
+if (!file.exists(gdsfile)) download.file(file.path(data.path, basename(gdsfile)), gdsfile)
 gds <- seqOpen(gdsfile)
 seqData <- SeqVarData(gds, sampleData=annot)
 iterator <- SeqVarBlockIterator(seqData, verbose=FALSE)
@@ -338,6 +338,11 @@ if (file.exists("data/indel_parsed.tsv"))(file.remove("data/indel_parsed.tsv"))
 
 #### Parsing with WGSAParsr
 
+```{r, include=FALSE}
+## REMOVE ME after updating this section
+knitr::opts_chunk$set(eval=FALSE)
+```
+
 parse the example files
 ```{r}
 parse_to_file(source_file = snvfile, 
@@ -548,7 +553,7 @@ In a larger-scale analysis of TOPMed data, aggregation units could include both 
 As before, the aggregation units are defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (for example a variant can be assigned to mutiple genes).
 
 ```{r agg_unit}
-aggfile <- "variants_by_gene.RData"
+aggfile <- "data/variants_by_gene.RData"
 if (!file.exists(aggfile)) download.file(file.path(workshop.path, aggfile), aggfile)
 aggunit <- TopmedPipeline::getobj(aggfile)
 names(aggunit)
@@ -580,7 +585,7 @@ iterator <- SeqVarListIterator(seqData, variantRanges=aggVarList, verbose=FALSE)
 
 As in the previous section, we must fit the null model before running the association test.
 
-```{r assoc_aggregate}
+```{r assoc_aggregate, eval=FALSE}
 assoc <- assocTestAggregate(iterator, nullmod, test="Burden", AF.max=0.1, weight.beta=c(1,1))
 names(assoc)
 head(assoc$results)
