@@ -41,7 +41,7 @@ rownames(grm$grm) <- colnames(grm$grm) <- grm$sample.id
 
 We will test for an association between genotype and height, adjusting for sex, age, and study as covariates. If the sample set involves multiple distinct groups with different variances for the phenotype, we recommend allowing the model to use heterogeneous variance among groups with the parameter `group.var`. We saw in a previous exercise that the variance differs by study.
 
-```{r}
+```{r null_model_fit}
 library(GENESIS)
 nullmod <- fitNullModel(annot, outcome="height", covars=c("sex", "age", "study"), 
                         cov.mat=grm$grm, group.var="study", verbose=FALSE)
@@ -331,6 +331,13 @@ save my_config
 write_tsv(my_config, "data/my_config.tsv")
 ```
 
+
+```{r, include=FALSE}
+## REMOVE ME after updating this section
+knitr::opts_chunk$set(eval=FALSE)
+```
+
+
 ```{r echo=FALSE}
 # cleanup needed for knitting
 if (file.exists("data/snv_parsed.tsv"))(file.remove("data/snv_parsed.tsv"))
@@ -452,6 +459,12 @@ ggplot(counts, aes(x = n)) + geom_bar()
 Feel free to look at other summary statistics and do other exploratory data analysis as you'd like!
 
 ### Aggregate unit for association testing exercise
+
+```{r, include=FALSE}
+## REMOVE ME after updating this section
+knitr::opts_chunk$set(eval=TRUE)
+```
+
 Now you can proceed to an assocation testing exercise. In a larger-scale analysis of TOPMed data, aggregation units could include SNP and indel variants falling within defined other aggregation units (such as user-defined range-based aggregation, rather than gene definitions), and would not be restricted to the variants also present in this chosen subset of the 1000 Genomes Project. An analyst might also choose to filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).
 
 You will use the aggregation units you defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (a variant can be assigned to mutiple genes).
