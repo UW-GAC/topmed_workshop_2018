@@ -75,7 +75,7 @@ References:
 ### Log in to AWI
 **Replace topmed_## with the user ID from your handout**
 ```
-$ ssh topmed_##@34.212.243.167
+$ ssh topmed_##@34.208.147.133
 You will be prompted for your password, e.g. TOPMed_## (Note capitalization)
 _Please ignore login warnings
 
