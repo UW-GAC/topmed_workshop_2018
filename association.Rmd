@@ -10,6 +10,7 @@ The first step in an association test is to fit the null model. We will need an 
 # sample annotation
 workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master"
 sampfile <- "data/sample_annotation.RData"
+if (!dir.exists("data")) dir.create("data")
 if (!file.exists(sampfile)) download.file(file.path(workshop.path, sampfile), sampfile)
 annot <- TopmedPipeline::getobj(sampfile)
 library(Biobase)
@@ -338,11 +339,6 @@ if (file.exists("data/indel_parsed.tsv"))(file.remove("data/indel_parsed.tsv"))
 
 #### Parsing with WGSAParsr
 
-```{r, include=FALSE}
-## REMOVE ME after updating this section
-knitr::opts_chunk$set(eval=FALSE)
-```
-
 parse the example files
 ```{r}
 parse_to_file(source_file = snvfile, 
@@ -493,7 +489,7 @@ iterator <- SeqVarListIterator(seqData, variantRanges=aggVarList, verbose=FALSE)
 
 As in the previous section, we must fit the null model before running the association test.
 
-```{r assoc_aggregate, eval=FALSE}
+```{r assoc_aggregate}
 assoc <- assocTestAggregate(iterator, nullmod, test="Burden", AF.max=0.1, weight.beta=c(1,1))
 names(assoc)
 head(assoc$results)

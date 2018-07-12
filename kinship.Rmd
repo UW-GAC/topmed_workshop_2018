@@ -31,6 +31,7 @@ Step 1 is to get initial estimates of kinship using [KING](http://www.ncbi.nlm.n
 library(SeqArray)
 data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
 gdsfile <- "data/1KG_phase3_subset.gds"
+if (!dir.exists("data")) dir.create("data")
 if (!file.exists(gdsfile)) download.file(file.path(data.path, basename(gdsfile)), gdsfile)
 gds <- seqOpen(gdsfile)
 
