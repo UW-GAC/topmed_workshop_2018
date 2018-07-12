@@ -170,7 +170,7 @@ head(assoc$results)
 
 ## Annotation-based aggregate tests
 
-**Note:** the code and libraries in this section are under active development. This section uses [WGSAParsr v 5.0.6](https://github.com/UW-GAC/wgsaparsr/tree/5.0.6) to parse output from [WGSA version 0.7](https://sites.google.com/site/jpopgen/wgsa). Use this code at your own risk, and be warned that it may break in unexpected ways or be incompatible across different versions of the software. [Github issues and contribution](https://github.com/UW-GAC/wgsaparsr) are welcome!
+**Note:** the code and libraries in this section are under active development. This section uses [WGSAParsr v 5.0.7](https://github.com/UW-GAC/wgsaparsr/tree/5.0.7) to parse output from [WGSA version 0.7](https://sites.google.com/site/jpopgen/wgsa). Use this code at your own risk, and be warned that it may break in unexpected ways or be incompatible across different versions of the software. [Github issues and contribution](https://github.com/UW-GAC/wgsaparsr) are welcome!
 
 This module is provided to give workshop participants an example of some of the kinds of analysis tasks that might be performed with TOPMed annotation data. 
 
@@ -403,159 +403,68 @@ combined_annotation <- bind_rows(snv_annotation, indel_annotation)
 
 ### Aggregating and filtering variants using annotation
 
-I AM HERE
-
 ```{r, include=FALSE}
 ## REMOVE ME after updating this section
 knitr::opts_chunk$set(eval=FALSE)
 ```
 
+With the now-tidy variant annotation, the process of aggregating and filtering variants for association testing is almost trivial. For example, an analyst could remove variants that are not associated with a Gene, group the variants by gene, and filter the variants for intron_variants with a CADD_phred score greater than 3 in just a few lines of code:
 ```{r}
-combined_annotation %>% filter(VEP_ensembl_Gene_ID != ".") %>% group_by(VEP_ensembl_Gene_ID) %>% filter(CADD_phred > 3) %>% filter(str_detect(VEP_ensembl_Consequence, "intron_variant"))
+combined_annotation %>% 
+  filter(VEP_ensembl_Gene_ID != ".") %>% # remove variants not annotated with a Gene_ID
+  group_by(VEP_ensembl_Gene_ID) %>% # aggregate by gene
+  filter(CADD_phred > 3) %>% # filter variants to keep only CADD_phred greater than 3
+  filter(str_detect(VEP_ensembl_Consequence, "intron_variant")) %>% # keep intron variants
+  glimpse() # view the result - 592 variants
 ```
 
-If an analyst wished to filter the list of variants prior to aggregation, the processing code could be modified to apply filters during parsing, or the annotation file could be reprocessed to apply filters at this point. Alternatively, filters can also be applied subsequent to aggregation.
-
-As insurance for this exercise, the parsed files are also available on github:
-
+Now that you've got a set of variants that you can aggregate into genic units, the tibble needs to be reformatted for input to the GENESIS analysis pipeline. The input to the GENESIS pipeline is a data frame with variables called `group_id`, `chromosome`, `position`, `ref`, and `alt`. Prepare this data frame and save it for testing (You do not need to filter the variants for this exercise):
 ```{r}
-ben.workshop.path <- "https://github.com/bheavner/topmed_workshop_2017_bh/raw/master"
-parsedsnpfile <- "parsed_snp.tsv"
-if (!file.exists(parsedsnpfile)) download.file(file.path(ben.workshop.path, parsedsnpfile), parsedsnpfile)
-
-parsedindelfile <- "parsed_indel.tsv"
-if (!file.exists(parsedindelfile)) download.file(file.path(ben.workshop.path, parsedindelfile), parsedindelfile)
+aggregates <-
+  combined_annotation %>%
+  filter(VEP_ensembl_Gene_ID != ".") %>% # remove variants not annotated with a Gene_ID
+  group_by(VEP_ensembl_Gene_ID) %>% # aggregate by gene
+  select(group_id = VEP_ensembl_Gene_ID,
+         chromosome = CHROM,
+         position = POS,
+         ref = REF,
+         alt = ALT) %>%
+  glimpse # inspect the tibble
 ```
 
-
-
-Now we've generated a set of variants with a manaageable number of annotation fields, and defined the desired aggregation units as sets of genomic ranges. The set of variants may be filtered using the annotation fields we've chosen (our list is unfiltered in this example).
-
-We're ready to aggregate the variants by genic units. As insurance, we can start with the same set of inputs by downloading what I generated last week:
-
+This set can be saved and used with the analysis pipeline for association testing.
 ```{r}
-ben.workshop.path <- "https://github.com/bheavner/topmed_workshop_2017_bh/raw/master"
-
-parsed_snp_file <- "parsed_snp.tsv"
-parsed_indel_file <- "parsed_indel.tsv"
-unit_defs_file <- "feature_bounds_20170804.tsv"
-
-if (!file.exists(parsed_snp_file)) download.file(file.path(ben.workshop.path, parsed_snp_file), parsed_snp_file)
-
-if (!file.exists(parsed_indel_file)) download.file(file.path(ben.workshop.path, parsed_indel_file), parsed_indel_file)
-
-if (!file.exists(unit_defs_file)) download.file(file.path(ben.workshop.path, unit_defs_file), unit_defs_file)
+save(aggregates, file = "data/variants_by_gene.RData")
 ```
 
-Load the tab-separated files to tibbles (data frames) to work with:
-
-```{R}
-snps <- read_tsv(parsed_snp_file, comment = "#")
-indels <- read_tsv(parsed_indel_file, comment = "#")
-unit_defs <- read_tsv(unit_defs_file, comment = "#", skip = 1)
-unit_defs <- select(unit_defs, c(gene_id, agg_start, agg_end))
-```
-
-There's probably a nice, fast, vectorized to accomplish this task, but for demonstration purposes, we'll just loop over the unit_defs and select indels and snps within the genomic ranges of interest:
-
+You can also compute some summary information about these aggregates, such as counting how many genic units we're using:
 ```{r}
-# make an empty tibble
-foo <- tibble(group_id="", chromosome="", position="", ref="", alt="") %>%
-  filter(length(group_id)>1)
-
-# loop over unit defs
-for (rowIndex in 1:nrow(unit_defs)) {
-
-  # select snps and insert to foo ## SNPs could be filtered here
-  snpsToAdd <- select(snps, c(chr, pos, ref, alt)) %>%
-    dplyr::filter(between(pos, unit_defs[rowIndex,]$agg_start, unit_defs[rowIndex,]$agg_end)) %>% # This is the line to vectorize
-    distinct() %>%
-    mutate(group_id = unit_defs[rowIndex,]$gene_id)
-  
-  if (nrow(snpsToAdd) > 0) {
-    foo <- add_row(
-      foo,
-      group_id = snpsToAdd$group_id,
-      chromosome = snpsToAdd$chr,
-      position = snpsToAdd$pos,
-      ref = snpsToAdd$ref,
-      alt = snpsToAdd$alt
-    )
-  }
-  
-  # select indels and insert to foo ## Indels could be filtered here, too
-  toAdd <- select(indels, c(chr, pos, ref, alt)) %>%
-    dplyr::filter(between(pos, unit_defs[rowIndex, ]$agg_start, unit_defs[rowIndex, ]$agg_end)) %>% # to vectorize
-    distinct() %>%
-    mutate(group_id = unit_defs[rowIndex, ]$gene_id)
-  
-  if (rowIndex %% 10 == 0){
-    message(
-      paste0("row: ", rowIndex, 
-             " snps to add: ", nrow(snpsToAdd), 
-             " indels to add: ", nrow(toAdd)))
-  }
-  
-  if (nrow(toAdd) > 0) {
-    foo <- add_row(
-      foo,
-      group_id = toAdd$group_id,
-      chromosome = toAdd$chr,
-      position = toAdd$pos,
-      ref = toAdd$ref,
-      alt = toAdd$alt
-    )
-  }
-}
-
-aggregated_variants <- distinct(foo)
+distinct(as.tibble(aggregates$group_id))
 ```
 
-That may not be fast or pretty, but we've now got a set of variants aggregated into genic units using the GENCODE gene model! This set can be saved and used with the analysis pipeline for association testing.
-
-We can inspect the tibble with glimpse:
+We can look at the distribution of the number of variants per aggregation unit:
 ```{r}
-glimpse(aggregated_variants)
+counts <- aggregates %>% group_by(group_id) %>% summarize(n = n())
+ggplot(counts, aes(x = n)) + geom_bar()
 ```
 
-We can do things like counting how many genic units we're using:
-```{r}
-distinct(as.tibble(aggregated_variants$group_id))
-```
-
-We can look at number of variants per aggregation unit:
-```{r}
-counts <- aggregated_variants %>% group_by(group_id) %>% summarize(n())
-```
-
-Feel free to look at other summary statistics and do other exploratory data analysis as you'd like, but don't forget to save it if you'd like to use it for the analysis pipeline!
-
-```{r}
-save(aggregated_variants, file = "chr22_gene_aggregates.RDA")
-```
-
-```{r, include=FALSE}
-## REMOVE ME after updating this section
-knitr::opts_chunk$set(eval=TRUE)
-```
-
+Feel free to look at other summary statistics and do other exploratory data analysis as you'd like!
 
 ### Aggregate unit for association testing exercise
-We will be using a slightly different gene-based aggregation unit for the assocation testing exercise. As before, this analysis uses a subset of the TOPMed SNP variants that are present in the 1000 Genomes Project. However, in this exercise, the genic units include TOPMed SNP variants from all chromosomes (no indels, and not just chromosome 22 as before). Further, each genic unit is expanded to include the set of TOPMed SNP variants falling within a GENCODE-defined gene along with 20 kb flanking regions upstream and downstream of that range.
+Now you can proceed to an assocation testing exercise. In a larger-scale analysis of TOPMed data, aggregation units could include SNP and indel variants falling within defined other aggregation units (such as user-defined range-based aggregation, rather than gene definitions), and would not be restricted to the variants also present in this chosen subset of the 1000 Genomes Project. An analyst might also choose to filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).
 
-In a larger-scale analysis of TOPMed data, aggregation units could include both TOPMed SNP and indel variants falling within defined aggregation units, and would not be restricted to the variants also present in this chosen subset of the 1000 Genomes Project. An analyst might also choose to filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).
-
-As before, the aggregation units are defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (for example a variant can be assigned to mutiple genes).
+You will use the aggregation units you defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (a variant can be assigned to mutiple genes).
 
 ```{r agg_unit}
-aggfile <- "variants_by_gene.RData"
-if (!file.exists(aggfile)) download.file(file.path(workshop.path, aggfile), aggfile)
+workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master/"
+aggfile <- "data/variants_by_gene.RData"
+download.file(file.path(workshop.path, aggfile), snvfile, extra="-L")
+
 aggunit <- TopmedPipeline::getobj(aggfile)
 names(aggunit)
 head(aggunit)
 
 # an example of variant that is present in mutiple groups
-library(dplyr)
 mult <- aggunit %>%
     group_by(chr, pos) %>%
     summarise(n=n()) %>%
