@@ -333,13 +333,6 @@ save my_config
 write_tsv(my_config, "data/my_config.tsv")
 ```
 
-
-```{r, include=FALSE}
-## REMOVE ME after updating this section
-knitr::opts_chunk$set(eval=FALSE)
-```
-
-
 ```{r echo=FALSE}
 # cleanup needed for knitting
 if (file.exists("data/snv_parsed.tsv"))(file.remove("data/snv_parsed.tsv"))
@@ -413,11 +406,6 @@ combined_annotation <- bind_rows(snv_annotation, indel_annotation)
 
 ### Aggregating and filtering variants using annotation
 
-```{r, include=FALSE}
-## REMOVE ME after updating this section
-knitr::opts_chunk$set(eval=FALSE)
-```
-
 With the now-tidy variant annotation, the process of aggregating and filtering variants for association testing is almost trivial. For example, an analyst could remove variants that are not associated with a Gene, group the variants by gene, and filter the variants for intron_variants with a CADD_phred score greater than 3 in just a few lines of code:
 ```{r}
 combined_annotation %>% 
@@ -461,11 +449,6 @@ ggplot(counts, aes(x = n)) + geom_bar()
 Feel free to look at other summary statistics and do other exploratory data analysis as you'd like!
 
 ### Aggregate unit for association testing exercise
-
-```{r, include=FALSE}
-## REMOVE ME after updating this section
-knitr::opts_chunk$set(eval=TRUE)
-```
 
 Now you can proceed to an assocation testing exercise. In a larger-scale analysis of TOPMed data, aggregation units could include SNP and indel variants falling within defined other aggregation units (such as user-defined range-based aggregation, rather than gene definitions), and would not be restricted to the variants also present in this chosen subset of the 1000 Genomes Project. An analyst might also choose to filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).
 
