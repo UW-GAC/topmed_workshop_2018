@@ -450,10 +450,11 @@ Feel free to look at other summary statistics and do other exploratory data anal
 
 ### Aggregate unit for association testing exercise
 
-Now you can proceed to an assocation testing exercise. In a larger-scale analysis of TOPMed data, aggregation units could include SNP and indel variants falling within defined other aggregation units (such as user-defined range-based aggregation, rather than gene definitions), and would not be restricted to the variants also present in this chosen subset of the 1000 Genomes Project. An analyst might also choose to filter variants within each unit based on various annotations (examples include loss of function, conservation, deleteriousness scores, etc.).
+Now you can proceed to an assocation testing exercise. You will be using a slightly different gene-based aggregation unit for the assocation testing exercise. As before, this analysis uses a subset of the TOPMed SNP variants that are present in the 1000 Genomes Project. However, in this exercise, the genic units include TOPMed SNP variants from all chromosomes (no indels, and not just chromosome 22 as before), each genic unit is expanded to include the set of TOPMed SNP variants falling within a GENCODE-defined gene along with 20 kb flanking regions upstream and downstream of that range, and the variants will be from TOPMed freeze 4 instead of freeze 5 (so that the annotation positions are consistent with the build used for genotyping data in the workshop). This set of aggregation units is not filtered by CADD score or consequence.
 
-You will use the aggregation units you defined in an R dataframe. Each row of the dataframe specifies a variant (chromosome, position, ref, alt) and the group identifier (group_id) assigned to it. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (a variant can be assigned to mutiple genes).
+As before, the aggregation units are defined in an R dataframe. Each row of the dataframe specifies a variant (chr, pos, ref, alt) and the group identifier (group_id) it is a part of. Mutiple rows with different group identifiers can be specified to assign a variant to different groups (a variant can be assigned to mutiple genes).
 
+Begin by loading the aggregation units using `TopmedPipeline::getobj()`:
 ```{r agg_unit}
 workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master/"
 aggfile <- "data/variants_by_gene.RData"
