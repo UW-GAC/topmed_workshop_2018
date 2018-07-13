@@ -1,4 +1,5 @@
 rmd_files: ["index.Rmd", "gds_intro.Rmd", "kinship.Rmd",
     "phenotype_harmonization.Rmd",
-    "association.Rmd", "pipeline.md", "AnalysisCommonsWorksheet.md"]
+    "association.Rmd", "pipeline.md", 
+    "docker.md", "AnalysisCommonsWorksheet.md"]
 output_dir: "docs"

@@ -1,18 +1,22 @@
-# Using TOPMed's Docker Image for the TOPMed's workshop
-Users have two choices for doing the exercises in the workshop:
-1. Logging into an RStudio session on a remote computer.
-2. Run a TOPMed docker image on your local computer.
+# Using Docker
 
-This project describes how to do the exercises using the docker image.
+This section describes how to install docker on your local computer and run workshop exercises from within a docker container.
+
+All docker images maintained by the UW-GAC are here: https://hub.docker.com/u/uwgac/
+
+Our git repository contains code for building the images: https://github.com/UW-GAC/docker
+
 ## Prerequisites ##
 The following software is required on your local computer or laptop:
+
 - [ ] git is required
 - [ ] Python 2.7.11+ is required
 - [ ] Docker engine (aka <i>docker</i>)  
 
-  *  For Mac computers, installing <i>docker</i> is fairly straight forward.  Following the Docker instructions at the url https://docs.docker.com/docker-for-mac/install/
+For Mac computers, installing <i>docker</i> is fairly straight forward.  Follow the Docker instructions at the url https://docs.docker.com/docker-for-mac/install/
 
-  * For Windows 10 computers, installing docker requires enabling <i>Hyper-V</i> in Windows and enabling virtualization in the bios. Follow the Docker instructions at the url: https://docs.docker.com/docker-for-windows/install/
+For Windows 10 computers, installing docker requires enabling <i>Hyper-V</i> in Windows and enabling virtualization in the bios. Follow the Docker instructions at the url https://docs.docker.com/docker-for-windows/install/
+  
 ## General Steps ##
 The general steps for running RStudio using the docker images are as follows:
 1. Download the docker image
@@ -22,14 +26,14 @@ The general steps for running RStudio using the docker images are as follows:
 4. Connect to the RStudio server using the local browser
 
 
-#### Download the Docker Image ####
+### Download the Docker Image ###
 After <i>docker</i> has been installed, download the TOPMed RStudio docker image <kbd>uwgac/topmed-RStudio</kbd>.  For example:
 ```
 docker pull uwgac/topmed-RStudio
 ```
 This step only has to be done once.  The image will be stored persistently on the computer.
 
-#### Create Working Directory ####
+### Create Working Directory ###
 Create a working directory and <i>cd</i> to it.  For example,
 ```
 mkdir ~/workshop_2018
@@ -37,7 +41,7 @@ cd ~/workshop_2018
 ```
 This step only has to be done once.
 
-#### Download the docker helper functions ####
+### Download the docker helper functions ###
 Using <i>git</i>,  download the docker help functions and create an alias to the helper function <i>Rstudio_docker.py</i>.  For example,
 ```
 mkdir ~/workshop_2018
@@ -48,7 +52,7 @@ alias rs_docker='~/workshop_2018/docker_helpers/Rstudio_docker.py'
 
 This step also only has to be done once.
 
-#### Running RStudio ####
+### Running RStudio ###
 Run RStudio server within a docker container in the background (or detached) using the helper function <i>Rstudio_docker.py</i> (e.g., using the previously defined alias).  This enables a browser on a local computer to start an RStudio session.
 
 The RStudio session has the following characteristics and attributes:
@@ -63,6 +67,7 @@ rs_docker [options]
 Execute <i>rs_docker --help</i> for more details.
 
 <i>Examples</i>
+
 1. <i>Example 1</i>
 ```{r}
 mkdir ~/workshop_2018
@@ -87,6 +92,7 @@ The example above runs RStudio server in the background in the container named <
 ```{r}
 192.168.1.4:8080/
 ```
+
 3. <i>Example 3</i>
 ```{r}
 rs_docker -C kill

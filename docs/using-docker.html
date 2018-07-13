@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="association-tests.html">
-<link rel="next" href="using-docker.html">
+<link rel="prev" href="analysis-pipeline.html">
+<link rel="next" href="analysis-commons.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -195,108 +195,78 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="analysis-pipeline" class="section level1">
-<h1><span class="header-section-number">7</span> Analysis Pipeline</h1>
-<p>The DCC’s analysis pipeline is hosted on github: <a href="https://github.com/UW-GAC/analysis_pipeline" class="uri">https://github.com/UW-GAC/analysis_pipeline</a></p>
-<div id="running-on-a-local-cluster" class="section level2">
-<h2><span class="header-section-number">7.1</span> Running on a local cluster</h2>
-<p>To run a burden test on our local SGE cluster, first we create a config file and call it <code>assoc_window_burden.config</code>:</p>
-<pre><code>out_prefix &quot;test&quot;
-gds_file &quot;testdata/1KG_phase3_subset_chr .gds&quot;
-phenotype_file &quot;testdata/1KG_phase3_subset_annot.RData&quot;
-pcrelate_file &quot;testdata/round2_pcrelate.gds&quot;
-pca_file &quot;testdata/round2_pcair.RData&quot;
-sample_include_file &quot;testdata/sample_include.RData&quot;
-variant_include_file &quot;testdata/variant_include_chr .RData&quot;
-outcome outcome
-covars &quot;sex&quot;
-n_pcs 4
-alt_freq_max &quot;0.1&quot;
-test &quot;burden&quot;
-test_type &quot;score&quot;</code></pre>
-<p>We will use the python script <code>assoc.py</code> to submit all jobs. First we look at the available options:</p>
-<pre><code>setenv PIPELINE /projects/topmed/working_code/analysis_pipeline_2.0.1
-$PIPELINE/assoc.py --help</code></pre>
-<p>Let’s run a sliding window test on chromosomes 1-10. We will also specify the cluster type, although UW_Cluster is actually the default. The cluster file is a JSON file that can override default values for the cluster configuration. In this case, we are changing the memory requirements for each job to only reserve a small amount of memory on each cluster node. The last argument is our config file.</p>
-<p>First, we print the commands that will be be run without actually submitting jobs:</p>
-<pre><code>$PIPELINE/assoc.py \
-    --chromosomes 1-10 \
-    --cluster_type UW_Cluster \
-    --cluster_file test_cluster_cfg.json \
-    --print_only \
-    window \
-    testdata/assoc_window_burden.config</code></pre>
-<p>The default segment length is 10,000 kb, but we can change that to 50,000 kb when we submit:</p>
-<pre><code>$PIPELINE/assoc.py \
-    --chromosomes 1-10 \
-    --cluster_type UW_Cluster \
-    --cluster_file test_cluster_cfg.json \
-    --segment_length 50000 \
-    window \
-    testdata/assoc_window_burden.config</code></pre>
-<p>We can use the <code>qstat</code> command to check the status of our jobs.</p>
+<div id="using-docker" class="section level1">
+<h1><span class="header-section-number">8</span> Using Docker</h1>
+<p>This section describes how to install docker on your local computer and run workshop exercises from within a docker container.</p>
+<p>All docker images maintained by the UW-GAC are here: <a href="https://hub.docker.com/u/uwgac/" class="uri">https://hub.docker.com/u/uwgac/</a></p>
+<p>Our git repository contains code for building the images: <a href="https://github.com/UW-GAC/docker" class="uri">https://github.com/UW-GAC/docker</a></p>
+<div id="prerequisites" class="section level2">
+<h2><span class="header-section-number">8.1</span> Prerequisites</h2>
+<p>The following software is required on your local computer or laptop:</p>
+<ul>
+<li>[ ] git is required</li>
+<li>[ ] Python 2.7.11+ is required</li>
+<li>[ ] Docker engine (aka <i>docker</i>)</li>
+</ul>
+<p>For Mac computers, installing <i>docker</i> is fairly straight forward. Follow the Docker instructions at the url <a href="https://docs.docker.com/docker-for-mac/install/" class="uri">https://docs.docker.com/docker-for-mac/install/</a></p>
+<p>For Windows 10 computers, installing docker requires enabling <i>Hyper-V</i> in Windows and enabling virtualization in the bios. Follow the Docker instructions at the url <a href="https://docs.docker.com/docker-for-windows/install/" class="uri">https://docs.docker.com/docker-for-windows/install/</a></p>
 </div>
-<div id="running-on-aws-batch" class="section level2">
-<h2><span class="header-section-number">7.2</span> Running on AWS Batch</h2>
-<p>To run a burden test on AWS Batch, we do the following general steps: 1. Log into the the docker AMI instance 2. Download the docker helper functions 2. cd to a working directory on our NFS volume 3. Create the configuration file <code>assoc_window_burden.config</code> 4. Execute the python helper function to run the docker image 4. Optionally execute the association pipeline specifying the AWS Batch service to print out the commands (not running the pipeline) 5. Execute the association pipeline specifying the AWS Batch service to run the pipeline 6. Monitor the pipeline via the AWS Batch console</p>
-<div id="log-into-aws-docker-image" class="section level3">
-<h3><span class="header-section-number">7.2.1</span> Log into AWS docker image</h3>
-<p>ssh into our image which is running docker. Various docker commands can be executed including running TOPMed version of R (note: TOPMed data is not part of the docker image).</p>
-<pre><code>ssh -i ~/.ssh/&lt;some private key&gt; kuraisa@52.27.98.54
-[kuraisa@ip-172-255-46-100]~
-_4816$ docker images
-...
-[kuraisa@ip-172-255-46-100]~
-_4817$ docker run -it uwgac/r-topmed:dev
-/# which R
-...
-/# R
-...
-&gt; .libPaths()
-...
-&gt; library(SeqArray)
-...
-&gt; q()
-...
-/# exit
-[kuraisa@ip-172-255-46-100]~
-_4818$  </code></pre>
+<div id="general-steps" class="section level2">
+<h2><span class="header-section-number">8.2</span> General Steps</h2>
+<p>The general steps for running RStudio using the docker images are as follows: 1. Download the docker image 2. Create a working directory and <i>cd</i> to it 2. Download the docker helper scripts 3. Running RStudio server in the docker image 4. Connect to the RStudio server using the local browser</p>
+<div id="download-the-docker-image" class="section level3">
+<h3><span class="header-section-number">8.2.1</span> Download the Docker Image</h3>
+<p>After <i>docker</i> has been installed, download the TOPMed RStudio docker image <kbd>uwgac/topmed-RStudio</kbd>. For example:</p>
+<pre><code>docker pull uwgac/topmed-RStudio</code></pre>
+<p>This step only has to be done once. The image will be stored persistently on the computer.</p>
 </div>
-<div id="download-the-docker-helper-functions" class="section level3">
-<h3><span class="header-section-number">7.2.2</span> Download the docker helper functions</h3>
-<pre><code>git clone https://github.com/uw-gac/docker_helpers
-alias pipeline=&#39;/home/kuraisa/docker_helpers/analysis_pipeline.py&#39;</code></pre>
+<div id="create-working-directory" class="section level3">
+<h3><span class="header-section-number">8.2.2</span> Create Working Directory</h3>
+<p>Create a working directory and <i>cd</i> to it. For example,</p>
+<pre><code>mkdir ~/workshop_2018
+cd ~/workshop_2018</code></pre>
+<p>This step only has to be done once.</p>
 </div>
-<div id="cd-to-working-directory-and-create-config-file" class="section level3">
-<h3><span class="header-section-number">7.2.3</span> cd to working directory and create config file</h3>
-<pre><code>cd /projects/topmed/analysts/kuraisa/workshop/burden
-vi assoc_window_burden.config
-...</code></pre>
+<div id="download-the-docker-helper-functions-1" class="section level3">
+<h3><span class="header-section-number">8.2.3</span> Download the docker helper functions</h3>
+<p>Using <i>git</i>, download the docker help functions and create an alias to the helper function <i>Rstudio_docker.py</i>. For example,</p>
+<pre><code>mkdir ~/workshop_2018
+cd ~/workshop_2018
+git clone https://github.com/uw-gac/docker_helpers
+alias rs_docker=&#39;~/workshop_2018/docker_helpers/Rstudio_docker.py&#39;</code></pre>
+<p>This step also only has to be done once.</p>
 </div>
-<div id="execute-the-python-helper-function-to-run-the-docker-image" class="section level3">
-<h3><span class="header-section-number">7.2.4</span> Execute the python helper function to run the docker image</h3>
-<pre><code>pipeline</code></pre>
-</div>
-<div id="print-out-aws-commands-if-executing-the-pipeline" class="section level3">
-<h3><span class="header-section-number">7.2.5</span> Print out AWS commands if executing the pipeline</h3>
-<pre><code>/usr/local/analysis_pipeline/assoc.py \
- single testdata/assoc_window_burden.config \
-  --cluster_type AWS_Batch \
-  --cluster_file custom_batch.json \
-  --print &gt; single_print.log  2&gt;&amp;1</code></pre>
-</div>
-<div id="execute-the-pipeline" class="section level3">
-<h3><span class="header-section-number">7.2.6</span> Execute the pipeline</h3>
-<pre><code>/usr/local/analysis_pipeline/assoc.py \
- single testdata/assoc_window_burden.config \
-  --cluster_type AWS_Batch \
-  --cluster_file custom_batch.json  &gt; single_burden.log  2&gt;&amp;1
-</code></pre>
-</div>
-<div id="monitor-the-jobs" class="section level3">
-<h3><span class="header-section-number">7.2.7</span> Monitor the jobs</h3>
-<p>From the web browser, log into the AWS account and select the <strong>Batch Services</strong> to monitor: - Summary via <strong>Dashboard</strong> - Job queue <strong>Optimal_topmed_testdata</strong> - View high-level job logs</p>
-<p>You can switch to <strong>ec2 services</strong> to monitor instances being created or running to support the various jobs.</p>
+<div id="running-rstudio" class="section level3">
+<h3><span class="header-section-number">8.2.4</span> Running RStudio</h3>
+<p>Run RStudio server within a docker container in the background (or detached) using the helper function <i>Rstudio_docker.py</i> (e.g., using the previously defined alias). This enables a browser on a local computer to start an RStudio session.</p>
+<p>The RStudio session has the following characteristics and attributes: 1. The user name and password is <i>rstudio</i> 2. The current working directory of the RStudio session is <i>/home/rstudio</i> 3. By default the current working directory in the RStudio session is mapped to the current working directory of the local computer</p>
+<p>The general command syntax is:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rs_docker [options]</code></pre></div>
+<p>Execute <i>rs_docker –help</i> for more details.</p>
+<p><i>Examples</i></p>
+<ol style="list-style-type: decimal">
+<li><i>Example 1</i></li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mkdir <span class="op">~</span><span class="er">/</span>workshop_<span class="dv">2018</span>
+cd <span class="op">~</span><span class="er">/</span>workshop_<span class="dv">2018</span>
+git clone https<span class="op">:</span><span class="er">//</span>github.com<span class="op">/</span>uw<span class="op">-</span>gac<span class="op">/</span>docker_helpers
+alias rs_docker=<span class="st">&#39;~/workshop_2018/docker_helpers/Rstudio_docker.py&#39;</span>
+rs_docker</code></pre></div>
+<p>The example above runs RStudio server in the background in the container named <i>rstudio</i>. The current working directory, <i>~/workshop_2018/</i>, will be mapped to <i>/home/rstudio</i> in the docker container.</p>
+<p>In the local computer’s browser, the following URL will create an RStudio session:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">localhost<span class="op">:</span><span class="dv">8787</span><span class="op">/</span></code></pre></div>
+<p>The current working directory in the R session is <i>/home/rstudio</i> which is also mapped to the local computer’s directory <i>~/workshop_2018/</i>.</p>
+<ol start="2" style="list-style-type: decimal">
+<li><i>Example 2</i></li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rs_docker <span class="op">-</span>i <span class="fl">192.168</span>.<span class="fl">1.4</span> <span class="op">-</span>p <span class="dv">8080</span></code></pre></div>
+<p>The example above runs RStudio server in the background in the container named <i>rstudio</i>. In a local computer’s browser, the following URL will create an RStudio session:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="fl">192.168</span>.<span class="fl">1.4</span><span class="op">:</span><span class="dv">8080</span><span class="op">/</span></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li><i>Example 3</i></li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rs_docker <span class="op">-</span>C kill</code></pre></div>
+<p>The example above kills the background docker container named <i>RStudio</i></p>
 
 </div>
 </div>
@@ -306,8 +276,8 @@ vi assoc_window_burden.config
           </div>
         </div>
       </div>
-<a href="association-tests.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="using-docker.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="analysis-pipeline.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="analysis-commons.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

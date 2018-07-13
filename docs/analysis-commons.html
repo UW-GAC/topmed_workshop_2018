@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="analysis-pipeline.html">
+<link rel="prev" href="using-docker.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -117,7 +117,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html"><i class="fa fa-check"></i><b>5</b> Phenotype Harmonization</a><ul>
 <li class="chapter" data-level="5.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#inspect-individual-study-data-in-r"><i class="fa fa-check"></i><b>5.1</b> Inspect individual study data in R</a></li>
 <li class="chapter" data-level="5.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#compare-study-values"><i class="fa fa-check"></i><b>5.2</b> Compare study values</a></li>
-<li class="chapter" data-level="5.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#use-using-mixed-models-to-compare-studies"><i class="fa fa-check"></i><b>5.3</b> Use using mixed models to compare studies</a><ul>
+<li class="chapter" data-level="5.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#using-mixed-models-to-compare-studies"><i class="fa fa-check"></i><b>5.3</b> Using mixed models to compare studies</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#create-an-annotated-data-frame"><i class="fa fa-check"></i><b>5.3.1</b> Create an Annotated Data Frame</a></li>
 <li class="chapter" data-level="5.3.2" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#obtain-the-genetic-relatedness-matrix"><i class="fa fa-check"></i><b>5.3.2</b> Obtain the genetic relatedness matrix</a></li>
 <li class="chapter" data-level="5.3.3" data-path="phenotype-harmonization.html"><a href="phenotype-harmonization.html#fit-a-mixed-model-without-study"><i class="fa fa-check"></i><b>5.3.3</b> Fit a mixed model without study</a></li>
@@ -152,21 +152,30 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.2.7" data-path="analysis-pipeline.html"><a href="analysis-pipeline.html#monitor-the-jobs"><i class="fa fa-check"></i><b>7.2.7</b> Monitor the jobs</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>8</b> Analysis Commons</a><ul>
-<li class="chapter" data-level="8.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>8.1</b> Outline</a></li>
-<li class="chapter" data-level="8.2" data-path="analysis-commons.html"><a href="analysis-commons.html#web-interface-and-running-an-analysis-application"><i class="fa fa-check"></i><b>8.2</b> Web Interface and Running an Analysis Application</a><ul>
-<li class="chapter" data-level="8.2.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-1-run-a-single-variant-analysis."><i class="fa fa-check"></i><b>8.2.1</b> Exercise 1) Run a single variant analysis.</a></li>
-<li class="chapter" data-level="8.2.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5."><i class="fa fa-check"></i><b>8.2.2</b> Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</a></li>
+<li class="chapter" data-level="8" data-path="using-docker.html"><a href="using-docker.html"><i class="fa fa-check"></i><b>8</b> Using Docker</a><ul>
+<li class="chapter" data-level="8.1" data-path="using-docker.html"><a href="using-docker.html#prerequisites"><i class="fa fa-check"></i><b>8.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="8.2" data-path="using-docker.html"><a href="using-docker.html#general-steps"><i class="fa fa-check"></i><b>8.2</b> General Steps</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="using-docker.html"><a href="using-docker.html#download-the-docker-image"><i class="fa fa-check"></i><b>8.2.1</b> Download the Docker Image</a></li>
+<li class="chapter" data-level="8.2.2" data-path="using-docker.html"><a href="using-docker.html#create-working-directory"><i class="fa fa-check"></i><b>8.2.2</b> Create Working Directory</a></li>
+<li class="chapter" data-level="8.2.3" data-path="using-docker.html"><a href="using-docker.html#download-the-docker-helper-functions-1"><i class="fa fa-check"></i><b>8.2.3</b> Download the docker helper functions</a></li>
+<li class="chapter" data-level="8.2.4" data-path="using-docker.html"><a href="using-docker.html#running-rstudio"><i class="fa fa-check"></i><b>8.2.4</b> Running RStudio</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="analysis-commons.html"><a href="analysis-commons.html#command-line-interface"><i class="fa fa-check"></i><b>8.3</b> Command line interface</a><ul>
-<li class="chapter" data-level="8.3.1" data-path="analysis-commons.html"><a href="analysis-commons.html#log-in-to-awi"><i class="fa fa-check"></i><b>8.3.1</b> Log in to AWI</a></li>
-<li class="chapter" data-level="8.3.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-3-navigate-directories-make-output-directory-examine-files"><i class="fa fa-check"></i><b>8.3.2</b> Exercise 3) Navigate directories, make output directory, examine files</a></li>
-<li class="chapter" data-level="8.3.3" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-4-run-single-variant-analysis-from-command-line-using-bash-script"><i class="fa fa-check"></i><b>8.3.3</b> Exercise 4) Run single variant analysis from command line using bash script</a></li>
 </ul></li>
-<li class="chapter" data-level="8.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>8.4</b> Writing your own Apps</a><ul>
-<li class="chapter" data-level="8.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>8.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
-<li class="chapter" data-level="8.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>8.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
-<li class="chapter" data-level="8.4.3" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set"><i class="fa fa-check"></i><b>8.4.3</b> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</a></li>
+<li class="chapter" data-level="9" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>9</b> Analysis Commons</a><ul>
+<li class="chapter" data-level="9.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>9.1</b> Outline</a></li>
+<li class="chapter" data-level="9.2" data-path="analysis-commons.html"><a href="analysis-commons.html#web-interface-and-running-an-analysis-application"><i class="fa fa-check"></i><b>9.2</b> Web Interface and Running an Analysis Application</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-1-run-a-single-variant-analysis."><i class="fa fa-check"></i><b>9.2.1</b> Exercise 1) Run a single variant analysis.</a></li>
+<li class="chapter" data-level="9.2.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5."><i class="fa fa-check"></i><b>9.2.2</b> Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="analysis-commons.html"><a href="analysis-commons.html#command-line-interface"><i class="fa fa-check"></i><b>9.3</b> Command line interface</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="analysis-commons.html"><a href="analysis-commons.html#log-in-to-awi"><i class="fa fa-check"></i><b>9.3.1</b> Log in to AWI</a></li>
+<li class="chapter" data-level="9.3.2" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-3-navigate-directories-make-output-directory-examine-files"><i class="fa fa-check"></i><b>9.3.2</b> Exercise 3) Navigate directories, make output directory, examine files</a></li>
+<li class="chapter" data-level="9.3.3" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-4-run-single-variant-analysis-from-command-line-using-bash-script"><i class="fa fa-check"></i><b>9.3.3</b> Exercise 4) Run single variant analysis from command line using bash script</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="analysis-commons.html"><a href="analysis-commons.html#writing-your-own-apps"><i class="fa fa-check"></i><b>9.4</b> Writing your own Apps</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="analysis-commons.html"><a href="analysis-commons.html#exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform"><i class="fa fa-check"></i><b>9.4.1</b> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</a></li>
+<li class="chapter" data-level="9.4.2" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-6-make-qq-plot"><i class="fa fa-check"></i><b>9.4.2</b> Optional Exercise 6) Make QQ plot</a></li>
+<li class="chapter" data-level="9.4.3" data-path="analysis-commons.html"><a href="analysis-commons.html#optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set"><i class="fa fa-check"></i><b>9.4.3</b> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -187,9 +196,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="analysis-commons" class="section level1">
-<h1><span class="header-section-number">8</span> Analysis Commons</h1>
+<h1><span class="header-section-number">9</span> Analysis Commons</h1>
 <div id="outline" class="section level2">
-<h2><span class="header-section-number">8.1</span> Outline</h2>
+<h2><span class="header-section-number">9.1</span> Outline</h2>
 <ul>
 <li>Introduction to web-interface</li>
 <li>Running a single variant analysis</li>
@@ -200,13 +209,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul>
 </div>
 <div id="web-interface-and-running-an-analysis-application" class="section level2">
-<h2><span class="header-section-number">8.2</span> Web Interface and Running an Analysis Application</h2>
+<h2><span class="header-section-number">9.2</span> Web Interface and Running an Analysis Application</h2>
 <div id="exercise-1-run-a-single-variant-analysis." class="section level3">
-<h3><span class="header-section-number">8.2.1</span> Exercise 1) Run a single variant analysis.</h3>
+<h3><span class="header-section-number">9.2.1</span> Exercise 1) Run a single variant analysis.</h3>
 <p>Log into <a href="http://dnanexus.com" class="uri">http://dnanexus.com</a> using the Analysis Commons user name and password listed on the website.<br />
 Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong>TOPMed_#</strong>. <em>Ignore warning about default billing account.</em></p>
 <div id="part-1-run-null-model" class="section level4">
-<h4><span class="header-section-number">8.2.1.1</span> Part 1: Run null model</h4>
+<h4><span class="header-section-number">9.2.1.1</span> Part 1: Run null model</h4>
 <p>Navigate to and select <strong>(wgs:tools/genesis_nullmodel)</strong></p>
 <p>File inputs:<br />
 * phenofile -&gt; phenotype/1KG_pheno.csv<br />
@@ -220,7 +229,7 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 * Note: Other options can be left as their defaults * Note: The job may finish instantaneously if you don’t change the output file name. It knows that you are running the exact same job and will just reuse results from previous analyses.</p>
 </div>
 <div id="part-2-run-association-tests" class="section level4">
-<h4><span class="header-section-number">8.2.1.2</span> Part 2: Run association tests</h4>
+<h4><span class="header-section-number">9.2.1.2</span> Part 2: Run association tests</h4>
 <p>Navigate to and select <strong>(wgs:tools/genesis_tests)</strong></p>
 <p>File inputs:<br />
 * null_model -&gt; /output/YOURFOLDERNAME/nullmodel_outcome.Rda <strong>(output from part1. If yours has not completed, you can select output/DEMO/nullmodel_outcome.Rda)</strong> * genotypes -&gt; genotypes/GDS/1KG_phase3_subset_chr1.gds</p>
@@ -232,7 +241,7 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 </div>
 </div>
 <div id="exercise-2-run-skat-test-grouping-variants-into-gene-transcript-regions-and-limit-the-variants-to-those-with-a-cadd-phred-score-2-and-maf-5." class="section level3">
-<h3><span class="header-section-number">8.2.2</span> Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</h3>
+<h3><span class="header-section-number">9.2.2</span> Exercise 2) Run SKAT test grouping variants into gene transcript regions and limit the variants to those with a CADD phred score &gt; 2 and MAF &lt;= 5%.</h3>
 <p>File inputs:<br />
 * null_model -&gt; /output/YOURFOLDERNAME/nullmodel_outcome.Rda <strong>(output from part1. If yours has not completed, you can select output/DEMO/nullmodel_outcome.Rda)</strong> * genotypefile -&gt; genotypes/1KG_phase3_subset_chr1.gds<br />
 * annotation -&gt; annotation/1KG_annotation_CHR1.txt<br />
@@ -248,12 +257,12 @@ Should be in the form of Username:<strong>topmed_#</strong> and Password:<strong
 </div>
 </div>
 <div id="command-line-interface" class="section level2">
-<h2><span class="header-section-number">8.3</span> Command line interface</h2>
+<h2><span class="header-section-number">9.3</span> Command line interface</h2>
 <p>References:<br />
 * Command Line Interface <a href="https://wiki.dnanexus.com/Command-Line-Client/Quickstart">Quickstart</a><br />
 * Index of <a href="https://wiki.dnanexus.com/Command-Line-Client/Index%20of%20dx%20Commands">dx commands</a></p>
 <div id="log-in-to-awi" class="section level3">
-<h3><span class="header-section-number">8.3.1</span> Log in to AWI</h3>
+<h3><span class="header-section-number">9.3.1</span> Log in to AWI</h3>
 <p><strong>Replace topmed_## with the user ID from your handout</strong></p>
 <pre><code>$ ssh topmed_##@34.208.147.133
 You will be prompted for your password, e.g. TOPMed_## (Note capitalization)
@@ -270,7 +279,7 @@ You can select or change project once you are logged in
 $ dx select wgs</code></pre>
 </div>
 <div id="exercise-3-navigate-directories-make-output-directory-examine-files" class="section level3">
-<h3><span class="header-section-number">8.3.2</span> Exercise 3) Navigate directories, make output directory, examine files</h3>
+<h3><span class="header-section-number">9.3.2</span> Exercise 3) Navigate directories, make output directory, examine files</h3>
 <ul>
 <li>File paths: &lt;project&gt;:/path/to/file.txt</li>
 <li>Example: wgs:/phenotypes/1KG_pheno.csv</li>
@@ -286,7 +295,7 @@ $ ls
 $ head 1KG_pheno.csv</code></pre>
 </div>
 <div id="exercise-4-run-single-variant-analysis-from-command-line-using-bash-script" class="section level3">
-<h3><span class="header-section-number">8.3.3</span> Exercise 4) Run single variant analysis from command line using bash script</h3>
+<h3><span class="header-section-number">9.3.3</span> Exercise 4) Run single variant analysis from command line using bash script</h3>
 <p>Open the single_multichrom.sh bash script and edit to replace the output directory “YOURNAME” to your folder</p>
 <pre><code>$ dx describe tools/genesis_tests</code></pre>
 <p>Either edit using nano</p>
@@ -297,9 +306,9 @@ $ ./single_multichrom.sh</code></pre>
 </div>
 </div>
 <div id="writing-your-own-apps" class="section level2">
-<h2><span class="header-section-number">8.4</span> Writing your own Apps</h2>
+<h2><span class="header-section-number">9.4</span> Writing your own Apps</h2>
 <div id="exercise-5-write-an-app-that-creates-phenotype-residuals-and-performs-an-inverse-normal-transform" class="section level3">
-<h3><span class="header-section-number">8.4.1</span> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</h3>
+<h3><span class="header-section-number">9.4.1</span> Exercise 5) Write an App that creates phenotype residuals and performs an inverse normal transform</h3>
 <p>Use app wizard to create template</p>
 <pre><code>$ dx-app-wizard
 
@@ -376,7 +385,7 @@ write.csv(pheno,file=&quot;output&quot;,row.names=F)</code></pre>
 <pre><code>$ dx watch jobid</code></pre>
 </div>
 <div id="optional-exercise-6-make-qq-plot" class="section level3">
-<h3><span class="header-section-number">8.4.2</span> Optional Exercise 6) Make QQ plot</h3>
+<h3><span class="header-section-number">9.4.2</span> Optional Exercise 6) Make QQ plot</h3>
 <p>Make QQ plot of your single variant results.<br />
 Select results from the multiple chromosome run (chr21 and chr22).</p>
 <p>You will need to identify the p-value column name. To view the results file try these options:</p>
@@ -391,7 +400,7 @@ Select results from the multiple chromosome run (chr21 and chr22).</p>
 <p><em>Note: the plot label must not contain spaces.</em></p>
 </div>
 <div id="optional-exercise-8-create-a-regional-association-plot-using-ld-extracted-from-your-data-set" class="section level3">
-<h3><span class="header-section-number">8.4.3</span> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</h3>
+<h3><span class="header-section-number">9.4.3</span> Optional Exercise 8) Create a regional association plot using LD extracted from your data set</h3>
 <p>This process requires two steps, one to extract the LD for all variants in the region and one to create the plot. Sequencing data sets often contain variants not in external refernce panels, so it is helpful to create your own LD reference.</p>
 <p><strong>Step 1</strong>: Run GILD (<strong>G</strong>DS <strong>I</strong>nto <strong>LD</strong>) App (tools/gild_v1)</p>
 <p>File inputs: * gds_file -&gt; genotypes/1KG_phase3_subset_chr22.gds</p>
@@ -426,7 +435,7 @@ Select results from the multiple chromosome run (chr21 and chr22).</p>
           </div>
         </div>
       </div>
-<a href="analysis-pipeline.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="using-docker.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>

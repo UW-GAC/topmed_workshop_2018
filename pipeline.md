@@ -26,22 +26,34 @@ test_type "score"
 We will use the python script `assoc.py` to submit all jobs. First we look at the available options:
 
 ```
-setenv PIPELINE /projects/topmed/working_code/analysis_pipeline
+setenv PIPELINE /projects/topmed/working_code/analysis_pipeline_2.0.1
 $PIPELINE/assoc.py --help
 ```
 
-Let's run a sliding window test on chromosomes 1-10. We will also specify the cluster type, although UW_Cluster is actually the default. The last argument is our config file.
+Let's run a sliding window test on chromosomes 1-10. We will also specify the cluster type, although UW_Cluster is actually the default. The cluster file is a JSON file that can override default values for the cluster configuration. In this case, we are changing the memory requirements for each job to only reserve a small amount of memory on each cluster node. The last argument is our config file.
 
 First, we print the commands that will be be run without actually submitting jobs:
 
 ```
-$PIPELINE/assoc.py --chromosomes 1-10 --cluster_type UW_Cluster --print_only window testdata/assoc_window_burden.config
+$PIPELINE/assoc.py \
+    --chromosomes 1-10 \
+    --cluster_type UW_Cluster \
+    --cluster_file test_cluster_cfg.json \
+    --print_only \
+    window \
+    testdata/assoc_window_burden.config
 ```
 
 The default segment length is 10,000 kb, but we can change that to 50,000 kb when we submit:
 
 ```
-$PIPELINE/assoc.py --chromosomes 1-10 --cluster_type UW_Cluster --segment_length 50000 window testdata/assoc_window_burden.config
+$PIPELINE/assoc.py \
+    --chromosomes 1-10 \
+    --cluster_type UW_Cluster \
+    --cluster_file test_cluster_cfg.json \
+    --segment_length 50000 \
+    window \
+    testdata/assoc_window_burden.config
 ```
 
 We can use the `qstat` command to check the status of our jobs.
