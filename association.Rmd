@@ -171,7 +171,7 @@ head(assoc$results)
 
 ## Annotation-based aggregate tests
 
-**Note:** the code and libraries in this section are under active development. This section uses [WGSAParsr v 5.0.7](https://github.com/UW-GAC/wgsaparsr/tree/5.0.7) to parse output from [WGSA version 0.7](https://sites.google.com/site/jpopgen/wgsa). Use this code at your own risk, and be warned that it may break in unexpected ways or be incompatible across different versions of the software. [Github issues and contribution](https://github.com/UW-GAC/wgsaparsr) are welcome!
+**Note:** the code and libraries in this section are under active development. This section uses [WGSAParsr v 5.0.8](https://github.com/UW-GAC/wgsaparsr/tree/5.0.8) to parse output from [WGSA version 0.7](https://sites.google.com/site/jpopgen/wgsa). Use this code at your own risk, and be warned that it may break in unexpected ways or be incompatible across different versions of the software. [Github issues and contribution](https://github.com/UW-GAC/wgsaparsr) are welcome!
 
 This module is provided to give workshop participants an example of some of the kinds of analysis tasks that might be performed with TOPMed annotation data. 
 
@@ -208,8 +208,10 @@ readLines(snvfile, n=2)
 
 The TOPMed DCC uses an R package we developed, *WGSAParsr*, to work with WGSA output files. Briefly, WGSAParsr simplifies the WGSA output files by: 1) selecting a subset of fields; 2) renaming some fields; and 3) simplifying fields that have compound list-entries. The *WGSAParsr* package is under development, and is available on github at [https://github.com/UW-GAC/wgsaparsr](https://github.com/UW-GAC/wgsaparsr). It can be installed using the *devtools* package, like this:
 ```{r eval=FALSE}
-devtools::install_github("UW-GAC/wgsaparsr", ref = "5.0.7", upgrade_dependencies = FALSE)
+devtools::install_github("UW-GAC/wgsaparsr", ref = "5.0.8", upgrade_dependencies = FALSE)
 ```
+
+*note*: if you get an error `Installation failed: error in running command`, that may be related to some assumptions devtools makes in downloading packages from github. The error can be resolved if you set the unzip option in your R session before running `devtools::install_github()`. Here's how: `options(unzip = "internal")`
 
 Once the package is installed locally, it can be loaded to the workspace in the usual manner:
 ```{r}
