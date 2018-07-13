@@ -9,14 +9,14 @@ Our git repository contains code for building the images: https://github.com/UW-
 ## Prerequisites ##
 The following software is required on your local computer or laptop:
 
-- [ ] git is required
-- [ ] Python 2.7.11+ is required
-- [ ] Docker engine (aka <i>docker</i>)  
+- git
+- Python 2.7.11+
+- Docker engine (aka <i>docker</i>)  
 
 For Mac computers, installing <i>docker</i> is fairly straight forward.  Follow the Docker instructions at the url https://docs.docker.com/docker-for-mac/install/
 
 For Windows 10 computers, installing docker requires enabling <i>Hyper-V</i> in Windows and enabling virtualization in the bios. Follow the Docker instructions at the url https://docs.docker.com/docker-for-windows/install/
-  
+
 ## General Steps ##
 The general steps for running RStudio using the docker images are as follows:
 1. Download the docker image
@@ -27,9 +27,9 @@ The general steps for running RStudio using the docker images are as follows:
 
 
 ### Download the Docker Image ###
-After <i>docker</i> has been installed, download the TOPMed RStudio docker image <kbd>uwgac/topmed-RStudio</kbd>.  For example:
+After <i>docker</i> has been installed, download the TOPMed RStudio docker image <kbd>uwgac/topmed-rstudio</kbd>.  For example:
 ```
-docker pull uwgac/topmed-RStudio
+docker pull uwgac/topmed-rstudio
 ```
 This step only has to be done once.  The image will be stored persistently on the computer.
 
