@@ -29,6 +29,7 @@ dat <- pData(annot) %>%
     left_join(pData(phen), by=c("subject.id"="subject_id", "sex"="sex"))
 meta <- bind_rows(varMetadata(annot), varMetadata(phen)[3:5,,drop=FALSE])
 annot <- AnnotatedDataFrame(dat, meta)
+save(annot, file="data/sample_phenotype_annotation.RData")
 
 # load the GRM
 data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
@@ -45,6 +46,7 @@ We will test for an association between genotype and height, adjusting for sex, 
 library(GENESIS)
 nullmod <- fitNullModel(annot, outcome="height", covars=c("sex", "age", "study"), 
                         cov.mat=grm$grm, group.var="study", verbose=FALSE)
+save(nullmod, file="data/null_model.RData")
 ```
 
 We also recommend taking an inverse normal transform of the residuals and refitting the model. This is done separately for each group, and the transformed residuals are rescaled. See the full procedure in the  
@@ -441,7 +443,7 @@ distinct(as.tibble(aggregates$group_id))
 ```
 
 We can look at the distribution of the number of variants per aggregation unit:
-```{r}
+```{r plot_agg_units}
 counts <- aggregates %>% group_by(group_id) %>% summarize(n = n())
 ggplot(counts, aes(x = n)) + geom_bar()
 ```
@@ -477,18 +479,41 @@ We can run a burden test or SKAT on each of these units using `assocTestAggregat
 
 ```{r aggVarList}
 library(TopmedPipeline)
+library(SeqVarTools)
+if (exists("seqData")) {
+    seqResetFilter(seqData, verbose=FALSE)
+} else {
+    data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
+    gdsfile <- "data/1KG_phase3_subset_chr1.gds"
+    if (!file.exists(gdsfile)) download.file(file.path(data.path, basename(gdsfile)), gdsfile)
+    gds <- seqOpen(gdsfile)
+    workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master/"
+    annotfile <- "data/sample_phenotype_annotation.RData"
+    if (!file.exists(annotfile)) download.file(file.path(workshop.path, annotfile), annotfile)
+    annot <- getobj(annotfile)
+    seqData <- SeqVarData(gds, sampleData=annot)
+}
+    
+# subset to chromosome 1
+aggunit <- filter(aggunit, chr == 1)
 aggVarList <- aggregateGRangesList(aggunit)
 length(aggVarList)
 head(names(aggVarList))
 aggVarList[[1]]
 
-seqResetFilter(seqData, verbose=FALSE)
 iterator <- SeqVarListIterator(seqData, variantRanges=aggVarList, verbose=FALSE)
 ```
 
 As in the previous section, we must fit the null model before running the association test.
 
 ```{r assoc_aggregate}
+if (!exists("nullmod")) {
+    nmfile <- "data/null_model.RData"
+    if (!file.exists(nmfile)) download.file(file.path(workshop.path, nmfile), nmfile)
+    nullmod <- getobj(nmfile)
+}
+
+library(GENESIS)
 assoc <- assocTestAggregate(iterator, nullmod, test="Burden", AF.max=0.1, weight.beta=c(1,1))
 names(assoc)
 head(assoc$results)
