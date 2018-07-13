@@ -428,23 +428,23 @@ combined_annotation %>%
   glimpse() # view the result - 592 variants
 ```
 
-Now that you've got a set of variants that you can aggregate into genic units, the tibble needs to be reformatted for input to the GENESIS analysis pipeline. The input to the GENESIS pipeline is a data frame with variables called `group_id`, `chromosome`, `position`, `ref`, and `alt`. Prepare this data frame and save it for testing (You do not need to filter the variants for this exercise):
+Now that you've got a set of variants that you can aggregate into genic units, the tibble needs to be reformatted for input to the GENESIS analysis pipeline. The input to the GENESIS pipeline is a data frame with variables called `group_id`, `chr`, `pos`, `ref`, and `alt`. Prepare this data frame and save it for testing (You do not need to filter the variants for this exercise):
 ```{r}
 aggregates <-
   combined_annotation %>%
   filter(VEP_ensembl_Gene_ID != ".") %>% # remove variants not annotated with a Gene_ID
   group_by(VEP_ensembl_Gene_ID) %>% # aggregate by gene
   select(group_id = VEP_ensembl_Gene_ID,
-         chromosome = CHROM,
-         position = POS,
+         chr = CHROM,
+         pos = POS,
          ref = REF,
          alt = ALT) %>%
   glimpse # inspect the tibble
 ```
 
-This set can be saved and used with the analysis pipeline for association testing.
+This set can be saved for futher analysis, if you'd like.
 ```{r}
-save(aggregates, file = "data/variants_by_gene.RData")
+save(aggregates, file = "data/chr_22_by_gene.RData")
 ```
 
 You can also compute some summary information about these aggregates, such as counting how many genic units we're using:
