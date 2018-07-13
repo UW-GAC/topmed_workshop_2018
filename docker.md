@@ -61,7 +61,7 @@ The RStudio session has the following characteristics and attributes:
 3. By default the current working directory in the RStudio session is mapped to the current working directory of the local computer
 
 The general command syntax is:
-```{r}
+```
 rs_docker [options]
 ```
 Execute <i>rs_docker --help</i> for more details.
@@ -69,7 +69,7 @@ Execute <i>rs_docker --help</i> for more details.
 <i>Examples</i>
 
 1. <i>Example 1</i>
-```{r}
+```
 mkdir ~/workshop_2018
 cd ~/workshop_2018
 git clone https://github.com/uw-gac/docker_helpers
@@ -79,22 +79,22 @@ rs_docker
 The example above runs RStudio server in the background in the container named <i>rstudio</i>. The current working directory, <i>~/workshop_2018/</i>, will be mapped to <i>/home/rstudio</i> in the docker container.
 
 In the local computer's browser, the following URL will create an RStudio session:
-```{r}
+```
 localhost:8787/
 ```
 The current working directory in the R session is <i>/home/rstudio</i> which is also mapped to the local computer's directory <i>~/workshop_2018/</i>.
 
 2. <i>Example 2</i>
-```{r}
+```
 rs_docker -i 192.168.1.4 -p 8080
 ```
 The example above runs RStudio server in the background in the container named <i>rstudio</i>.  In a local computer's browser, the following URL will create an RStudio session:
-```{r}
+```
 192.168.1.4:8080/
 ```
 
 3. <i>Example 3</i>
-```{r}
+```
 rs_docker -C kill
 ```
 The example above kills the background docker container named <i>RStudio</i>
