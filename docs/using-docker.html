@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-12">
+<meta name="date" content="2018-07-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -204,9 +204,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">8.1</span> Prerequisites</h2>
 <p>The following software is required on your local computer or laptop:</p>
 <ul>
-<li>[ ] git is required</li>
-<li>[ ] Python 2.7.11+ is required</li>
-<li>[ ] Docker engine (aka <i>docker</i>)</li>
+<li>git</li>
+<li>Python 2.7.11+</li>
+<li>Docker engine (aka <i>docker</i>)</li>
 </ul>
 <p>For Mac computers, installing <i>docker</i> is fairly straight forward. Follow the Docker instructions at the url <a href="https://docs.docker.com/docker-for-mac/install/" class="uri">https://docs.docker.com/docker-for-mac/install/</a></p>
 <p>For Windows 10 computers, installing docker requires enabling <i>Hyper-V</i> in Windows and enabling virtualization in the bios. Follow the Docker instructions at the url <a href="https://docs.docker.com/docker-for-windows/install/" class="uri">https://docs.docker.com/docker-for-windows/install/</a></p>
@@ -216,8 +216,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The general steps for running RStudio using the docker images are as follows: 1. Download the docker image 2. Create a working directory and <i>cd</i> to it 2. Download the docker helper scripts 3. Running RStudio server in the docker image 4. Connect to the RStudio server using the local browser</p>
 <div id="download-the-docker-image" class="section level3">
 <h3><span class="header-section-number">8.2.1</span> Download the Docker Image</h3>
-<p>After <i>docker</i> has been installed, download the TOPMed RStudio docker image <kbd>uwgac/topmed-RStudio</kbd>. For example:</p>
-<pre><code>docker pull uwgac/topmed-RStudio</code></pre>
+<p>After <i>docker</i> has been installed, download the TOPMed RStudio docker image <kbd>uwgac/topmed-rstudio</kbd>. For example:</p>
+<pre><code>docker pull uwgac/topmed-rstudio</code></pre>
 <p>This step only has to be done once. The image will be stored persistently on the computer.</p>
 </div>
 <div id="create-working-directory" class="section level3">
@@ -241,32 +241,30 @@ alias rs_docker=&#39;~/workshop_2018/docker_helpers/Rstudio_docker.py&#39;</code
 <p>Run RStudio server within a docker container in the background (or detached) using the helper function <i>Rstudio_docker.py</i> (e.g., using the previously defined alias). This enables a browser on a local computer to start an RStudio session.</p>
 <p>The RStudio session has the following characteristics and attributes: 1. The user name and password is <i>rstudio</i> 2. The current working directory of the RStudio session is <i>/home/rstudio</i> 3. By default the current working directory in the RStudio session is mapped to the current working directory of the local computer</p>
 <p>The general command syntax is:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rs_docker [options]</code></pre></div>
+<pre><code>rs_docker [options]</code></pre>
 <p>Execute <i>rs_docker –help</i> for more details.</p>
 <p><i>Examples</i></p>
 <ol style="list-style-type: decimal">
-<li><i>Example 1</i></li>
+<li><p><i>Example 1</i></p>
+<pre><code>mkdir ~/workshop_2018
+cd ~/workshop_2018
+git clone https://github.com/uw-gac/docker_helpers
+alias rs_docker=&#39;~/workshop_2018/docker_helpers/Rstudio_docker.py&#39;
+rs_docker</code></pre>
+<p>The example above runs RStudio server in the background in the container named <i>rstudio</i>. The current working directory, <i>~/workshop_2018/</i>, will be mapped to <i>/home/rstudio</i> in the docker container.</p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mkdir <span class="op">~</span><span class="er">/</span>workshop_<span class="dv">2018</span>
-cd <span class="op">~</span><span class="er">/</span>workshop_<span class="dv">2018</span>
-git clone https<span class="op">:</span><span class="er">//</span>github.com<span class="op">/</span>uw<span class="op">-</span>gac<span class="op">/</span>docker_helpers
-alias rs_docker=<span class="st">&#39;~/workshop_2018/docker_helpers/Rstudio_docker.py&#39;</span>
-rs_docker</code></pre></div>
-<p>The example above runs RStudio server in the background in the container named <i>rstudio</i>. The current working directory, <i>~/workshop_2018/</i>, will be mapped to <i>/home/rstudio</i> in the docker container.</p>
 <p>In the local computer’s browser, the following URL will create an RStudio session:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">localhost<span class="op">:</span><span class="dv">8787</span><span class="op">/</span></code></pre></div>
+<pre><code>localhost:8787/</code></pre>
 <p>The current working directory in the R session is <i>/home/rstudio</i> which is also mapped to the local computer’s directory <i>~/workshop_2018/</i>.</p>
 <ol start="2" style="list-style-type: decimal">
-<li><i>Example 2</i></li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rs_docker <span class="op">-</span>i <span class="fl">192.168</span>.<span class="fl">1.4</span> <span class="op">-</span>p <span class="dv">8080</span></code></pre></div>
+<li><p><i>Example 2</i></p>
+<pre><code>rs_docker -i 192.168.1.4 -p 8080</code></pre>
 <p>The example above runs RStudio server in the background in the container named <i>rstudio</i>. In a local computer’s browser, the following URL will create an RStudio session:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="fl">192.168</span>.<span class="fl">1.4</span><span class="op">:</span><span class="dv">8080</span><span class="op">/</span></code></pre></div>
-<ol start="3" style="list-style-type: decimal">
-<li><i>Example 3</i></li>
+<pre><code>192.168.1.4:8080/</code></pre></li>
+<li><p><i>Example 3</i></p>
+<pre><code>rs_docker -C kill</code></pre>
+<p>The example above kills the background docker container named <i>RStudio</i></p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rs_docker <span class="op">-</span>C kill</code></pre></div>
-<p>The example above kills the background docker container named <i>RStudio</i></p>
 
 </div>
 </div>

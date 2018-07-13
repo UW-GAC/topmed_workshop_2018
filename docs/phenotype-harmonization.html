@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-12">
+<meta name="date" content="2018-07-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -209,7 +209,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 pheno_files &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;data/pheno_data_study_1.txt&quot;</span>, <span class="st">&quot;data/pheno_data_study_2.txt&quot;</span>, <span class="st">&quot;data/pheno_data_study_3.txt&quot;</span>)
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">dir.exists</span>(<span class="st">&quot;data&quot;</span>)) <span class="kw">dir.create</span>(<span class="st">&quot;data&quot;</span>)
 <span class="cf">for</span> (pheno_file <span class="cf">in</span> pheno_files) {
-  <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(pheno_file)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(repo_path, pheno_file), pheno_file, <span class="dt">extra =</span> <span class="st">&quot;-L&quot;</span>)
+  <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(pheno_file)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(repo_path, pheno_file), pheno_file)
 }</code></pre></div>
 <p>Next, read the study phenotype files into R. In this case, each file is tab-delimited.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">study_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;data/pheno_data_study_1.txt&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">as.is =</span> <span class="ot">TRUE</span>)
