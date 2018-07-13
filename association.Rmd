@@ -192,10 +192,10 @@ workshop.path <- "https://github.com/UW-GAC/topmed_workshop_2018/raw/master/"
 if (!dir.exists("data")) dir.create("data")
 
 snvfile <- "data/snv.tsv.gz"
-if (!file.exists(snvfile)) download.file(file.path(workshop.path, snvfile), snvfile, extra="-L")
+if (!file.exists(snvfile)) download.file(file.path(workshop.path, snvfile), snvfile)
 
 indelfile <- "data/indel.tsv.gz"
-if (!file.exists(indelfile)) download.file(file.path(workshop.path, indelfile), indelfile, extra="-L")
+if (!file.exists(indelfile)) download.file(file.path(workshop.path, indelfile), indelfile)
 ```
 
 Also, you'll be using functions from the `tidyverse` package, so load that library as well:
