@@ -120,7 +120,7 @@ dos <- alleleDosage(gds, n=3)
 head(dos)
 ```
 
-2. Use the `hwe` function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes. (Note that the HWE test is only valid for biallelic variants.)
+2. Use the `hwe` function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes. (Note that the HWE test is only valid for biallelic variants, and will return `NA` for multiallelic variants.)
 
 ```{r exercise_hwe}
 seqResetFilter(gds)

@@ -75,7 +75,7 @@ ggplot(kinship, aes(IBS0, kinship)) +
 
 The next step is [PC-AiR](http://www.ncbi.nlm.nih.gov/pubmed/25810074), in which we select a set of unrelated samples that is maximally informative about all ancestries in the sample. We use this unrelated set for Principal Component Analysis (PCA), then project the relatives onto the PCs.
 
-First, we partition the samples into a related and unrelated set. We use a kinship threshold of degree 3 (unrelated is less than first cousins). We load the GENESIS package. In the first iteration, we use the KING estimates for both kinship (`kinMat`) and ancestry divergence (`divMat`). KING kinship estimates are negative for samples with different ancestry.
+First, we partition the samples into a related and unrelated set. We use a kinship threshold of degree 3, which corresponds to first cousins. This defines anyone less related than first cousins as "unrelated". We load the GENESIS package. In the first iteration, we use the KING estimates for both kinship (`kinMat`) and ancestry divergence (`divMat`). KING kinship estimates are negative for samples with different ancestry.
 
 ```{r pcair_partition}
 library(GENESIS)
@@ -102,7 +102,7 @@ samp.ord <- match(sample.id, rownames(pcs))
 pcs <- pcs[samp.ord,]
 ```
 
-We need to determine which PCs are ancestry informative. To do this we need population information for the 1000 Genomes samples. This information is stored in an `AnnotatedDataFrame`, which is a data.frame with optional metadata describing the colunms. The class is defined in the Biobase package. We load the stored object using the `getobj` function from the TopmedPipeline package.
+We need to determine which PCs are ancestry informative. To do this we need population information for the 1000 Genomes samples. This information is stored in an `AnnotatedDataFrame`, which is a data.frame with optional metadata describing the columns. The class is defined in the Biobase package. We load the stored object using the `getobj` function from the TopmedPipeline package.
 
 ```{r annot}
 library(Biobase)

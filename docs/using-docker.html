@@ -160,6 +160,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8.2.3" data-path="using-docker.html"><a href="using-docker.html#download-the-docker-helper-functions-1"><i class="fa fa-check"></i><b>8.2.3</b> Download the docker helper functions</a></li>
 <li class="chapter" data-level="8.2.4" data-path="using-docker.html"><a href="using-docker.html#running-rstudio"><i class="fa fa-check"></i><b>8.2.4</b> Running RStudio</a></li>
 </ul></li>
+<li class="chapter" data-level="8.3" data-path="using-docker.html"><a href="using-docker.html#examples"><i class="fa fa-check"></i><b>8.3</b> Examples</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="using-docker.html"><a href="using-docker.html#example-1"><i class="fa fa-check"></i><b>8.3.1</b> Example 1</a></li>
+<li class="chapter" data-level="8.3.2" data-path="using-docker.html"><a href="using-docker.html#example-2"><i class="fa fa-check"></i><b>8.3.2</b> Example 2</a></li>
+<li class="chapter" data-level="8.3.3" data-path="using-docker.html"><a href="using-docker.html#example-3"><i class="fa fa-check"></i><b>8.3.3</b> Example 3</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>9</b> Analysis Commons</a><ul>
 <li class="chapter" data-level="9.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>9.1</b> Outline</a></li>
@@ -206,30 +211,37 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ul>
 <li>git</li>
 <li>Python 2.7.11+</li>
-<li>Docker engine (aka <i>docker</i>)</li>
+<li>Docker engine (aka <code>docker</code>)</li>
 </ul>
-<p>For Mac computers, installing <i>docker</i> is fairly straight forward. Follow the Docker instructions at the url <a href="https://docs.docker.com/docker-for-mac/install/" class="uri">https://docs.docker.com/docker-for-mac/install/</a></p>
+<p>For Mac computers, installing <code>docker</code> is fairly straight forward. Follow the Docker instructions at the url <a href="https://docs.docker.com/docker-for-mac/install/" class="uri">https://docs.docker.com/docker-for-mac/install/</a></p>
 <p>For Windows 10 computers, installing docker requires enabling <i>Hyper-V</i> in Windows and enabling virtualization in the bios. Follow the Docker instructions at the url <a href="https://docs.docker.com/docker-for-windows/install/" class="uri">https://docs.docker.com/docker-for-windows/install/</a></p>
 </div>
 <div id="general-steps" class="section level2">
 <h2><span class="header-section-number">8.2</span> General Steps</h2>
-<p>The general steps for running RStudio using the docker images are as follows: 1. Download the docker image 2. Create a working directory and <i>cd</i> to it 2. Download the docker helper scripts 3. Running RStudio server in the docker image 4. Connect to the RStudio server using the local browser</p>
+<p>The general steps for running RStudio using the docker images are as follows:</p>
+<ol style="list-style-type: decimal">
+<li>Download the docker image</li>
+<li>Create a working directory and <code>cd</code> to it</li>
+<li>Download the docker helper scripts</li>
+<li>Running RStudio server in the docker image</li>
+<li>Connect to the RStudio server using the local browser</li>
+</ol>
 <div id="download-the-docker-image" class="section level3">
 <h3><span class="header-section-number">8.2.1</span> Download the Docker Image</h3>
-<p>After <i>docker</i> has been installed, download the TOPMed RStudio docker image <kbd>uwgac/topmed-rstudio</kbd>. For example:</p>
+<p>After <code>docker</code> has been installed, download the TOPMed RStudio docker image <kbd>uwgac/topmed-rstudio</kbd>. For example:</p>
 <pre><code>docker pull uwgac/topmed-rstudio</code></pre>
 <p>This step only has to be done once. The image will be stored persistently on the computer.</p>
 </div>
 <div id="create-working-directory" class="section level3">
 <h3><span class="header-section-number">8.2.2</span> Create Working Directory</h3>
-<p>Create a working directory and <i>cd</i> to it. For example,</p>
+<p>Create a working directory and <code>cd</code> to it. For example,</p>
 <pre><code>mkdir ~/workshop_2018
 cd ~/workshop_2018</code></pre>
 <p>This step only has to be done once.</p>
 </div>
 <div id="download-the-docker-helper-functions-1" class="section level3">
 <h3><span class="header-section-number">8.2.3</span> Download the docker helper functions</h3>
-<p>Using <i>git</i>, download the docker help functions and create an alias to the helper function <i>Rstudio_docker.py</i>. For example,</p>
+<p>Using <code>git</code>, download the docker help functions and create an alias to the helper function <code>Rstudio_docker.py</code>. For example,</p>
 <pre><code>mkdir ~/workshop_2018
 cd ~/workshop_2018
 git clone https://github.com/uw-gac/docker_helpers
@@ -238,33 +250,37 @@ alias rs_docker=&#39;~/workshop_2018/docker_helpers/Rstudio_docker.py&#39;</code
 </div>
 <div id="running-rstudio" class="section level3">
 <h3><span class="header-section-number">8.2.4</span> Running RStudio</h3>
-<p>Run RStudio server within a docker container in the background (or detached) using the helper function <i>Rstudio_docker.py</i> (e.g., using the previously defined alias). This enables a browser on a local computer to start an RStudio session.</p>
-<p>The RStudio session has the following characteristics and attributes: 1. The user name and password is <i>rstudio</i> 2. The current working directory of the RStudio session is <i>/home/rstudio</i> 3. By default the current working directory in the RStudio session is mapped to the current working directory of the local computer</p>
+<p>Run RStudio server within a docker container in the background (or detached) using the helper function <code>Rstudio_docker.py</code> (e.g., using the previously defined alias). This enables a browser on a local computer to start an RStudio session.</p>
+<p>The RStudio session has the following characteristics and attributes: 1. The user name and password is <code>rstudio</code> 2. The current working directory of the RStudio session is <code>/home/rstudio</code> 3. By default the current working directory in the RStudio session is mapped to the current working directory of the local computer</p>
 <p>The general command syntax is:</p>
 <pre><code>rs_docker [options]</code></pre>
-<p>Execute <i>rs_docker –help</i> for more details.</p>
-<p><i>Examples</i></p>
-<ol style="list-style-type: decimal">
-<li><p><i>Example 1</i></p>
+<p>Execute <code>rs_docker --help</code> for more details.</p>
+</div>
+</div>
+<div id="examples" class="section level2">
+<h2><span class="header-section-number">8.3</span> Examples</h2>
+<div id="example-1" class="section level3">
+<h3><span class="header-section-number">8.3.1</span> Example 1</h3>
 <pre><code>mkdir ~/workshop_2018
 cd ~/workshop_2018
 git clone https://github.com/uw-gac/docker_helpers
 alias rs_docker=&#39;~/workshop_2018/docker_helpers/Rstudio_docker.py&#39;
 rs_docker</code></pre>
-<p>The example above runs RStudio server in the background in the container named <i>rstudio</i>. The current working directory, <i>~/workshop_2018/</i>, will be mapped to <i>/home/rstudio</i> in the docker container.</p></li>
-</ol>
+<p>The example above runs RStudio server in the background in the container named <code>rstudio</code>. The current working directory, <code>~/workshop_2018/</code>, will be mapped to <code>/home/rstudio</code> in the docker container.</p>
 <p>In the local computer’s browser, the following URL will create an RStudio session:</p>
 <pre><code>localhost:8787/</code></pre>
-<p>The current working directory in the R session is <i>/home/rstudio</i> which is also mapped to the local computer’s directory <i>~/workshop_2018/</i>.</p>
-<ol start="2" style="list-style-type: decimal">
-<li><p><i>Example 2</i></p>
+<p>The current working directory in the R session is <code>/home/rstudio</code> which is also mapped to the local computer’s directory <code>~/workshop_2018/</code>.</p>
+</div>
+<div id="example-2" class="section level3">
+<h3><span class="header-section-number">8.3.2</span> Example 2</h3>
 <pre><code>rs_docker -i 192.168.1.4 -p 8080</code></pre>
-<p>The example above runs RStudio server in the background in the container named <i>rstudio</i>. In a local computer’s browser, the following URL will create an RStudio session:</p>
-<pre><code>192.168.1.4:8080/</code></pre></li>
-<li><p><i>Example 3</i></p>
+<p>The example above runs RStudio server in the background in the container named <code>rstudio</code>. In a local computer’s browser, the following URL will create an RStudio session:</p>
+<pre><code>192.168.1.4:8080/</code></pre>
+</div>
+<div id="example-3" class="section level3">
+<h3><span class="header-section-number">8.3.3</span> Example 3</h3>
 <pre><code>rs_docker -C kill</code></pre>
-<p>The example above kills the background docker container named <i>RStudio</i></p></li>
-</ol>
+<p>The example above kills the background docker container named <code>rstudio</code>.</p>
 
 </div>
 </div>

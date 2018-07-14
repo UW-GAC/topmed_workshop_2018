@@ -160,6 +160,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8.2.3" data-path="using-docker.html"><a href="using-docker.html#download-the-docker-helper-functions-1"><i class="fa fa-check"></i><b>8.2.3</b> Download the docker helper functions</a></li>
 <li class="chapter" data-level="8.2.4" data-path="using-docker.html"><a href="using-docker.html#running-rstudio"><i class="fa fa-check"></i><b>8.2.4</b> Running RStudio</a></li>
 </ul></li>
+<li class="chapter" data-level="8.3" data-path="using-docker.html"><a href="using-docker.html#examples"><i class="fa fa-check"></i><b>8.3</b> Examples</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="using-docker.html"><a href="using-docker.html#example-1"><i class="fa fa-check"></i><b>8.3.1</b> Example 1</a></li>
+<li class="chapter" data-level="8.3.2" data-path="using-docker.html"><a href="using-docker.html#example-2"><i class="fa fa-check"></i><b>8.3.2</b> Example 2</a></li>
+<li class="chapter" data-level="8.3.3" data-path="using-docker.html"><a href="using-docker.html#example-3"><i class="fa fa-check"></i><b>8.3.3</b> Example 3</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>9</b> Analysis Commons</a><ul>
 <li class="chapter" data-level="9.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>9.1</b> Outline</a></li>
@@ -318,7 +323,7 @@ qqPlot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 <div id="exercises-1" class="section level2">
 <h2><span class="header-section-number">6.3</span> Exercises</h2>
 <ol style="list-style-type: decimal">
-<li>Logistic regression: <code>fitNullModel</code> can use a binary phenotype as the outcome variable by specifying the argument <code>family=binomial</code>. Use the <code>status</code> column in the sample annotation to fit a null model for simulated case/control status, with <code>sex</code> and <code>Population</code> as covariates. Refer to the documentation for <code>fitNulModel</code> to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.</li>
+<li>Logistic regression: <code>fitNullModel</code> can use a binary phenotype as the outcome variable by specifying the argument <code>family=binomial</code>. Use the <code>status</code> column in the sample annotation to fit a null model for simulated case/control status, with <code>sex</code> and <code>Population</code> as covariates. Refer to the documentation for <code>fitNullModel</code> to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nullmod.status &lt;-<span class="st"> </span><span class="kw">fitNullModel</span>(annot, <span class="dt">outcome=</span><span class="st">&quot;status&quot;</span>, <span class="dt">covars=</span><span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;Population&quot;</span>), 
                                <span class="dt">cov.mat=</span>grm<span class="op">$</span>grm, <span class="dt">family=</span>binomial, <span class="dt">verbose=</span><span class="ot">FALSE</span>)

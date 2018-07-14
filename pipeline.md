@@ -62,14 +62,15 @@ We can use the `qstat` command to check the status of our jobs.
 ## Running on AWS Batch
 
 To run a burden test on AWS Batch, we do the following general steps:
+
 1. Log into the the docker AMI instance
 2. Download the docker helper functions
-2. cd to a working directory on our NFS volume
-3. Create the configuration file `assoc_window_burden.config`
-4. Execute the python helper function to run the docker image
-4. Optionally execute the association pipeline specifying the AWS Batch service to print out the commands (not running the pipeline)
-5. Execute the association pipeline specifying the AWS Batch service to run the pipeline
-6. Monitor the pipeline via the AWS Batch console
+3. cd to a working directory on our NFS volume
+4. Create the configuration file `assoc_window_burden.config`
+5. Execute the python helper function to run the docker image
+6. Optionally execute the association pipeline specifying the AWS Batch service to print out the commands (not running the pipeline)
+7. Execute the association pipeline specifying the AWS Batch service to run the pipeline
+8. Monitor the pipeline via the AWS Batch console
 
 ### Log into AWS docker image
 ssh into our image which is running docker.  Various docker commands can be executed including running TOPMed version of R (note: TOPMed data is not part of the docker image).
@@ -127,6 +128,7 @@ pipeline
 ```
 ### Monitor the jobs
 From the web browser, log into the AWS account and select the **Batch Services** to monitor:
+
 - Summary via **Dashboard**
 - Job queue **Optimal_topmed_testdata**
 - View high-level job logs

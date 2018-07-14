@@ -160,6 +160,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8.2.3" data-path="using-docker.html"><a href="using-docker.html#download-the-docker-helper-functions-1"><i class="fa fa-check"></i><b>8.2.3</b> Download the docker helper functions</a></li>
 <li class="chapter" data-level="8.2.4" data-path="using-docker.html"><a href="using-docker.html#running-rstudio"><i class="fa fa-check"></i><b>8.2.4</b> Running RStudio</a></li>
 </ul></li>
+<li class="chapter" data-level="8.3" data-path="using-docker.html"><a href="using-docker.html#examples"><i class="fa fa-check"></i><b>8.3</b> Examples</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="using-docker.html"><a href="using-docker.html#example-1"><i class="fa fa-check"></i><b>8.3.1</b> Example 1</a></li>
+<li class="chapter" data-level="8.3.2" data-path="using-docker.html"><a href="using-docker.html#example-2"><i class="fa fa-check"></i><b>8.3.2</b> Example 2</a></li>
+<li class="chapter" data-level="8.3.3" data-path="using-docker.html"><a href="using-docker.html#example-3"><i class="fa fa-check"></i><b>8.3.3</b> Example 3</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>9</b> Analysis Commons</a><ul>
 <li class="chapter" data-level="9.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>9.1</b> Outline</a></li>
@@ -225,7 +230,7 @@ snpset &lt;-<span class="st"> </span><span class="kw">snpgdsLDpruning</span>(gds
 ## Calculating allele counts/frequencies ...
 ## 
 [..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 0s
+[==================================================] 100%, completed in 1s
 ## Excluding 13,673 SNVs (monomorphic: TRUE, MAF: NaN, missing rate: NaN)
 ## Working space: 100 samples, 10,967 SNVs
 ##     using 1 (CPU) core
@@ -268,17 +273,17 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 ## Calculating allele counts/frequencies ...
 ## 
 [..................................................]  0%, ETC: ---    
-[==================================================] 100%, completed in 0s
+[==================================================] 100%, completed in 1s
 ## Working space: 100 samples, 6,403 SNVs
 ##     using 1 (CPU) core
 ## No family is specified, and all individuals are treated as singletons.
 ## Relationship inference in the presence of population stratification.
 ## CPU capabilities: Double-Precision SSE2
-## Fri Jul 13 12:14:22 2018    (internal increment: 65536)
+## Fri Jul 13 22:37:15 2018    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---        
 [==================================================] 100%, completed in 0s
-## Fri Jul 13 12:14:22 2018    Done.</code></pre>
+## Fri Jul 13 22:37:15 2018    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(king)</code></pre></div>
 <pre><code>## [1] &quot;sample.id&quot; &quot;snp.id&quot;    &quot;afreq&quot;     &quot;IBS0&quot;      &quot;kinship&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(king<span class="op">$</span>kinship)</code></pre></div>
@@ -306,7 +311,7 @@ king &lt;-<span class="st"> </span><span class="kw">snpgdsIBDKING</span>(gds, <s
 <div id="pc-air" class="section level2">
 <h2><span class="header-section-number">4.2</span> PC-AiR</h2>
 <p>The next step is <a href="http://www.ncbi.nlm.nih.gov/pubmed/25810074">PC-AiR</a>, in which we select a set of unrelated samples that is maximally informative about all ancestries in the sample. We use this unrelated set for Principal Component Analysis (PCA), then project the relatives onto the PCs.</p>
-<p>First, we partition the samples into a related and unrelated set. We use a kinship threshold of degree 3 (unrelated is less than first cousins). We load the GENESIS package. In the first iteration, we use the KING estimates for both kinship (<code>kinMat</code>) and ancestry divergence (<code>divMat</code>). KING kinship estimates are negative for samples with different ancestry.</p>
+<p>First, we partition the samples into a related and unrelated set. We use a kinship threshold of degree 3, which corresponds to first cousins. This defines anyone less related than first cousins as “unrelated”. We load the GENESIS package. In the first iteration, we use the KING estimates for both kinship (<code>kinMat</code>) and ancestry divergence (<code>divMat</code>). KING kinship estimates are negative for samples with different ancestry.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GENESIS)
 sampset &lt;-<span class="st"> </span><span class="kw">pcairPartition</span>(<span class="dt">kinMat=</span>kingMat, <span class="dt">kin.thresh=</span><span class="dv">2</span><span class="op">^</span>(<span class="op">-</span><span class="dv">9</span><span class="op">/</span><span class="dv">2</span>),
                           <span class="dt">divMat=</span>kingMat, <span class="dt">div.thresh=</span><span class="op">-</span><span class="dv">2</span><span class="op">^</span>(<span class="op">-</span><span class="dv">9</span><span class="op">/</span><span class="dv">2</span>))
@@ -327,39 +332,39 @@ pca.unrel &lt;-<span class="st"> </span><span class="kw">snpgdsPCA</span>(gds, <
 ## Working space: 86 samples, 6,181 SNVs
 ##     using 1 (CPU) core
 ## CPU capabilities: Double-Precision SSE2
-## Fri Jul 13 12:14:24 2018    (internal increment: 8952)
+## Fri Jul 13 22:37:16 2018    (internal increment: 8952)
 ## 
 [..................................................]  0%, ETC: ---        
-[==================================================] 100%, completed in 0s
-## Fri Jul 13 12:14:24 2018    Begin (eigenvalues and eigenvectors)
-## Fri Jul 13 12:14:24 2018    Done.</code></pre>
+[==================================================] 100%, completed in 1s
+## Fri Jul 13 22:37:17 2018    Begin (eigenvalues and eigenvectors)
+## Fri Jul 13 22:37:17 2018    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># project values for relatives</span>
 snp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASNPLoading</span>(pca.unrel, <span class="dt">gdsobj=</span>gds)</code></pre></div>
 <pre><code>## SNP loading:
 ## Working space: 86 samples, 6181 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Fri Jul 13 12:14:24 2018    (internal increment: 65536)
+## Fri Jul 13 22:37:17 2018    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---        
 [==================================================] 100%, completed in 0s
-## Fri Jul 13 12:14:24 2018    Done.</code></pre>
+## Fri Jul 13 22:37:17 2018    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp.load &lt;-<span class="st"> </span><span class="kw">snpgdsPCASampLoading</span>(snp.load, <span class="dt">gdsobj=</span>gds, <span class="dt">sample.id=</span>sampset<span class="op">$</span>rels)</code></pre></div>
 <pre><code>## Sample loading:
 ## Working space: 14 samples, 6181 SNPs
 ##     using 1 (CPU) core
 ##     using the top 32 eigenvectors
-## Fri Jul 13 12:14:24 2018    (internal increment: 65536)
+## Fri Jul 13 22:37:17 2018    (internal increment: 65536)
 ## 
 [..................................................]  0%, ETC: ---        
-[==================================================] 100%, completed in 1s
-## Fri Jul 13 12:14:25 2018    Done.</code></pre>
+[==================================================] 100%, completed in 0s
+## Fri Jul 13 22:37:17 2018    Done.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># combine unrelated and related PCs and order as in GDS file</span>
 pcs &lt;-<span class="st"> </span><span class="kw">rbind</span>(pca.unrel<span class="op">$</span>eigenvect, samp.load<span class="op">$</span>eigenvect)
 <span class="kw">rownames</span>(pcs) &lt;-<span class="st"> </span><span class="kw">c</span>(pca.unrel<span class="op">$</span>sample.id, samp.load<span class="op">$</span>sample.id)
 samp.ord &lt;-<span class="st"> </span><span class="kw">match</span>(sample.id, <span class="kw">rownames</span>(pcs))
 pcs &lt;-<span class="st"> </span>pcs[samp.ord,]</code></pre></div>
-<p>We need to determine which PCs are ancestry informative. To do this we need population information for the 1000 Genomes samples. This information is stored in an <code>AnnotatedDataFrame</code>, which is a data.frame with optional metadata describing the colunms. The class is defined in the Biobase package. We load the stored object using the <code>getobj</code> function from the TopmedPipeline package.</p>
+<p>We need to determine which PCs are ancestry informative. To do this we need population information for the 1000 Genomes samples. This information is stored in an <code>AnnotatedDataFrame</code>, which is a data.frame with optional metadata describing the columns. The class is defined in the Biobase package. We load the stored object using the <code>getobj</code> function from the TopmedPipeline package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(Biobase)
 sampfile &lt;-<span class="st"> &quot;data/sample_annotation.RData&quot;</span>
 <span class="cf">if</span> (<span class="op">!</span><span class="kw">file.exists</span>(sampfile)) <span class="kw">download.file</span>(<span class="kw">file.path</span>(workshop.path, sampfile), sampfile)

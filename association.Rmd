@@ -95,7 +95,7 @@ qqPlot(assoc$Score.pval)
 
 ## Exercises
 
-1. Logistic regression: `fitNullModel` can use a binary phenotype as the outcome variable by specifying the argument `family=binomial`. Use the `status` column in the sample annotation to fit a null model for simulated case/control status, with `sex` and `Population` as covariates. Refer to the documentation for `fitNulModel` to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.
+1. Logistic regression: `fitNullModel` can use a binary phenotype as the outcome variable by specifying the argument `family=binomial`. Use the `status` column in the sample annotation to fit a null model for simulated case/control status, with `sex` and `Population` as covariates. Refer to the documentation for `fitNullModel` to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.
 
 ```{r exercise_logistic}
 nullmod.status <- fitNullModel(annot, outcome="status", covars=c("sex", "Population"), 

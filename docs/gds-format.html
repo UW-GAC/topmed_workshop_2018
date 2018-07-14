@@ -160,6 +160,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8.2.3" data-path="using-docker.html"><a href="using-docker.html#download-the-docker-helper-functions-1"><i class="fa fa-check"></i><b>8.2.3</b> Download the docker helper functions</a></li>
 <li class="chapter" data-level="8.2.4" data-path="using-docker.html"><a href="using-docker.html#running-rstudio"><i class="fa fa-check"></i><b>8.2.4</b> Running RStudio</a></li>
 </ul></li>
+<li class="chapter" data-level="8.3" data-path="using-docker.html"><a href="using-docker.html#examples"><i class="fa fa-check"></i><b>8.3</b> Examples</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="using-docker.html"><a href="using-docker.html#example-1"><i class="fa fa-check"></i><b>8.3.1</b> Example 1</a></li>
+<li class="chapter" data-level="8.3.2" data-path="using-docker.html"><a href="using-docker.html#example-2"><i class="fa fa-check"></i><b>8.3.2</b> Example 2</a></li>
+<li class="chapter" data-level="8.3.3" data-path="using-docker.html"><a href="using-docker.html#example-3"><i class="fa fa-check"></i><b>8.3.3</b> Example 3</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>9</b> Analysis Commons</a><ul>
 <li class="chapter" data-level="9.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>9.1</b> Outline</a></li>
@@ -642,7 +647,7 @@ multi.allelic &lt;-<span class="st"> </span><span class="kw">which</span>(n <spa
 ##   HG00101   0   0    0    0
 ##   HG00102   0   0    0    0</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li>Use the <code>hwe</code> function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes. (Note that the HWE test is only valid for biallelic variants.)</li>
+<li>Use the <code>hwe</code> function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes. (Note that the HWE test is only valid for biallelic variants, and will return <code>NA</code> for multiallelic variants.)</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqResetFilter</span>(gds)</code></pre></div>
 <pre><code>## # of selected samples: 1,126

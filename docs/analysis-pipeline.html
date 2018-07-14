@@ -160,6 +160,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8.2.3" data-path="using-docker.html"><a href="using-docker.html#download-the-docker-helper-functions-1"><i class="fa fa-check"></i><b>8.2.3</b> Download the docker helper functions</a></li>
 <li class="chapter" data-level="8.2.4" data-path="using-docker.html"><a href="using-docker.html#running-rstudio"><i class="fa fa-check"></i><b>8.2.4</b> Running RStudio</a></li>
 </ul></li>
+<li class="chapter" data-level="8.3" data-path="using-docker.html"><a href="using-docker.html#examples"><i class="fa fa-check"></i><b>8.3</b> Examples</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="using-docker.html"><a href="using-docker.html#example-1"><i class="fa fa-check"></i><b>8.3.1</b> Example 1</a></li>
+<li class="chapter" data-level="8.3.2" data-path="using-docker.html"><a href="using-docker.html#example-2"><i class="fa fa-check"></i><b>8.3.2</b> Example 2</a></li>
+<li class="chapter" data-level="8.3.3" data-path="using-docker.html"><a href="using-docker.html#example-3"><i class="fa fa-check"></i><b>8.3.3</b> Example 3</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="analysis-commons.html"><a href="analysis-commons.html"><i class="fa fa-check"></i><b>9</b> Analysis Commons</a><ul>
 <li class="chapter" data-level="9.1" data-path="analysis-commons.html"><a href="analysis-commons.html#outline"><i class="fa fa-check"></i><b>9.1</b> Outline</a></li>
@@ -238,7 +243,17 @@ $PIPELINE/assoc.py --help</code></pre>
 </div>
 <div id="running-on-aws-batch" class="section level2">
 <h2><span class="header-section-number">7.2</span> Running on AWS Batch</h2>
-<p>To run a burden test on AWS Batch, we do the following general steps: 1. Log into the the docker AMI instance 2. Download the docker helper functions 2. cd to a working directory on our NFS volume 3. Create the configuration file <code>assoc_window_burden.config</code> 4. Execute the python helper function to run the docker image 4. Optionally execute the association pipeline specifying the AWS Batch service to print out the commands (not running the pipeline) 5. Execute the association pipeline specifying the AWS Batch service to run the pipeline 6. Monitor the pipeline via the AWS Batch console</p>
+<p>To run a burden test on AWS Batch, we do the following general steps:</p>
+<ol style="list-style-type: decimal">
+<li>Log into the the docker AMI instance</li>
+<li>Download the docker helper functions</li>
+<li>cd to a working directory on our NFS volume</li>
+<li>Create the configuration file <code>assoc_window_burden.config</code></li>
+<li>Execute the python helper function to run the docker image</li>
+<li>Optionally execute the association pipeline specifying the AWS Batch service to print out the commands (not running the pipeline)</li>
+<li>Execute the association pipeline specifying the AWS Batch service to run the pipeline</li>
+<li>Monitor the pipeline via the AWS Batch console</li>
+</ol>
 <div id="log-into-aws-docker-image" class="section level3">
 <h3><span class="header-section-number">7.2.1</span> Log into AWS docker image</h3>
 <p>ssh into our image which is running docker. Various docker commands can be executed including running TOPMed version of R (note: TOPMed data is not part of the docker image).</p>
@@ -295,7 +310,12 @@ vi assoc_window_burden.config
 </div>
 <div id="monitor-the-jobs" class="section level3">
 <h3><span class="header-section-number">7.2.7</span> Monitor the jobs</h3>
-<p>From the web browser, log into the AWS account and select the <strong>Batch Services</strong> to monitor: - Summary via <strong>Dashboard</strong> - Job queue <strong>Optimal_topmed_testdata</strong> - View high-level job logs</p>
+<p>From the web browser, log into the AWS account and select the <strong>Batch Services</strong> to monitor:</p>
+<ul>
+<li>Summary via <strong>Dashboard</strong></li>
+<li>Job queue <strong>Optimal_topmed_testdata</strong></li>
+<li>View high-level job logs</li>
+</ul>
 <p>You can switch to <strong>ec2 services</strong> to monitor instances being created or running to support the various jobs.</p>
 
 </div>

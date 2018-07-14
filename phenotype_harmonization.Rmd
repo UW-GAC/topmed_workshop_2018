@@ -249,7 +249,7 @@ mod_1$converged
 Now, add the residuals to the phenotype data frame for plotting.
 We need to make sure that we are matching each residual value to the correct subject.
 In this case, we already ordered the AnnotatedDataFrame to match the genetic relatedness marix, but this may not always be the case (for example, if subjects are excluded due to missing phentoype data).
-To do match the same subject's values together, we use the row names of the `model.matrix` element of the output, which are in the same order as the `residual` matrix, and the `subject_id` column of the annotated data frame.
+To match the same subject's values together, we use the row names of the `model.matrix` element of the output, which are in the same order as the `residual` matrix, and the `subject_id` column of the annotated data frame.
 We then match the row names (and therefore the residuals) to the subject identifier in the phenotype file using the base R function `match`.
 ```{r}
 j <- match(annot$subject_id, rownames(mod_1$model.matrix))
