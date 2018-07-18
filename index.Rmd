@@ -33,7 +33,7 @@ https://sisg2018module12.slack.com
 
 - [Introduction](https://www.biostat.washington.edu/sites/default/files/modules/SISGmod12Intro_v3.pdf)
 - Data formats
-    - [Sequencing data formats](https://www.biostat.washington.edu/sites/default/files/modules/Sequencing_data_formats.pdf)
+    - [Sequencing data formats](https://www.biostat.washington.edu/sites/default/files/modules/Sequencing_data_formats_0.pdf)
     - [Intro to Genomic Data Storage](https://www.biostat.washington.edu/sites/default/files/modules/GDS_intro.pdf)
 - Population structure and relatedness
     - [Population structure inference](https://www.biostat.washington.edu/sites/default/files/modules/TOPMED_POPULATION_STRUCTURE_INFERENCE_Module12_2018.pdf)
