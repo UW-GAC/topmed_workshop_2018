@@ -6,6 +6,7 @@ We can use the [SNPRelate package](https://github.com/zhengxwen/SNPRelate) to co
 library(SeqArray)
 data.path <- "https://github.com/UW-GAC/analysis_pipeline/raw/master/testdata"
 gdsfile <- "data/1KG_phase3_subset_chr1.gds"
+if (!dir.exists("data")) dir.create("data")
 if (!file.exists(gdsfile)) download.file(file.path(data.path, basename(gdsfile)), gdsfile)
 gds <- seqOpen(gdsfile)
 
