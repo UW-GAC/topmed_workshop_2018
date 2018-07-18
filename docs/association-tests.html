@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-13">
+<meta name="date" content="2018-07-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -323,113 +323,9 @@ qqPlot &lt;-<span class="st"> </span><span class="cf">function</span>(pval) {
 <div id="exercises-1" class="section level2">
 <h2><span class="header-section-number">6.3</span> Exercises</h2>
 <ol style="list-style-type: decimal">
-<li>Logistic regression: <code>fitNullModel</code> can use a binary phenotype as the outcome variable by specifying the argument <code>family=binomial</code>. Use the <code>status</code> column in the sample annotation to fit a null model for simulated case/control status, with <code>sex</code> and <code>Population</code> as covariates. Refer to the documentation for <code>fitNullModel</code> to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.</li>
+<li><p>Logistic regression: <code>fitNullModel</code> can use a binary phenotype as the outcome variable by specifying the argument <code>family=binomial</code>. Use the <code>status</code> column in the sample annotation to fit a null model for simulated case/control status, with <code>sex</code> and <code>Population</code> as covariates. Refer to the documentation for <code>fitNullModel</code> to see what other parameters need to be changed for a binary outcome. Then run a single-variant test using this model.</p></li>
+<li><p>Inverse normal transform: use the function <code>nullModelInvNorm</code> to perform an inverse normal transform on the <code>height</code> variable. For each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.</p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nullmod.status &lt;-<span class="st"> </span><span class="kw">fitNullModel</span>(annot, <span class="dt">outcome=</span><span class="st">&quot;status&quot;</span>, <span class="dt">covars=</span><span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;Population&quot;</span>), 
-                               <span class="dt">cov.mat=</span>grm<span class="op">$</span>grm, <span class="dt">family=</span>binomial, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
-<span class="kw">seqResetFilter</span>(seqData, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
-iterator &lt;-<span class="st"> </span><span class="kw">SeqVarBlockIterator</span>(seqData, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
-assoc &lt;-<span class="st"> </span><span class="kw">assocTestSingle</span>(iterator, nullmod.status, <span class="dt">test=</span><span class="st">&quot;Score&quot;</span>)</code></pre></div>
-<pre><code>## # of selected samples: 1,126</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc)</code></pre></div>
-<pre><code>##   variant.id chr     pos allele.index n.obs         freq       Score
-## 1          1   1  970546            1  1126 0.0039964476  0.20297260
-## 2          2   1  985900            1  1126 0.0492895204 -2.63528215
-## 3          3   1 1025045            1  1126 0.0004440497 -0.09788685
-## 4          4   1 1265550            1  1126 0.0008880995  0.81055788
-## 5          5   1 1472676            1  1126 0.0071047957  0.63907684
-## 6          6   1 1735725            1  1126 0.0022202487 -0.45986600
-##    Score.SE Score.Stat Score.pval
-## 1 0.8333773  0.2435543 0.80757604
-## 2 2.6406893 -0.9979524 0.31830245
-## 3 0.2944788 -0.3324071 0.73958188
-## 4 0.4079077  1.9871110 0.04691009
-## 5 1.0775580  0.5930788 0.55312840
-## 6 0.6352752 -0.7238847 0.46913653</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>Inverse normal transform: use the function <code>nullModelInvNorm</code> to perform an inverse normal transform on the <code>height</code> variable. For each study separately, compute a null model and do the inverse normal transform using just the values for that study. Compare these residuals with the initial residuals you obtained for that study by transforming all studies together.</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nullmod.norm.all &lt;-<span class="st"> </span><span class="kw">nullModelInvNorm</span>(nullmod, <span class="dt">cov.mat=</span>grm<span class="op">$</span>grm, <span class="dt">norm.option=</span><span class="st">&quot;all&quot;</span>)</code></pre></div>
-<pre><code>## [1]  5.425789e+01  4.280994e+01  1.165208e+02  9.809390e+01 -1.603275e+03
-## [6]  7.550630e-03
-## [1]    34.1059393    35.8537374    89.5518525    76.2493606 -1603.1688799
-## [6]     0.0103567
-## [1]    23.9399324    26.5871040    41.8672926    38.6233809 -1589.5064053
-## [6]     0.0168785
-## [1]  1.323004e+01  1.695408e+01  2.026933e+01  1.897179e+01 -1.586899e+03
-## [6]  3.117756e-02
-## [1]  6.047367e-02  1.475300e+00  4.170380e-01  4.414852e-01 -1.668329e+03
-## [6]  1.555905e+00
-## [1]     0.1469553     0.4514150     0.5780888     0.5971697 -1591.8627680
-## [6]     1.4307711
-## [1]     0.2732667     0.5510270     0.6562528     0.6464594 -1587.9388068
-## [6]     1.1052135
-## [1]     0.3774293     0.5665061     0.6365457     0.6039886 -1586.8231113
-## [6]     1.0119805
-## [1]     0.4002069     0.5625065     0.6274501     0.5901307 -1586.7901480
-## [6]     1.0002535
-## [1]     0.4007555     0.5619102     0.6276794     0.5898303 -1586.7900939
-## [6]     1.0000002
-## [1]     0.4007924     0.5618621     0.6276632     0.5898012 -1586.7900937
-## [6]     1.0000000
-## [1]     0.4007940     0.5618596     0.6276631     0.5897998 -1586.7900937
-## [6]     1.0000000
-## [1]     0.4007941     0.5618594     0.6276630     0.5897997 -1586.7900937
-## [6]     1.0000000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat.all &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">sample.id=</span>nullmod.norm.all<span class="op">$</span>sample.id, 
-                      <span class="dt">resid.norm=</span>nullmod.norm.all<span class="op">$</span>resid.marginal,
-                      <span class="dt">study=</span>annot<span class="op">$</span>study,
-                      <span class="dt">run=</span><span class="st">&quot;combined&quot;</span>)
-
-nullmod.norm.group &lt;-<span class="st"> </span><span class="kw">nullModelInvNorm</span>(nullmod, <span class="dt">cov.mat=</span>grm<span class="op">$</span>grm, <span class="dt">norm.option=</span><span class="st">&quot;by.group&quot;</span>)</code></pre></div>
-<pre><code>## [1]  5.425789e+01  4.280994e+01  1.165208e+02  9.809390e+01 -1.603261e+03
-## [6]  7.550447e-03
-## [1]  3.410585e+01  3.585414e+01  8.955164e+01  7.624878e+01 -1.603073e+03
-## [6]  1.035495e-02
-## [1]  2.381355e+01  2.675865e+01  4.187048e+01  3.854132e+01 -1.589079e+03
-## [6]  1.688542e-02
-## [1]  1.314472e+01  1.711287e+01  2.026706e+01  1.891569e+01 -1.586384e+03
-## [6]  3.118594e-02
-## [1]  8.589106e-02  1.481859e+00  3.914272e-01  4.184609e-01 -1.667958e+03
-## [6]  1.544430e+00
-## [1]     0.1813120     0.3672249     0.5455505     0.5663653 -1592.4099600
-## [6]     1.4796328
-## [1]     0.2977573     0.4898427     0.6356443     0.6241021 -1587.7049688
-## [6]     1.1238804
-## [1]     0.3827790     0.5519849     0.6322866     0.5968108 -1586.3216456
-## [6]     1.0156781
-## [1]     0.3994230     0.5656881     0.6262186     0.5869734 -1586.2714835
-## [6]     1.0004091
-## [1]     0.3992844     0.5665599     0.6266094     0.5871986 -1586.2714479
-## [6]     1.0000003
-## [1]     0.3992672     0.5665839     0.6266101     0.5872179 -1586.2714479
-## [6]     1.0000000
-## [1]     0.3992662     0.5665853     0.6266105     0.5872188 -1586.2714479
-## [6]     1.0000000
-## [1]     0.3992662     0.5665853     0.6266105     0.5872188 -1586.2714479
-## [6]     1.0000000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat.group &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">sample.id=</span>nullmod.norm.group<span class="op">$</span>sample.id, 
-                        <span class="dt">resid.norm=</span>nullmod.norm.group<span class="op">$</span>resid.marginal,
-                        <span class="dt">study=</span>annot<span class="op">$</span>study,
-                        <span class="dt">run=</span><span class="st">&quot;separate&quot;</span>)
-
-dat &lt;-<span class="st"> </span><span class="kw">rbind</span>(dat.all, dat.group)
-
-<span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(study, resid.norm, <span class="dt">fill=</span>run)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>()</code></pre></div>
-<p><img src="_main_files/figure-html/exercise_invnorm-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">group_by</span>(study, run) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">summarise</span>(<span class="dt">mean=</span><span class="kw">mean</span>(resid.norm), <span class="dt">var=</span><span class="kw">var</span>(resid.norm))</code></pre></div>
-<pre><code>## # A tibble: 6 x 4
-## # Groups:   study [?]
-##   study   run           mean   var
-##   &lt;fct&gt;   &lt;fct&gt;        &lt;dbl&gt; &lt;dbl&gt;
-## 1 study_1 combined  0.000396 1.00 
-## 2 study_1 separate  0.00119  0.999
-## 3 study_2 combined  0.000915 1.00 
-## 4 study_2 separate  0.000783 0.999
-## 5 study_3 combined -0.00132  1.000
-## 6 study_3 separate -0.00198  0.999</code></pre>
 </div>
 <div id="sliding-window-tests" class="section level2">
 <h2><span class="header-section-number">6.4</span> Sliding window tests</h2>
@@ -523,20 +419,6 @@ assoc &lt;-<span class="st"> </span><span class="kw">assocTestAggregate</span>(i
 <div id="exercise-1" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Exercise</h3>
 <p>Repeat the previous exercise on logistic regression, this time running a sliding-window test.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nullmod.status &lt;-<span class="st"> </span><span class="kw">fitNullModel</span>(annot, <span class="dt">outcome=</span><span class="st">&quot;status&quot;</span>, <span class="dt">covars=</span><span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;Population&quot;</span>), 
-                               <span class="dt">cov.mat=</span>grm<span class="op">$</span>grm, <span class="dt">family=</span>binomial, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
-<span class="kw">seqResetFilter</span>(seqData, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
-iterator &lt;-<span class="st"> </span><span class="kw">SeqVarWindowIterator</span>(seqData, <span class="dt">windowSize=</span><span class="dv">5000</span>, <span class="dt">windowShift=</span><span class="dv">2000</span>, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
-assoc &lt;-<span class="st"> </span><span class="kw">assocTestAggregate</span>(iterator, nullmod, <span class="dt">test=</span><span class="st">&quot;SKAT&quot;</span>, <span class="dt">AF.max=</span><span class="fl">0.1</span>, <span class="dt">weight.beta=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">25</span>))</code></pre></div>
-<pre><code>## # of selected samples: 1,126</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>results)</code></pre></div>
-<pre><code>##   chr   start     end n.site n.alt n.sample.alt       Q_0     pval_0 err_0
-## 1   1  966001  971000      1     9            9  6.140982 0.68384830     0
-## 2   1  982001  987000      1   111          107 84.475122 0.09547633     0
-## 3   1 1022001 1027000      1     1            1 26.736279 0.02076790     0
-## 4   1 1262001 1267000      1     2            2  5.913344 0.30921116     0
-## 5   1 1468001 1473000      1    16           16 28.329885 0.50567227     0
-## 6   1 1732001 1737000      1     5            5  6.229246 0.55062937     0</code></pre>
 </div>
 </div>
 <div id="annotation-based-aggregate-tests" class="section level2">
@@ -1327,52 +1209,6 @@ assoc &lt;-<span class="st"> </span><span class="kw">assocTestAggregate</span>(i
 <div id="exercise-2" class="section level3">
 <h3><span class="header-section-number">6.5.5</span> Exercise</h3>
 <p>Since we are working with a subset of the data, many of the genes listed in <code>group_id</code> have a very small number of variants. Create a new set of units based on position rather than gene name, using the TopmedPipeline function <code>aggregateGRanges</code>. Then run SKAT using those units and a <code>SeqVarRangeIterator</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agg2 &lt;-<span class="st"> </span>aggunit <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">chr=</span><span class="kw">factor</span>(chr, <span class="dt">levels=</span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">22</span>, <span class="st">&quot;X&quot;</span>))) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">select</span>(chr, pos) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">distinct</span>() <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">group_by</span>(chr) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">summarise</span>(<span class="dt">min=</span><span class="kw">min</span>(pos), <span class="dt">max=</span><span class="kw">max</span>(pos))
-<span class="kw">head</span>(agg2)</code></pre></div>
-<pre><code>## # A tibble: 1 x 3
-##   chr       min       max
-##   &lt;fct&gt;   &lt;dbl&gt;     &lt;dbl&gt;
-## 1 1     1025045 248761613</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aggByPos &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(agg2), <span class="cf">function</span>(i) {
-    <span class="kw">data.frame</span>(<span class="dt">chr=</span>agg2<span class="op">$</span>chr[i],
-               <span class="dt">start=</span><span class="kw">seq</span>(agg2<span class="op">$</span>min[i], agg2<span class="op">$</span>max[i]<span class="op">-</span><span class="fl">1e6</span>, <span class="dt">length.out=</span><span class="dv">10</span>),
-               <span class="dt">end=</span><span class="kw">seq</span>(agg2<span class="op">$</span>min[i]<span class="op">+</span><span class="fl">1e6</span>, agg2<span class="op">$</span>max[i], <span class="dt">length.out=</span><span class="dv">10</span>))
-})) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">group_id=</span><span class="dv">1</span><span class="op">:</span><span class="kw">n</span>())
-<span class="kw">head</span>(aggByPos)</code></pre></div>
-<pre><code>##   chr     start       end group_id
-## 1   1   1025045   2025045        1
-## 2   1  28440219  29440219        2
-## 3   1  55855393  56855393        3
-## 4   1  83270568  84270568        4
-## 5   1 110685742 111685742        5
-## 6   1 138100916 139100916        6</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aggVarList &lt;-<span class="st"> </span><span class="kw">aggregateGRanges</span>(aggByPos)
-aggVarList[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</code></pre></div>
-<pre><code>## GRanges object with 2 ranges and 0 metadata columns:
-##     seqnames            ranges strand
-##        &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt;
-##   1        1   1025045-2025045      *
-##   2        1 28440219-29440219      *
-##   -------
-##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqResetFilter</span>(seqData, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
-iterator &lt;-<span class="st"> </span><span class="kw">SeqVarRangeIterator</span>(seqData, <span class="dt">variantRanges=</span>aggVarList, <span class="dt">verbose=</span><span class="ot">FALSE</span>)
-assoc &lt;-<span class="st"> </span><span class="kw">assocTestAggregate</span>(iterator, nullmod, <span class="dt">test=</span><span class="st">&quot;SKAT&quot;</span>, <span class="dt">AF.max=</span><span class="fl">0.1</span>, <span class="dt">weight.beta=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">25</span>))</code></pre></div>
-<pre><code>## # of selected samples: 1,126</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(assoc<span class="op">$</span>results)</code></pre></div>
-<pre><code>##   n.site n.alt n.sample.alt       Q_0    pval_0 err_0
-## 1      4    24           24  67.20875 0.4664646     0
-## 2      4   152          137  41.61442 0.6590382     0
-## 3      2    32           32  18.32963 0.6299791     0
-## 4      5    80           76 167.66663 0.3346761     0
-## 5      0     0            0        NA        NA    NA
-## 6      0     0            0        NA        NA    NA</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqClose</span>(gds)</code></pre></div>
 
 </div>
