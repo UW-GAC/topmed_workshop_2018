@@ -46,7 +46,7 @@ https://sisg2018module12.slack.com
 - Association tests
     - [Methods and motivation](https://www.biostat.washington.edu/sites/default/files/modules/TOPMedAssocTests18.pdf)
     - [GENESIS for association tests](https://www.biostat.washington.edu/sites/default/files/modules/R_assoc_tests.pdf)
-- Variant annotation
+- [Variant annotation](https://www.biostat.washington.edu/sites/default/files/modules/variant_annotation_v1.pdf)
 
 **Friday, July 20**
 
