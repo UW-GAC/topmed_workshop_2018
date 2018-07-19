@@ -132,7 +132,7 @@ dat %>%
 
 ## Sliding window tests
 
-For rare variants, we can do burden tests or SKAT using the GENESIS function `assocTestSeqAggregate`. We restrict the test to variants with alternate allele frequency < 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme. We define a sliding window across the genome using a `SeqVarWindowIterator`.
+For rare variants, we can do burden tests or SKAT using the GENESIS function `assocTestAggregate`. We restrict the test to variants with alternate allele frequency < 0.1. (For real data, this threshold would be lower.) We use a flat weighting scheme. We define a sliding window across the genome using a `SeqVarWindowIterator`.
 
 ```{r assoc_window_burden}
 seqResetFilter(seqData, verbose=FALSE)
