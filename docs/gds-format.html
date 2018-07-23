@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2018-07-20">
+<meta name="date" content="2018-07-22">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -217,7 +217,7 @@ gdsfile &lt;-<span class="st"> &quot;data/1KG_phase3_subset_chr1.gds&quot;</span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gds &lt;-<span class="st"> </span><span class="kw">seqOpen</span>(gdsfile)
 gds</code></pre></div>
 <pre><code>## Object of class &quot;SeqVarGDSClass&quot;
-## File: /projects/users/stephanie/Code/TOPMed/topmed_workshop_2018/data/1KG_phase3_subset_chr1.gds (70.6K)
+## File: /projects/topmed/analysts/sdmorris/presentations/workshop_2018/topmed_workshop_2018/data/1KG_phase3_subset_chr1.gds (70.6K)
 ## +    [  ] *
 ## |--+ description   [  ] *
 ## |--+ sample.id   { Str8 1126 LZMA_ra(9.66%), 877B } *
@@ -366,9 +366,312 @@ multi.allelic &lt;-<span class="st"> </span><span class="kw">which</span>(n <spa
 <div id="exercises" class="section level2">
 <h2><span class="header-section-number">2.2</span> Exercises</h2>
 <ol style="list-style-type: decimal">
-<li><p>Set a filter selecting only multi-allelic variants. Inspect their genotypes using the different methods you learned above. Use the <code>alleleDosage</code> method to find dosage for the second (and third, etc.) alternate allele.</p></li>
-<li><p>Use the <code>hwe</code> function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes. (Note that the HWE test is only valid for biallelic variants, and will return <code>NA</code> for multiallelic variants.)</p></li>
+<li>Set a filter selecting only multi-allelic variants. Inspect their genotypes using the different methods you learned above. Use the <code>alleleDosage</code> method to find dosage for the second (and third, etc.) alternate allele.</li>
 </ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqSetFilter</span>(gds, <span class="dt">variant.sel=</span>multi.allelic)</code></pre></div>
+<pre><code>## # of selected variants: 21</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geno &lt;-<span class="st"> </span><span class="kw">seqGetData</span>(gds, <span class="st">&quot;genotype&quot;</span>)
+<span class="kw">dim</span>(geno)</code></pre></div>
+<pre><code>## [1]    2 1126   21</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geno[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,]</code></pre></div>
+<pre><code>## , , 1
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    1    1    0    1    1
+##   [2,]    0    1    1    1    1
+## 
+## , , 2
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 3
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 4
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    1    0    0    1    0
+##   [2,]    0    0    0    0    1
+## 
+## , , 5
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 6
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 7
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 8
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 9
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    2
+##   [2,]    0    0    0    0    0
+## 
+## , , 10
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    1    2    0    0    1
+##   [2,]    0    2    0    2    1
+## 
+## , , 11
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    1    0    0
+##   [2,]    1    1    0    1    0
+## 
+## , , 12
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    3    1    1    1    3
+##   [2,]    3    3    3    1    0
+## 
+## , , 13
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    2    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 14
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 15
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    2    0    0    0    2
+##   [2,]    0    0    0    2    0
+## 
+## , , 16
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    2    2    2    2    2
+##   [2,]    2    2    2    2    2
+## 
+## , , 17
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    2    2    2    2    2
+##   [2,]    2    2    2    2    2
+## 
+## , , 18
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 19
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    0    0
+## 
+## , , 20
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    1
+##   [2,]    0    0    0    0    0
+## 
+## , , 21
+## 
+##       sample
+## allele [,1] [,2] [,3] [,4] [,5]
+##   [1,]    0    0    0    0    0
+##   [2,]    0    0    0    2    0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geno &lt;-<span class="st"> </span><span class="kw">getGenotype</span>(gds)
+<span class="kw">dim</span>(geno)</code></pre></div>
+<pre><code>## [1] 1126   21</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(geno)</code></pre></div>
+<pre><code>##          variant
+## sample    30    69    73    161   162   195   243   253   407   431  
+##   HG00096 &quot;1|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;1|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;1|0&quot;
+##   HG00097 &quot;1|1&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;2|2&quot;
+##   HG00099 &quot;0|1&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot;
+##   HG00100 &quot;1|1&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;1|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|2&quot;
+##   HG00101 &quot;1|1&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|1&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;2|0&quot; &quot;1|1&quot;
+##   HG00102 &quot;0|1&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;1|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;2|2&quot;
+##          variant
+## sample    434   610   627   645   689   756   765   814   988   1014 
+##   HG00096 &quot;0|1&quot; &quot;3|3&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;2|0&quot; &quot;2|2&quot; &quot;2|2&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot;
+##   HG00097 &quot;0|1&quot; &quot;1|3&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;2|2&quot; &quot;2|2&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot;
+##   HG00099 &quot;1|0&quot; &quot;1|3&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;2|2&quot; &quot;2|2&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot;
+##   HG00100 &quot;0|1&quot; &quot;1|1&quot; &quot;2|0&quot; &quot;0|0&quot; &quot;0|2&quot; &quot;2|2&quot; &quot;2|2&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|0&quot;
+##   HG00101 &quot;0|0&quot; &quot;3|0&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;2|0&quot; &quot;2|2&quot; &quot;2|2&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;1|0&quot;
+##   HG00102 &quot;0|1&quot; &quot;3|3&quot; &quot;0|2&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;2|2&quot; &quot;1|2&quot; &quot;0|0&quot; &quot;0|0&quot; &quot;0|1&quot;
+##          variant
+## sample    1056 
+##   HG00096 &quot;0|0&quot;
+##   HG00097 &quot;0|0&quot;
+##   HG00099 &quot;0|0&quot;
+##   HG00100 &quot;0|2&quot;
+##   HG00101 &quot;0|0&quot;
+##   HG00102 &quot;0|2&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geno &lt;-<span class="st"> </span><span class="kw">getGenotypeAlleles</span>(gds)
+<span class="kw">head</span>(geno)</code></pre></div>
+<pre><code>##          variant
+## sample    30       69    73    161   162   195   243   253   407  
+##   HG00096 &quot;GT|GTT&quot; &quot;A|A&quot; &quot;G|G&quot; &quot;A|G&quot; &quot;A|A&quot; &quot;A|A&quot; &quot;C|C&quot; &quot;G|G&quot; &quot;T|T&quot;
+##   HG00097 &quot;GT|GT&quot;  &quot;A|A&quot; &quot;G|G&quot; &quot;G|G&quot; &quot;A|A&quot; &quot;A|A&quot; &quot;C|C&quot; &quot;G|G&quot; &quot;T|T&quot;
+##   HG00099 &quot;GTT|GT&quot; &quot;A|A&quot; &quot;G|G&quot; &quot;G|G&quot; &quot;A|A&quot; &quot;A|A&quot; &quot;C|C&quot; &quot;G|G&quot; &quot;T|T&quot;
+##   HG00100 &quot;GT|GT&quot;  &quot;A|A&quot; &quot;G|G&quot; &quot;A|G&quot; &quot;A|A&quot; &quot;A|A&quot; &quot;C|C&quot; &quot;G|G&quot; &quot;T|T&quot;
+##   HG00101 &quot;GT|GT&quot;  &quot;A|A&quot; &quot;G|G&quot; &quot;G|A&quot; &quot;A|A&quot; &quot;A|A&quot; &quot;C|C&quot; &quot;G|G&quot; &quot;C|T&quot;
+##   HG00102 &quot;GTT|GT&quot; &quot;A|A&quot; &quot;G|G&quot; &quot;A|G&quot; &quot;A|A&quot; &quot;A|A&quot; &quot;C|C&quot; &quot;G|G&quot; &quot;T|T&quot;
+##          variant
+## sample    431       434      610       627   645   689   756              
+##   HG00096 &quot;TAA|TA&quot;  &quot;G|GTTA&quot; &quot;G|G&quot;     &quot;G|G&quot; &quot;G|G&quot; &quot;C|G&quot; &quot;CGAGCAT|CGAGCAT&quot;
+##   HG00097 &quot;T|T&quot;     &quot;G|GTTA&quot; &quot;GCC|G&quot;   &quot;G|G&quot; &quot;G|G&quot; &quot;G|G&quot; &quot;CGAGCAT|CGAGCAT&quot;
+##   HG00099 &quot;TA|TA&quot;   &quot;GTTA|G&quot; &quot;GCC|G&quot;   &quot;G|G&quot; &quot;G|G&quot; &quot;G|G&quot; &quot;CGAGCAT|CGAGCAT&quot;
+##   HG00100 &quot;TA|T&quot;    &quot;G|GTTA&quot; &quot;GCC|GCC&quot; &quot;C|G&quot; &quot;G|G&quot; &quot;G|C&quot; &quot;CGAGCAT|CGAGCAT&quot;
+##   HG00101 &quot;TAA|TAA&quot; &quot;G|G&quot;    &quot;G|GC&quot;    &quot;G|G&quot; &quot;G|G&quot; &quot;C|G&quot; &quot;CGAGCAT|CGAGCAT&quot;
+##   HG00102 &quot;T|T&quot;     &quot;G|GTTA&quot; &quot;G|G&quot;     &quot;G|C&quot; &quot;G|G&quot; &quot;G|G&quot; &quot;CGAGCAT|CGAGCAT&quot;
+##          variant
+## sample    765         814     988           1014      1056 
+##   HG00096 &quot;C|C&quot;       &quot;CT|CT&quot; &quot;CGTGA|CGTGA&quot; &quot;C|C&quot;     &quot;A|A&quot;
+##   HG00097 &quot;C|C&quot;       &quot;CT|CT&quot; &quot;CGTGA|CGTGA&quot; &quot;C|C&quot;     &quot;A|A&quot;
+##   HG00099 &quot;C|C&quot;       &quot;CT|CT&quot; &quot;CGTGA|CGTGA&quot; &quot;C|C&quot;     &quot;A|A&quot;
+##   HG00100 &quot;C|C&quot;       &quot;CT|CT&quot; &quot;CGTGA|CGTGA&quot; &quot;C|C&quot;     &quot;A|G&quot;
+##   HG00101 &quot;C|C&quot;       &quot;CT|CT&quot; &quot;CGTGA|CGTGA&quot; &quot;CCATT|C&quot; &quot;A|A&quot;
+##   HG00102 &quot;CATTATT|C&quot; &quot;CT|CT&quot; &quot;CGTGA|CGTGA&quot; &quot;C|CCATT&quot; &quot;A|G&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dos &lt;-<span class="st"> </span><span class="kw">refDosage</span>(gds)
+<span class="kw">head</span>(dos)</code></pre></div>
+<pre><code>##          variant
+## sample    30 69 73 161 162 195 243 253 407 431 434 610 627 645 689 756 765
+##   HG00096  1  2  2   1   2   2   2   2   2   1   1   0   2   2   1   0   0
+##   HG00097  0  2  2   2   2   2   2   2   2   0   1   0   2   2   2   0   0
+##   HG00099  1  2  2   2   2   2   2   2   2   2   1   0   2   2   2   0   0
+##   HG00100  0  2  2   1   2   2   2   2   2   1   1   0   1   2   1   0   0
+##   HG00101  0  2  2   1   2   2   2   2   1   0   2   1   2   2   1   0   0
+##   HG00102  1  2  2   1   2   2   2   2   2   0   1   0   1   2   2   0   0
+##          variant
+## sample    814 988 1014 1056
+##   HG00096   2   2    2    2
+##   HG00097   2   2    2    2
+##   HG00099   2   2    2    2
+##   HG00100   2   2    2    1
+##   HG00101   2   2    1    2
+##   HG00102   2   2    1    1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dos &lt;-<span class="st"> </span><span class="kw">altDosage</span>(gds)
+<span class="kw">head</span>(dos)</code></pre></div>
+<pre><code>##          variant
+## sample    30 69 73 161 162 195 243 253 407 431 434 610 627 645 689 756 765
+##   HG00096  1  0  0   1   0   0   0   0   0   1   1   2   0   0   1   2   2
+##   HG00097  2  0  0   0   0   0   0   0   0   2   1   2   0   0   0   2   2
+##   HG00099  1  0  0   0   0   0   0   0   0   0   1   2   0   0   0   2   2
+##   HG00100  2  0  0   1   0   0   0   0   0   1   1   2   1   0   1   2   2
+##   HG00101  2  0  0   1   0   0   0   0   1   2   0   1   0   0   1   2   2
+##   HG00102  1  0  0   1   0   0   0   0   0   2   1   2   1   0   0   2   2
+##          variant
+## sample    814 988 1014 1056
+##   HG00096   0   0    0    0
+##   HG00097   0   0    0    0
+##   HG00099   0   0    0    0
+##   HG00100   0   0    0    1
+##   HG00101   0   0    1    0
+##   HG00102   0   0    1    1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dos &lt;-<span class="st"> </span><span class="kw">alleleDosage</span>(gds, <span class="dt">n=</span><span class="dv">2</span>)
+<span class="kw">head</span>(dos)</code></pre></div>
+<pre><code>##          variant
+## sample    30 69 73 161 162 195 243 253 407 431 434 610 627 645 689 756 765
+##   HG00096  0  0  0   0   0   0   0   0   0   0   0   0   0   0   1   2   2
+##   HG00097  0  0  0   0   0   0   0   0   0   2   0   0   0   0   0   2   2
+##   HG00099  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0   2   2
+##   HG00100  0  0  0   0   0   0   0   0   0   1   0   0   1   0   1   2   2
+##   HG00101  0  0  0   0   0   0   0   0   1   0   0   0   0   0   1   2   2
+##   HG00102  0  0  0   0   0   0   0   0   0   2   0   0   1   0   0   2   1
+##          variant
+## sample    814 988 1014 1056
+##   HG00096   0   0    0    0
+##   HG00097   0   0    0    0
+##   HG00099   0   0    0    0
+##   HG00100   0   0    0    1
+##   HG00101   0   0    0    0
+##   HG00102   0   0    0    1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dos &lt;-<span class="st"> </span><span class="kw">alleleDosage</span>(gds, <span class="dt">n=</span><span class="dv">3</span>)
+<span class="kw">head</span>(dos)</code></pre></div>
+<pre><code>##          variant
+## sample    30 69 73 161 162 195 243 253 407 431 434 610 627 645 689 756 765
+##   HG00096  0  0  0   0   0   0   0   0   0   0   0   2   0   0   0   0   0
+##   HG00097  0  0  0   0   0   0   0   0   0   0   0   1   0   0   0   0   0
+##   HG00099  0  0  0   0   0   0   0   0   0   0   0   1   0   0   0   0   0
+##   HG00100  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+##   HG00101  0  0  0   0   0   0   0   0   0   0   0   1   0   0   0   0   0
+##   HG00102  0  0  0   0   0   0   0   0   0   0   0   2   0   0   0   0   0
+##          variant
+## sample    814 988 1014 1056
+##   HG00096   0   0    0    0
+##   HG00097   0   0    0    0
+##   HG00099   0   0    0    0
+##   HG00100   0   0    0    0
+##   HG00101   0   0    0    0
+##   HG00102   0   0    0    0</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Use the <code>hwe</code> function in SeqVarTools to run a Hardy-Weinberg Equilibrium test on each variant. Identify a variant with low p-value and inspect its genotypes. (Note that the HWE test is only valid for biallelic variants, and will return <code>NA</code> for multiallelic variants.)</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqResetFilter</span>(gds)</code></pre></div>
+<pre><code>## # of selected samples: 1,126
+## # of selected variants: 1,120</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hwe.res &lt;-<span class="st"> </span><span class="kw">hwe</span>(gds)
+lowp &lt;-<span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(hwe.res<span class="op">$</span>p) <span class="op">&amp;</span><span class="st"> </span>hwe.res<span class="op">$</span>p <span class="op">&lt;</span><span class="st"> </span><span class="fl">1e-4</span>
+<span class="kw">head</span>(hwe.res[lowp,])</code></pre></div>
+<pre><code>##     variant.id nAA nAa naa     afreq            p         f
+## 75          75 702 336  88 0.7726465 1.070663e-06 0.1506466
+## 92          92 632 381 113 0.7304618 3.558878e-06 0.1407120
+## 98          98 672 335 119 0.7455595 2.369695e-12 0.2158342
+## 105        105  93 272 761 0.2033748 7.851777e-16 0.2544970
+## 114        114 299 482 345 0.4795737 1.745346e-06 0.1424409
+## 150        150 471 447 208 0.6167851 8.020208e-08 0.1602251</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqSetFilter</span>(gds, <span class="dt">variant.id=</span><span class="dv">75</span>)</code></pre></div>
+<pre><code>## # of selected variants: 1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">getGenotype</span>(gds))</code></pre></div>
+<pre><code>## 
+## 0|0 0|1 1|0 1|1 
+## 702 165 171  88</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">refDosage</span>(gds))</code></pre></div>
+<pre><code>## 
+##   0   1   2 
+##  88 336 702</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">seqClose</span>(gds)</code></pre></div>
 
 </div>
