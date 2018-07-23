@@ -20,8 +20,8 @@ Data used is located in the [github repository](https://github.com/UW-GAC/topmed
 
 To work through the exercises, log into RStudio Server at http://34.208.147.133:8787 with your username and password.
 
-Slides for lectures are posted here:\
-https://www.biostat.washington.edu/suminst/SISG2018/modules/SM1812
+Slides for lectures are posted here below in the schedule. 
+A detailed description of the course and instructor biographies can be found at https://www.biostat.washington.edu/suminst/SISG2018/modules/SM1812
 
 Join the Slack channel here:\
 https://sisg2018module12.slack.com
